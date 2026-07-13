@@ -24,6 +24,8 @@ applySiteConfig();
 
 const soundPrompt = document.querySelector('[data-sound-prompt]');
 const soundToggle = document.querySelector('[data-sound-toggle]');
+const soundSkip = document.querySelector('[data-sound-skip]');
+const soundPrevious = document.querySelector('[data-sound-previous]');
 const soundDismiss = document.querySelector('[data-sound-dismiss]');
 const soundStatus = document.querySelector('[data-sound-status]');
 const soundTrack = document.querySelector('[data-sound-track]');
@@ -31,9 +33,11 @@ const soundArt = document.querySelector('[data-sound-art]');
 const soundProgress = document.querySelector('[data-sound-progress]');
 const spotifyEmbed = document.querySelector('[data-spotify-embed]');
 const spotifyArtistUri = 'spotify:artist:1JiqQUYL0EA1h3jVQIRQtg';
+const spotifyTracks = siteConfig.music?.spotifyTracks || [];
 let spotifyController = null;
 let spotifyPlaying = false;
 let spotifyPlayRequested = false;
+let spotifyAwaitingStart = false;
 let spotifyHasStarted = false;
 let spotifyCurrentUri = spotifyArtistUri;
 let spotifyCurrentPosition = 0;
@@ -74,8 +78,9 @@ const setSoundState = (playing, message = playing ? 'Soundtrack playing' : 'Soun
 const requestSpotifyPlayback = () => {
   if (!spotifyController) return;
   spotifyPlayRequested = true;
+  spotifyAwaitingStart = true;
   window.clearTimeout(spotifyPlaybackTimer);
-  soundStatus.textContent = 'Starting soundtrack…';
+  setSoundState(true, 'Connecting…');
   if (spotifyHasStarted && spotifyCurrentUri !== spotifyArtistUri) {
     spotifyController.loadEntity(spotifyCurrentUri, false, Math.floor(spotifyCurrentPosition / 1000));
     spotifyController.play();
@@ -83,20 +88,51 @@ const requestSpotifyPlayback = () => {
     spotifyController.play();
   }
   spotifyPlaybackTimer = window.setTimeout(() => {
-    if (!spotifyPlaying) setSoundState(false, 'Tap to start the soundtrack');
+    if (spotifyAwaitingStart) {
+      spotifyPlayRequested = false;
+      spotifyAwaitingStart = false;
+      setSoundState(false, 'Tap to start the soundtrack');
+    }
   }, 1800);
+};
+
+const changeSpotifyTrack = (direction) => {
+  if (!spotifyController || !spotifyTracks.length) return;
+  const currentIndex = spotifyTracks.findIndex((track) => track.uri === spotifyCurrentUri);
+  const nextIndex = currentIndex < 0
+    ? (direction > 0 ? 0 : spotifyTracks.length - 1)
+    : (currentIndex + direction + spotifyTracks.length) % spotifyTracks.length;
+  const nextTrack = spotifyTracks[nextIndex];
+  spotifyCurrentUri = nextTrack.uri;
+  spotifyCurrentPosition = 0;
+  spotifyHasStarted = true;
+  spotifyPlayRequested = true;
+  spotifyAwaitingStart = true;
+  spotifyInfoUri = '';
+  soundTrack.textContent = nextTrack.title;
+  soundProgress.style.width = '0%';
+  soundSkip.disabled = true;
+  soundPrevious.disabled = true;
+  setSoundState(true, direction > 0 ? 'Skipping…' : 'Going back…');
+  syncSpotifyTrackInfo(nextTrack.uri);
+  spotifyController.loadEntity(nextTrack.uri, false, 0);
+  spotifyController.play();
 };
 
 soundToggle.addEventListener('click', () => {
   if (!spotifyController) return;
   if (spotifyPlaying) {
     spotifyPlayRequested = false;
+    spotifyAwaitingStart = false;
     setSoundState(false, 'Paused');
     spotifyController.pause();
   } else {
     requestSpotifyPlayback();
   }
 });
+
+soundSkip.addEventListener('click', () => changeSpotifyTrack(1));
+soundPrevious.addEventListener('click', () => changeSpotifyTrack(-1));
 
 soundDismiss.addEventListener('click', () => {
   soundPrompt.classList.add('dismissed');
@@ -118,6 +154,8 @@ window.onSpotifyIframeApiReady = (IFrameAPI) => {
   }, (EmbedController) => {
     spotifyController = EmbedController;
     soundToggle.disabled = false;
+    soundSkip.disabled = false;
+    soundPrevious.disabled = false;
     setSoundState(false, 'Press play to listen');
 
     EmbedController.addListener('playback_started', (event) => {
@@ -127,7 +165,10 @@ window.onSpotifyIframeApiReady = (IFrameAPI) => {
         return;
       }
       window.clearTimeout(spotifyPlaybackTimer);
+      spotifyAwaitingStart = false;
       spotifyHasStarted = true;
+      soundSkip.disabled = false;
+      soundPrevious.disabled = false;
       if (event?.data?.playingURI) {
         spotifyCurrentUri = event.data.playingURI;
         syncSpotifyTrackInfo(event.data.playingURI);
@@ -149,6 +190,7 @@ window.onSpotifyIframeApiReady = (IFrameAPI) => {
         setSoundState(false, spotifyHasStarted ? 'Paused' : 'Press play to listen');
         return;
       }
+      if (!event.data.isPaused) spotifyAwaitingStart = false;
       setSoundState(!event.data.isPaused);
     });
   });

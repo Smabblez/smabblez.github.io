@@ -15,5 +15,14 @@ window.SMABBLEZ_SITE = {
     tiktok: "https://www.tiktok.com/@Smabblez",
     discord: "https://discord.gg/5edKN6cw2K",
     spotify: "https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg"
+  },
+  music: {
+    spotifyTracks: [
+      { title: "Smabble's Show", uri: "spotify:track:411HCjwGmBLorc7Mk5wSSn" },
+      { title: "Velvet Control", uri: "spotify:track:2RgDoI61SEpHt1O8E3ki6h" },
+      { title: "Smab's City", uri: "spotify:track:1uSkiAwmaIvb9ePgO83qVh" },
+      { title: "Big Top Boss", uri: "spotify:track:1hM0UJOcJfYXVm8ajVr68F" },
+      { title: "Say it", uri: "spotify:track:6pqMDrYXvGTaqhGN882ZEu" }
+    ]
   }
 };
