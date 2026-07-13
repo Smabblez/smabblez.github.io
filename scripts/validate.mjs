@@ -19,10 +19,14 @@ check(config?.socials?.tiktok === 'https://www.tiktok.com/@Smabblez', 'TikTok mu
 check(config?.socials?.discord === 'https://discord.gg/5edKN6cw2K', 'Discord invite is incorrect.');
 check(config?.socials?.spotify === 'https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg', 'Spotify artist URL is incorrect.');
 check(config?.music?.spotifyTracks?.length === 5, 'Spotify track list must include the five artist-page tracks.');
+check(config?.content?.twitchVideos?.includes('/smabblez/videos'), 'Twitch recent-broadcast URL is missing.');
+check(config?.content?.twitchSchedule === 'https://www.twitch.tv/smabblez/schedule', 'Twitch schedule URL is incorrect.');
 check((index.match(/data-social="spotify"/g) || []).length >= 3, 'Spotify must be visible in the feature, finale, and footer.');
 check(!/twitch\.tv\/smabbles\b/i.test(index + configSource), 'Legacy Twitch handle found.');
 check(!/tiktok\.com\/@smabbles\b/i.test(index + configSource), 'Legacy TikTok handle found.');
-check(!/\bclips?\b/i.test(index), 'Public page still contains clip-related copy or UI.');
+check(index.includes('data-twitch-player'), 'Official Twitch live player is missing.');
+check(index.includes('id="latest"'), 'Latest-content section is missing.');
+check((index.match(/loading="lazy"/g) || []).length >= 10, 'Below-fold media must be lazy-loaded.');
 check(!/small amount of dignity/i.test(index), 'Removed dignity copy was reintroduced.');
 check(!/data-emote-dialog|badge-ladder|drop-grid|emote vault/i.test(index), 'Asset-catalog UI was reintroduced.');
 check((index.match(/class="social-card/g) || []).length === 3, 'The social funnel must have exactly three primary cards.');

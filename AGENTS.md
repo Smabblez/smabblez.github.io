@@ -23,12 +23,13 @@ The live-show differentiator is audience control: Smabblez uses jumpscares, rede
 - Spotify artist page: `https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg`
 - Some old workspace files contain legacy spellings and handles. Never copy them into this website.
 
-`site.config.js` is the source of truth for external URLs. Keep fallback URLs in `index.html` synchronized for no-JavaScript visitors.
+`site.config.js` is the source of truth for external URLs, recent-content destinations, and the Spotify track list. Keep fallback URLs in `index.html` synchronized for no-JavaScript visitors.
 
 ## Deployment target
 
 - Production hosting is GitHub Pages.
 - Keep the site fully static and dependency-free.
+- Use Twitch's official channel embed for live/offline state and schedule information; do not add fake status or schedule data.
 - Use relative asset and script paths so repository-subpath hosting continues to work.
 - Do not introduce server routes, server-only rendering, environment secrets, databases, or runtime API credentials.
 - `scripts/serve.mjs` is a local preview tool only.
@@ -50,7 +51,7 @@ The live-show differentiator is audience control: Smabblez uses jumpscares, rede
 - `index.html` — semantic content and conversion funnel.
 - `styles.css` — all responsive styling; no CSS framework.
 - `script.js` — navigation, reveals, follow dock, scroll signal, pointer effects, parallax, card tilt, and Chaos Mode.
-- `assets/emotes/` — six transparent character images used decoratively.
+- `assets/emotes/` — six original transparent PNGs plus optimized WebP versions used on the page.
 - `assets/animated/` — two small decorative GIFs currently used.
 - `scripts/validate.mjs` — deterministic project checks.
 - `scripts/serve.mjs` — dependency-free local server.

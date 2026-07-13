@@ -4,12 +4,14 @@ const body = document.body;
 const header = document.querySelector('[data-header]');
 const menuButton = document.querySelector('.menu-toggle');
 const menuLabel = document.querySelector('[data-menu-label]');
+const menuCurrent = document.querySelector('[data-menu-current]');
 const nav = document.querySelector('.site-nav');
 const navLinks = [...document.querySelectorAll('.site-nav a')];
 const sections = [...document.querySelectorAll('main section[id]')];
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const siteConfig = window.SMABBLEZ_SITE || {};
 const root = document.documentElement;
+let currentSectionName = 'Home';
 
 const applySiteConfig = () => {
   Object.entries(siteConfig.socials || {}).forEach(([name, url]) => {
@@ -18,9 +20,22 @@ const applySiteConfig = () => {
       link.href = url;
     });
   });
+  Object.entries(siteConfig.content || {}).forEach(([name, url]) => {
+    if (!url) return;
+    document.querySelectorAll(`[data-content="${name}"]`).forEach((link) => {
+      link.href = url;
+    });
+  });
 };
 
 applySiteConfig();
+
+const twitchPlayer = document.querySelector('[data-twitch-player]');
+if (twitchPlayer) {
+  const twitchChannel = siteConfig.brand?.twitchChannel || 'smabblez';
+  const twitchParent = window.location.hostname || 'localhost';
+  twitchPlayer.src = `https://player.twitch.tv/?channel=${encodeURIComponent(twitchChannel)}&parent=${encodeURIComponent(twitchParent)}&autoplay=false&muted=true`;
+}
 
 const soundPrompt = document.querySelector('[data-sound-prompt]');
 const soundToggle = document.querySelector('[data-sound-toggle]');
@@ -223,8 +238,9 @@ window.addEventListener('resize', requestScrollSync, { passive: true });
 
 const setMenuOpen = (open, { returnFocus = false } = {}) => {
   menuButton.setAttribute('aria-expanded', String(open));
-  menuButton.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-  menuLabel.textContent = open ? 'Close menu' : 'Open menu';
+  menuButton.setAttribute('aria-label', open ? 'Close sections menu' : 'Open sections menu');
+  menuLabel.textContent = open ? 'Close sections menu' : 'Open sections menu';
+  menuCurrent.textContent = open ? 'Close' : currentSectionName;
   nav.classList.toggle('open', open);
   if (returnFocus) menuButton.focus();
 };
@@ -267,7 +283,11 @@ if ('IntersectionObserver' in window) {
       navLinks.forEach((link) => {
         const matches = link.getAttribute('href') === `#${entry.target.id}`;
         link.classList.toggle('active', matches);
-        if (matches) link.setAttribute('aria-current', 'page');
+        if (matches) {
+          link.setAttribute('aria-current', 'page');
+          currentSectionName = link.dataset.sectionName || 'Sections';
+          if (menuButton.getAttribute('aria-expanded') !== 'true') menuCurrent.textContent = currentSectionName;
+        }
         else link.removeAttribute('aria-current');
       });
     });

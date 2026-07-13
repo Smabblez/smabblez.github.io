@@ -16,6 +16,10 @@ window.SMABBLEZ_SITE = {
     discord: "https://discord.gg/5edKN6cw2K",
     spotify: "https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg"
   },
+  content: {
+    twitchVideos: "https://www.twitch.tv/smabblez/videos?filter=archives&sort=time",
+    twitchSchedule: "https://www.twitch.tv/smabblez/schedule"
+  },
   music: {
     spotifyTracks: [
       { title: "Smabble's Show", uri: "spotify:track:411HCjwGmBLorc7Mk5wSSn" },
