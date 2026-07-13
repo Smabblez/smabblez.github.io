@@ -72,9 +72,11 @@ let spotifyVolumeMuted = false;
 let spotifyMutedActivePlayback = false;
 let spotifyIFrameApi = null;
 let spotifyControllerLoading = false;
+let spotifyControllerRequested = false;
 
 function loadSpotifyApi() {
   if (spotifyController || spotifyControllerLoading) return;
+  spotifyControllerRequested = true;
   soundToggle.disabled = true;
   setSoundState(false, 'Loading Spotify…');
   if (spotifyIFrameApi) createSpotifyController();
@@ -83,6 +85,7 @@ function loadSpotifyApi() {
 if (spotifyApiScript) {
   spotifyApiScript.addEventListener('error', () => {
     spotifyControllerLoading = false;
+    spotifyControllerRequested = false;
     spotifyPlayAfterReady = false;
     soundToggle.disabled = false;
     setSoundState(false, 'Spotify unavailable — try again');
@@ -217,19 +220,26 @@ const setSoundCollapsed = (collapsed) => {
 };
 
 soundDismiss.addEventListener('click', () => setSoundCollapsed(true));
-soundRestore.addEventListener('click', () => setSoundCollapsed(false));
+soundRestore.addEventListener('click', () => {
+  setSoundCollapsed(false);
+  loadSpotifyApi();
+});
 
+let playerStartsExpanded = false;
 try {
   const savedPlayerState = window.localStorage.getItem('smabblez-player-collapsed');
-  setSoundCollapsed(savedPlayerState !== 'false');
+  playerStartsExpanded = savedPlayerState === 'false';
+  setSoundCollapsed(!playerStartsExpanded);
 } catch {
   setSoundCollapsed(true);
 }
 soundToggle.disabled = false;
 setSoundState(false, 'Press play to load');
+if (playerStartsExpanded) loadSpotifyApi();
 
 function createSpotifyController() {
   if (!spotifyEmbed || !spotifyIFrameApi || spotifyController || spotifyControllerLoading) return;
+  spotifyControllerRequested = false;
   spotifyControllerLoading = true;
   spotifyIFrameApi.createController(spotifyEmbed, { width: 1, height: 1, uri: spotifyArtistUri }, (EmbedController) => {
     spotifyControllerLoading = false;
@@ -283,7 +293,7 @@ function createSpotifyController() {
 
 window.onSpotifyIframeApiReady = (IFrameAPI) => {
   spotifyIFrameApi = IFrameAPI;
-  if (spotifyPlayAfterReady) createSpotifyController();
+  if (spotifyControllerRequested) createSpotifyController();
 };
 
 const discordPreview = document.querySelector('[data-discord-preview]');
