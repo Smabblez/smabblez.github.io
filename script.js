@@ -159,16 +159,21 @@ soundAudio.addEventListener('error', () => {
 
 const setSoundCollapsed = (collapsed) => {
   soundPrompt.classList.toggle('collapsed', collapsed);
-  soundPrompt.setAttribute('aria-label', collapsed ? 'Smabblez soundtrack player, minimized' : 'Spotify soundtrack controls');
+  soundPrompt.setAttribute('aria-label', collapsed ? 'Smabblez soundtrack player, minimized' : 'Smabblez soundtrack preview controls');
   try { window.localStorage.setItem('smabblez-player-collapsed', String(collapsed)); } catch {}
 };
 
 soundDismiss.addEventListener('click', () => setSoundCollapsed(true));
-soundRestore.addEventListener('click', () => setSoundCollapsed(false));
+soundRestore.addEventListener('click', () => {
+  setSoundCollapsed(false);
+  updateTrackInfo();
+});
 
+let playerStartsCollapsed = true;
 try {
   const savedPlayerState = window.localStorage.getItem('smabblez-player-collapsed');
-  setSoundCollapsed(savedPlayerState !== 'false');
+  playerStartsCollapsed = savedPlayerState !== 'false';
+  setSoundCollapsed(playerStartsCollapsed);
 } catch {
   setSoundCollapsed(true);
 }
@@ -184,7 +189,7 @@ try {
 }
 
 updateVolumeUI();
-updateTrackInfo();
+if (!playerStartsCollapsed) updateTrackInfo();
 const hasPlayableTracks = spotifyTracks.length > 0;
 soundToggle.disabled = !hasPlayableTracks;
 soundSkip.disabled = !hasPlayableTracks;
@@ -197,7 +202,9 @@ const discordOnline = document.querySelector('[data-discord-online]');
 const discordMembers = document.querySelector('[data-discord-members]');
 const discordInviteCode = siteConfig.community?.discordInviteCode;
 
-if (discordPreview && discordInviteCode) {
+const loadDiscordPreview = () => {
+  if (!discordPreview || !discordInviteCode || discordPreview.dataset.loaded === 'true') return;
+  discordPreview.dataset.loaded = 'true';
   fetch(`https://discord.com/api/v10/invites/${encodeURIComponent(discordInviteCode)}?with_counts=true`)
     .then((response) => {
       if (!response.ok) throw new Error('Discord preview unavailable');
@@ -214,6 +221,20 @@ if (discordPreview && discordInviteCode) {
       discordOnline.textContent = 'See who is';
       discordMembers.textContent = 'Meet the';
     });
+};
+
+if (discordPreview && discordInviteCode) {
+  const followSection = document.querySelector('#follow');
+  if ('IntersectionObserver' in window && followSection) {
+    const discordObserver = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      loadDiscordPreview();
+      discordObserver.disconnect();
+    }, { rootMargin: '220px 0px' });
+    discordObserver.observe(followSection);
+  } else {
+    loadDiscordPreview();
+  }
 }
 
 const analyticsEndpoint = siteConfig.analytics?.endpoint?.trim();
@@ -285,7 +306,7 @@ const chaosLabel = document.querySelector('[data-chaos-label]');
 const chaosFlash = document.querySelector('.chaos-flash');
 const modeStatus = document.querySelector('[data-mode-status]');
 const chaosCharacter = document.querySelector('[data-chaos-character]');
-const sparkColors = ['#ff2638', '#70ef29', '#8f46e8', '#ffd42f', '#f6f1e7'];
+const sparkColors = ['#ff2638', '#ffd42f', '#f6f1e7'];
 const chaosWords = ['HONK!', 'BONK!', 'CHAOS!', 'LIVE!', '???', 'BIG TOP'];
 
 const makeSparks = (x, y, amount = 24) => {
@@ -322,12 +343,12 @@ const broadcastChaos = () => {
   chaosFlash.classList.remove('play');
   void chaosFlash.offsetWidth;
   chaosFlash.classList.add('play');
-  window.setTimeout(() => chaosFlash.classList.remove('play'), 900);
-  [[.18,.22],[.82,.2],[.22,.76],[.78,.72],[.5,.48]].forEach(([x, y], index) => {
+  window.setTimeout(() => chaosFlash.classList.remove('play'), 700);
+  [[.2,.24],[.8,.22],[.24,.74],[.76,.7]].forEach(([x, y], index) => {
     window.setTimeout(() => {
-      makeSparks(window.innerWidth * x, window.innerHeight * y, 12);
+      makeSparks(window.innerWidth * x, window.innerHeight * y, 8);
       dropChaosSticker(window.innerWidth * x, window.innerHeight * y, chaosWords[index]);
-    }, index * 70);
+    }, index * 65);
   });
 };
 
@@ -352,7 +373,7 @@ window.addEventListener('keydown', (event) => {
 });
 
 document.addEventListener('pointerdown', (event) => {
-  if (!body.classList.contains('chaos-on') || event.target.closest('a,button')) return;
+  if (!body.classList.contains('chaos-on') || event.target.closest('a,button,input,label')) return;
   dropChaosSticker(event.clientX, event.clientY);
 });
 
@@ -364,11 +385,11 @@ if (!reduceMotion && window.matchMedia('(pointer:fine)').matches) {
     cursorNose.classList.add('visible');
   }, { passive: true });
   document.addEventListener('pointerover', (event) => {
-    cursorNose.classList.toggle('hot', Boolean(event.target.closest('a,button')));
+    cursorNose.classList.toggle('hot', Boolean(event.target.closest('a,button,input,label')));
   }, { passive: true });
   document.addEventListener('pointerout', (event) => {
     if (!event.relatedTarget) cursorNose.classList.remove('visible');
-    if (!event.relatedTarget?.closest?.('a,button')) cursorNose.classList.remove('hot');
+    if (!event.relatedTarget?.closest?.('a,button,input,label')) cursorNose.classList.remove('hot');
   }, { passive: true });
 }
 
