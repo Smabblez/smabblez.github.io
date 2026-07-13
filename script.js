@@ -306,6 +306,8 @@ const chaosLabel = document.querySelector('[data-chaos-label]');
 const chaosFlash = document.querySelector('.chaos-flash');
 const modeStatus = document.querySelector('[data-mode-status]');
 const chaosCharacter = document.querySelector('[data-chaos-character]');
+const heroCharacter = document.querySelector('.hero-character');
+const honkButton = document.querySelector('[data-honk]');
 const sparkColors = ['#ff2638', '#ffd42f', '#f6f1e7'];
 const chaosWords = ['HONK!', 'BONK!', 'CHAOS!', 'LIVE!', '???', 'BIG TOP'];
 
@@ -351,6 +353,25 @@ const broadcastChaos = () => {
     }, index * 65);
   });
 };
+
+const honkNose = () => {
+  if (!honkButton) return;
+  const rect = honkButton.getBoundingClientRect();
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
+  makeSparks(x, y, 18);
+  dropChaosSticker(x, y, 'HONK!');
+  heroCharacter?.classList.remove('honked');
+  void heroCharacter?.offsetWidth;
+  heroCharacter?.classList.add('honked');
+  window.setTimeout(() => heroCharacter?.classList.remove('honked'), 460);
+  modeStatus.textContent = 'Honk! You found Smabblez\'s nose.';
+};
+
+honkButton?.addEventListener('click', (event) => {
+  event.stopPropagation();
+  honkNose();
+});
 
 const setChaos = (active) => {
   body.classList.toggle('chaos-on', active);
