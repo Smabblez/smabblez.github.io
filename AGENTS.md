@@ -20,7 +20,7 @@ The live-show differentiator is audience control: Smabblez uses jumpscares, rede
 - Twitch channel: `https://www.twitch.tv/smabblez`
 - TikTok: `https://www.tiktok.com/@Smabblez`
 - Discord: `https://discord.gg/5edKN6cw2K`
-- Spotify is part of the wider brand, but there is no confirmed URL yet. Never invent one.
+- Spotify artist page: `https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg`
 - Some old workspace files contain legacy spellings and handles. Never copy them into this website.
 
 `site.config.js` is the source of truth for external URLs. Keep fallback URLs in `index.html` synchronized for no-JavaScript visitors.

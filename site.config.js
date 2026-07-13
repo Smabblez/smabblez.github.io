@@ -14,6 +14,6 @@ window.SMABBLEZ_SITE = {
     twitch: "https://www.twitch.tv/smabblez",
     tiktok: "https://www.tiktok.com/@Smabblez",
     discord: "https://discord.gg/5edKN6cw2K",
-    spotify: ""
+    spotify: "https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg"
   }
 };
