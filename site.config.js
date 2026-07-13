@@ -20,6 +20,13 @@ window.SMABBLEZ_SITE = {
     twitchVideos: "https://www.twitch.tv/smabblez/videos?filter=archives&sort=time",
     twitchSchedule: "https://www.twitch.tv/smabblez/schedule"
   },
+  community: {
+    discordInviteCode: "5edKN6cw2K"
+  },
+  analytics: {
+    /* Add a privacy-friendly event endpoint here when one is available. */
+    endpoint: ""
+  },
   music: {
     spotifyTracks: [
       { title: "Smabble's Show", uri: "spotify:track:411HCjwGmBLorc7Mk5wSSn" },

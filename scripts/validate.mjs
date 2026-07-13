@@ -21,11 +21,17 @@ check(config?.socials?.spotify === 'https://open.spotify.com/artist/1JiqQUYL0EA1
 check(config?.music?.spotifyTracks?.length === 5, 'Spotify track list must include the five artist-page tracks.');
 check(config?.content?.twitchVideos?.includes('/smabblez/videos'), 'Twitch recent-broadcast URL is missing.');
 check(config?.content?.twitchSchedule === 'https://www.twitch.tv/smabblez/schedule', 'Twitch schedule URL is incorrect.');
+check(config?.community?.discordInviteCode === '5edKN6cw2K', 'Discord live-preview invite code is missing.');
 check((index.match(/data-social="spotify"/g) || []).length >= 3, 'Spotify must be visible in the feature, finale, and footer.');
 check(!/twitch\.tv\/smabbles\b/i.test(index + configSource), 'Legacy Twitch handle found.');
 check(!/tiktok\.com\/@smabbles\b/i.test(index + configSource), 'Legacy TikTok handle found.');
 check(index.includes('data-twitch-player'), 'Official Twitch live player is missing.');
 check(index.includes('id="latest"'), 'Latest-content section is missing.');
+check(index.includes('id="collab"'), 'Collaboration section is missing.');
+check(index.includes('data-sound-restore'), 'Persistent soundtrack restore control is missing.');
+check(index.includes('data-discord-preview'), 'Live Discord community preview is missing.');
+check(index.includes('href="media-kit.html"'), 'Creator media-kit link is missing.');
+check(existsSync(join(root, 'media-kit.html')), 'Standalone media-kit page is missing.');
 check((index.match(/loading="lazy"/g) || []).length >= 10, 'Below-fold media must be lazy-loaded.');
 check(!/small amount of dignity/i.test(index), 'Removed dignity copy was reintroduced.');
 check(!/data-emote-dialog|badge-ladder|drop-grid|emote vault/i.test(index), 'Asset-catalog UI was reintroduced.');

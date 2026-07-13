@@ -42,6 +42,7 @@ const soundToggle = document.querySelector('[data-sound-toggle]');
 const soundSkip = document.querySelector('[data-sound-skip]');
 const soundPrevious = document.querySelector('[data-sound-previous]');
 const soundDismiss = document.querySelector('[data-sound-dismiss]');
+const soundRestore = document.querySelector('[data-sound-restore]');
 const soundStatus = document.querySelector('[data-sound-status]');
 const soundTrack = document.querySelector('[data-sound-track]');
 const soundArt = document.querySelector('[data-sound-art]');
@@ -149,15 +150,19 @@ soundToggle.addEventListener('click', () => {
 soundSkip.addEventListener('click', () => changeSpotifyTrack(1));
 soundPrevious.addEventListener('click', () => changeSpotifyTrack(-1));
 
-soundDismiss.addEventListener('click', () => {
-  soundPrompt.classList.add('dismissed');
-  try { window.sessionStorage.setItem('smabblez-sound-dismissed', 'true'); } catch {}
-});
+const setSoundCollapsed = (collapsed) => {
+  soundPrompt.classList.toggle('collapsed', collapsed);
+  soundPrompt.setAttribute('aria-label', collapsed ? 'Smabblez soundtrack player, minimized' : 'Spotify soundtrack controls');
+  try { window.localStorage.setItem('smabblez-player-collapsed', String(collapsed)); } catch {}
+};
+
+soundDismiss.addEventListener('click', () => setSoundCollapsed(true));
+soundRestore.addEventListener('click', () => setSoundCollapsed(false));
 
 try {
-  if (window.sessionStorage.getItem('smabblez-sound-dismissed') === 'true') {
-    soundPrompt.classList.add('dismissed');
-  }
+  const legacyDismissed = window.sessionStorage.getItem('smabblez-sound-dismissed') === 'true';
+  setSoundCollapsed(legacyDismissed || window.localStorage.getItem('smabblez-player-collapsed') === 'true');
+  window.sessionStorage.removeItem('smabblez-sound-dismissed');
 } catch {}
 
 window.onSpotifyIframeApiReady = (IFrameAPI) => {
@@ -210,6 +215,51 @@ window.onSpotifyIframeApiReady = (IFrameAPI) => {
     });
   });
 };
+
+const discordPreview = document.querySelector('[data-discord-preview]');
+const discordOnline = document.querySelector('[data-discord-online]');
+const discordMembers = document.querySelector('[data-discord-members]');
+const discordInviteCode = siteConfig.community?.discordInviteCode;
+
+if (discordPreview && discordInviteCode) {
+  fetch(`https://discord.com/api/v10/invites/${encodeURIComponent(discordInviteCode)}?with_counts=true`)
+    .then((response) => {
+      if (!response.ok) throw new Error('Discord preview unavailable');
+      return response.json();
+    })
+    .then((invite) => {
+      const online = Number(invite.approximate_presence_count ?? invite.profile?.online_count);
+      const members = Number(invite.approximate_member_count ?? invite.profile?.member_count);
+      if (Number.isFinite(online)) discordOnline.textContent = online.toLocaleString();
+      if (Number.isFinite(members)) discordMembers.textContent = members.toLocaleString();
+      discordPreview.title = `${invite.guild?.name || 'The Clown Tent'} community snapshot`;
+    })
+    .catch(() => {
+      discordOnline.textContent = 'See who is';
+      discordMembers.textContent = 'Meet the';
+    });
+}
+
+const analyticsEndpoint = siteConfig.analytics?.endpoint?.trim();
+document.addEventListener('click', (event) => {
+  const link = event.target.closest('a[href]');
+  if (!link) return;
+  const label = link.dataset.track || link.dataset.social || link.dataset.content;
+  if (!label) return;
+  const destination = new URL(link.href, window.location.href);
+  const detail = {
+    event: 'outbound_click',
+    label,
+    destination: `${destination.origin}${destination.pathname}`,
+    page: window.location.pathname,
+    timestamp: new Date().toISOString()
+  };
+  window.dispatchEvent(new CustomEvent('smabblez:conversion', { detail }));
+  if (!analyticsEndpoint) return;
+  const body = JSON.stringify(detail);
+  if (navigator.sendBeacon) navigator.sendBeacon(analyticsEndpoint, new Blob([body], { type: 'application/json' }));
+  else fetch(analyticsEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => {});
+});
 
 const syncHeader = () => header.classList.toggle('scrolled', window.scrollY > 18);
 const followDock = document.querySelector('[data-follow-dock]');

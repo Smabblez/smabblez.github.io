@@ -31,7 +31,7 @@ Do not add a backend, server-only rendering, environment secrets, or root-relati
 
 ## Editing order
 
-1. Edit `site.config.js` for public platform URLs.
+1. Edit `site.config.js` for public platform URLs, Discord preview data, and the optional analytics endpoint.
 2. Edit `index.html` for page copy or section structure.
 3. Edit `styles.css` for layout and visual design.
 4. Edit `script.js` only for behavior.
@@ -43,4 +43,10 @@ For Hermes/E4B from this directory, begin with `AGENTS.md`, then `site.config.js
 - Twitch: `https://www.twitch.tv/smabblez`
 - TikTok: `https://www.tiktok.com/@Smabblez`
 - Discord: `https://discord.gg/5edKN6cw2K`
-- Spotify: intentionally blank until the real public URL is supplied
+- Spotify: `https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg`
+
+## Conversion analytics
+
+Tracked calls to action emit a browser event named `smabblez:conversion`. To collect those events, set `analytics.endpoint` in `site.config.js` to a POST endpoint you control. The payload contains only the event label, destination origin/path, page path, and timestamp; it does not set cookies or create a user identifier. With no endpoint configured, nothing is transmitted.
+
+The standalone `media-kit.html` page is the public collaboration one-sheet and includes a print/save-PDF layout. It intentionally uses only verified public claims and links.

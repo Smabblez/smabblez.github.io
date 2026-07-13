@@ -20,7 +20,7 @@
   <link rel="canonical" href="https://smabblez.github.io/">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b080d'/%3E%3Ccircle cx='32' cy='32' r='15' fill='%23ff2638'/%3E%3Ccircle cx='27' cy='26' r='4' fill='%23ff9ca5'/%3E%3C/svg%3E">
   <link rel="preload" as="image" href="assets/emotes/hype.webp" type="image/webp" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=20260713k">
+  <link rel="stylesheet" href="styles.css?v=20260713m">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -47,6 +47,7 @@
   <p class="mode-status sr-only" role="status" aria-live="polite" data-mode-status></p>
 
   <aside class="sound-prompt" data-sound-prompt aria-label="Spotify soundtrack controls">
+    <button class="sound-restore" type="button" data-sound-restore aria-label="Expand soundtrack controls" title="Expand soundtrack controls"><span aria-hidden="true">♪</span><strong>Music</strong></button>
     <a class="sound-art" href="https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg" data-social="spotify" data-sound-art target="_blank" rel="noreferrer" aria-label="Open Smabblez on Spotify"><span aria-hidden="true">♪</span></a>
     <span class="sound-meta">
       <span class="sound-kicker">SMABBLEZ · SPOTIFY</span>
@@ -56,7 +57,7 @@
     <button class="sound-previous" type="button" data-sound-previous aria-label="Play previous track" title="Play previous track" disabled>‹‹</button>
     <button class="sound-skip" type="button" data-sound-skip aria-label="Skip to next track" title="Skip to next track" disabled>››</button>
     <button class="sound-toggle" type="button" data-sound-toggle aria-label="Loading Spotify player" aria-pressed="false" disabled>…</button>
-    <button class="sound-dismiss" type="button" data-sound-dismiss aria-label="Dismiss soundtrack controls">×</button>
+    <button class="sound-dismiss" type="button" data-sound-dismiss aria-label="Minimize soundtrack controls" title="Minimize soundtrack controls">−</button>
     <span class="sound-progress" aria-hidden="true"><span data-sound-progress></span></span>
   </aside>
 
@@ -80,6 +81,7 @@
       <a href="#socials" data-section-name="Socials"><span aria-hidden="true">03</span>Socials</a>
       <a href="#content" data-section-name="The show"><span aria-hidden="true">04</span>The show</a>
       <a href="#about" data-section-name="About"><span aria-hidden="true">05</span>About</a>
+      <a href="#collab" data-section-name="Work"><span aria-hidden="true">06</span>Work</a>
     </nav>
 
     <a class="header-cta" href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">
@@ -209,6 +211,10 @@
           <strong>Get inside the tent.</strong>
           <small>Alerts, events, RP updates, and chaos coordination.</small>
           <span class="social-tags" aria-hidden="true"><i>ALERTS</i><i>EVENTS</i><i>THE CREW</i></span>
+          <span class="discord-preview" data-discord-preview aria-live="polite">
+            <span><b data-discord-online>Live</b> online</span>
+            <span><b data-discord-members>community</b> members</span>
+          </span>
           <span class="social-action">Join the circus <i aria-hidden="true">↗</i></span>
           <img src="assets/emotes/bonk.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="" aria-hidden="true">
         </a>
@@ -291,6 +297,23 @@
       </div>
     </section>
 
+    <section class="section collab-section" id="collab" aria-labelledby="collab-title">
+      <div class="collab-intro reveal">
+        <p class="kicker"><span>///</span> Put Smabblez in the brief</p>
+        <h2 id="collab-title">WORK WITH<br><em>THE CIRCUS.</em></h2>
+        <p>Interactive livestreams, short-form campaigns, community activations, and character-led creative built around an audience that participates.</p>
+        <div class="collab-actions">
+          <a class="button button-primary" href="media-kit.html" data-track="media-kit">Open media kit <span aria-hidden="true">→</span></a>
+          <a class="button button-ghost" href="https://discord.gg/5edKN6cw2K" data-social="discord" data-track="collab-discord" target="_blank" rel="noreferrer">Start a conversation <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <div class="collab-grid reveal">
+        <article><span>01 / LIVE</span><strong>Interactive integrations</strong><p>Stream-native ideas that let chat trigger, choose, derail, and remember the moment.</p></article>
+        <article><span>02 / SHORT</span><strong>Social campaigns</strong><p>Character-led TikTok concepts with a fast hook and a natural place in the Smabblez world.</p></article>
+        <article><span>03 / CREW</span><strong>Community activations</strong><p>Discord events, themed community nights, launches, and audience challenges.</p></article>
+      </div>
+    </section>
+
     <section class="finale" aria-labelledby="finale-title">
       <div class="finale-stars" aria-hidden="true">✦ ★ ✦</div>
       <p class="kicker"><span>///</span> The tent is open</p>
@@ -319,8 +342,8 @@
     <a href="https://discord.gg/5edKN6cw2K" data-social="discord" target="_blank" rel="noreferrer">Discord ↗</a>
   </aside>
 
-  <script src="site.config.js?v=20260713k"></script>
-  <script src="script.js?v=20260713k"></script>
+  <script src="site.config.js?v=20260713m"></script>
+  <script src="script.js?v=20260713m"></script>
   <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
 </body>
 </html>
