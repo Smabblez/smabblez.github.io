@@ -1,0 +1,247 @@
+document.documentElement.classList.add('js');
+
+const body = document.body;
+const header = document.querySelector('[data-header]');
+const menuButton = document.querySelector('.menu-toggle');
+const menuLabel = document.querySelector('[data-menu-label]');
+const nav = document.querySelector('.site-nav');
+const navLinks = [...document.querySelectorAll('.site-nav a')];
+const sections = [...document.querySelectorAll('main section[id]')];
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const siteConfig = window.SMABBLEZ_SITE || {};
+const root = document.documentElement;
+
+const applySiteConfig = () => {
+  Object.entries(siteConfig.socials || {}).forEach(([name, url]) => {
+    if (!url) return;
+    document.querySelectorAll(`[data-social="${name}"]`).forEach((link) => {
+      link.href = url;
+    });
+  });
+};
+
+applySiteConfig();
+
+const syncHeader = () => header.classList.toggle('scrolled', window.scrollY > 18);
+const followDock = document.querySelector('[data-follow-dock]');
+const scrollProgress = document.querySelector('[data-scroll-progress]');
+const syncFollowDock = () => {
+  followDock.classList.toggle('show', window.scrollY > window.innerHeight * 0.72);
+};
+const syncScroll = () => {
+  syncHeader();
+  syncFollowDock();
+  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = scrollable > 0 ? Math.min(window.scrollY / scrollable, 1) : 0;
+  root.style.setProperty('--scroll-progress', progress.toFixed(4));
+};
+let scrollFrame = 0;
+const requestScrollSync = () => {
+  if (scrollFrame) return;
+  scrollFrame = window.requestAnimationFrame(() => {
+    syncScroll();
+    scrollFrame = 0;
+  });
+};
+syncScroll();
+window.addEventListener('scroll', requestScrollSync, { passive: true });
+window.addEventListener('resize', requestScrollSync, { passive: true });
+
+const setMenuOpen = (open, { returnFocus = false } = {}) => {
+  menuButton.setAttribute('aria-expanded', String(open));
+  menuButton.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  menuLabel.textContent = open ? 'Close menu' : 'Open menu';
+  nav.classList.toggle('open', open);
+  if (returnFocus) menuButton.focus();
+};
+
+menuButton.addEventListener('click', () => {
+  setMenuOpen(menuButton.getAttribute('aria-expanded') !== 'true');
+});
+
+navLinks.forEach((link) => {
+  link.addEventListener('click', () => {
+    setMenuOpen(false);
+  });
+});
+
+document.addEventListener('pointerdown', (event) => {
+  if (menuButton.getAttribute('aria-expanded') !== 'true') return;
+  if (nav.contains(event.target) || menuButton.contains(event.target)) return;
+  setMenuOpen(false);
+});
+
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 1100 && menuButton.getAttribute('aria-expanded') === 'true') {
+    setMenuOpen(false);
+  }
+}, { passive: true });
+
+if ('IntersectionObserver' in window) {
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('in-view');
+      revealObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px' });
+  document.querySelectorAll('.reveal').forEach((item) => revealObserver.observe(item));
+
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      navLinks.forEach((link) => {
+        const matches = link.getAttribute('href') === `#${entry.target.id}`;
+        link.classList.toggle('active', matches);
+        if (matches) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+      });
+    });
+  }, { rootMargin: '-35% 0px -55%', threshold: 0 });
+  sections.forEach((section) => sectionObserver.observe(section));
+} else {
+  document.querySelectorAll('.reveal').forEach((item) => item.classList.add('in-view'));
+}
+
+const chaosButton = document.querySelector('[data-chaos-toggle]');
+const chaosLabel = document.querySelector('[data-chaos-label]');
+const chaosFlash = document.querySelector('.chaos-flash');
+const modeStatus = document.querySelector('[data-mode-status]');
+const chaosCharacter = document.querySelector('[data-chaos-character]');
+const sparkColors = ['#ff2638', '#70ef29', '#8f46e8', '#ffd42f', '#f6f1e7'];
+const chaosWords = ['HONK!', 'BONK!', 'CHAOS!', 'LIVE!', '???', 'BIG TOP'];
+
+const makeSparks = (x, y, amount = 24) => {
+  if (reduceMotion) return;
+  for (let index = 0; index < amount; index += 1) {
+    const spark = document.createElement('i');
+    const angle = (Math.PI * 2 * index) / amount;
+    const distance = 60 + Math.random() * 140;
+    spark.className = 'spark';
+    spark.style.left = `${x}px`;
+    spark.style.top = `${y}px`;
+    spark.style.setProperty('--spark-x', `${Math.cos(angle) * distance}px`);
+    spark.style.setProperty('--spark-y', `${Math.sin(angle) * distance}px`);
+    spark.style.setProperty('--spark-color', sparkColors[index % sparkColors.length]);
+    document.body.appendChild(spark);
+    spark.addEventListener('animationend', () => spark.remove());
+  }
+};
+
+const dropChaosSticker = (x, y, word = chaosWords[Math.floor(Math.random() * chaosWords.length)]) => {
+  if (reduceMotion) return;
+  const sticker = document.createElement('span');
+  sticker.className = 'chaos-sticker';
+  sticker.textContent = word;
+  sticker.style.left = `${x}px`;
+  sticker.style.top = `${y}px`;
+  sticker.style.setProperty('--sticker-color', sparkColors[Math.floor(Math.random() * (sparkColors.length - 1))]);
+  sticker.style.setProperty('--sticker-rotate', `${-14 + Math.random() * 28}deg`);
+  document.body.appendChild(sticker);
+  sticker.addEventListener('animationend', () => sticker.remove());
+};
+
+const broadcastChaos = () => {
+  chaosFlash.classList.remove('play');
+  void chaosFlash.offsetWidth;
+  chaosFlash.classList.add('play');
+  window.setTimeout(() => chaosFlash.classList.remove('play'), 900);
+  [[.18,.22],[.82,.2],[.22,.76],[.78,.72],[.5,.48]].forEach(([x, y], index) => {
+    window.setTimeout(() => {
+      makeSparks(window.innerWidth * x, window.innerHeight * y, 12);
+      dropChaosSticker(window.innerWidth * x, window.innerHeight * y, chaosWords[index]);
+    }, index * 70);
+  });
+};
+
+const setChaos = (active) => {
+  body.classList.toggle('chaos-on', active);
+  chaosButton.setAttribute('aria-pressed', String(active));
+  chaosLabel.textContent = active ? 'Calm it down' : 'Chaos mode';
+  modeStatus.textContent = active ? 'Chaos mode enabled.' : 'Chaos mode disabled.';
+  chaosCharacter.src = active ? chaosCharacter.dataset.chaosSrc : chaosCharacter.dataset.normalSrc;
+  if (active) broadcastChaos();
+};
+
+chaosButton.addEventListener('click', () => {
+  const active = !body.classList.contains('chaos-on');
+  setChaos(active);
+  const rect = chaosButton.getBoundingClientRect();
+  makeSparks(rect.left + rect.width / 2, rect.top + rect.height / 2);
+});
+
+window.addEventListener('keydown', (event) => {
+  if (event.key !== 'Escape') return;
+  if (menuButton.getAttribute('aria-expanded') === 'true') setMenuOpen(false, { returnFocus: true });
+  if (body.classList.contains('chaos-on')) setChaos(false);
+});
+
+document.addEventListener('pointerdown', (event) => {
+  if (!body.classList.contains('chaos-on') || event.target.closest('a,button')) return;
+  dropChaosSticker(event.clientX, event.clientY);
+});
+
+if (!reduceMotion && window.matchMedia('(pointer:fine)').matches) {
+  const cursorNose = document.querySelector('.cursor-nose');
+  const parallaxStage = document.querySelector('[data-parallax-stage]');
+  const parallaxLayers = [...document.querySelectorAll('[data-parallax-layer]')];
+  const tiltCards = [...document.querySelectorAll('[data-tilt]')];
+  const magneticItems = [...document.querySelectorAll('.button,.header-cta')];
+
+  window.addEventListener('pointermove', (event) => {
+    root.style.setProperty('--cursor-x', `${event.clientX}px`);
+    root.style.setProperty('--cursor-y', `${event.clientY}px`);
+    cursorNose.classList.add('visible');
+  }, { passive: true });
+
+  document.addEventListener('pointerover', (event) => {
+    cursorNose.classList.toggle('hot', Boolean(event.target.closest('a,button')));
+  }, { passive: true });
+  document.addEventListener('pointerout', (event) => {
+    if (!event.relatedTarget) cursorNose.classList.remove('visible');
+    if (!event.relatedTarget?.closest?.('a,button')) cursorNose.classList.remove('hot');
+  }, { passive: true });
+
+  parallaxStage.addEventListener('pointermove', (event) => {
+    const rect = parallaxStage.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - .5;
+    const y = (event.clientY - rect.top) / rect.height - .5;
+    parallaxLayers.forEach((layer) => {
+      const depth = Number(layer.dataset.depth || .5);
+      layer.style.setProperty('--parallax-x', `${x * depth * 34}px`);
+      layer.style.setProperty('--parallax-y', `${y * depth * 28}px`);
+    });
+  }, { passive: true });
+  parallaxStage.addEventListener('pointerleave', () => {
+    parallaxLayers.forEach((layer) => {
+      layer.style.setProperty('--parallax-x', '0px');
+      layer.style.setProperty('--parallax-y', '0px');
+    });
+  });
+
+  tiltCards.forEach((card) => {
+    card.addEventListener('pointermove', (event) => {
+      const rect = card.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width;
+      const y = (event.clientY - rect.top) / rect.height;
+      card.style.setProperty('--tilt-x', `${(0.5 - y) * 7}deg`);
+      card.style.setProperty('--tilt-y', `${(x - 0.5) * 7}deg`);
+      card.style.setProperty('--glare-x', `${x * 100}%`);
+      card.style.setProperty('--glare-y', `${y * 100}%`);
+      card.style.setProperty('--glare-opacity', '.68');
+    }, { passive: true });
+    card.addEventListener('pointerleave', () => {
+      card.style.setProperty('--tilt-x', '0deg');
+      card.style.setProperty('--tilt-y', '0deg');
+      card.style.setProperty('--glare-opacity', '0');
+    });
+  });
+
+  magneticItems.forEach((item) => {
+    item.addEventListener('pointermove', (event) => {
+      const rect = item.getBoundingClientRect();
+      item.style.translate = `${(event.clientX - rect.left - rect.width / 2) * .12}px ${(event.clientY - rect.top - rect.height / 2) * .18}px`;
+    }, { passive: true });
+    item.addEventListener('pointerleave', () => { item.style.translate = ''; });
+  });
+}
