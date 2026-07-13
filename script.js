@@ -301,13 +301,12 @@ window.addEventListener('keydown', (event) => {
   }
 });
 
-const chaosButton = document.querySelector('[data-chaos-toggle]');
-const chaosLabel = document.querySelector('[data-chaos-label]');
 const chaosFlash = document.querySelector('.chaos-flash');
 const modeStatus = document.querySelector('[data-mode-status]');
 const chaosCharacter = document.querySelector('[data-chaos-character]');
 const heroCharacter = document.querySelector('.hero-character');
 const honkButton = document.querySelector('[data-honk]');
+const honkLabel = document.querySelector('[data-honk-label]');
 const sparkColors = ['#ff2638', '#ffd42f', '#f6f1e7'];
 const chaosWords = ['HONK!', 'BONK!', 'CHAOS!', 'LIVE!', '???', 'BIG TOP'];
 
@@ -370,24 +369,20 @@ const honkNose = () => {
 
 honkButton?.addEventListener('click', (event) => {
   event.stopPropagation();
+  const active = !body.classList.contains('chaos-on');
   honkNose();
+  setChaos(active);
 });
 
 const setChaos = (active) => {
   body.classList.toggle('chaos-on', active);
-  chaosButton.setAttribute('aria-pressed', String(active));
-  chaosLabel.textContent = active ? 'Calm it down' : 'Chaos mode';
+  honkButton?.setAttribute('aria-pressed', String(active));
+  honkButton?.setAttribute('aria-label', active ? "Honk Smabblez's nose and turn off Chaos Mode" : "Honk Smabblez's nose and turn on Chaos Mode");
+  if (honkLabel) honkLabel.textContent = active ? 'Honk to calm' : 'Honk for chaos';
   modeStatus.textContent = active ? 'Chaos mode enabled. Click the page to drop chaos.' : 'Chaos mode disabled.';
   chaosCharacter.src = active ? chaosCharacter.dataset.chaosSrc : chaosCharacter.dataset.normalSrc;
   if (active) broadcastChaos();
 };
-
-chaosButton.addEventListener('click', () => {
-  const active = !body.classList.contains('chaos-on');
-  setChaos(active);
-  const rect = chaosButton.getBoundingClientRect();
-  makeSparks(rect.left + rect.width / 2, rect.top + rect.height / 2);
-});
 
 window.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && body.classList.contains('chaos-on')) setChaos(false);

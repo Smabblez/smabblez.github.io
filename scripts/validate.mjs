@@ -31,7 +31,7 @@ check(index.includes('id="follow"'), 'Simplified follow section is missing.');
 check((index.match(/<section\b/g) || []).length === 4, 'Homepage must stay focused at exactly four sections.');
 check(!/id="latest"|id="content"|class="finale"|data-follow-dock/i.test(index), 'Redundant homepage section was reintroduced.');
 check(index.includes('class="cursor-nose"'), 'Nose cursor is missing.');
-check(index.includes('data-chaos-toggle'), 'Chaos Mode control is missing.');
+check(index.includes('data-honk') && !index.includes('data-chaos-toggle'), 'Chaos Mode must be merged into the hero nose control.');
 check(index.includes('data-sound-restore'), 'Persistent soundtrack restore control is missing.');
 check(index.includes('data-discord-preview'), 'Live Discord community preview is missing.');
 check(index.includes('href="media-kit.html"'), 'Creator media-kit link is missing.');
