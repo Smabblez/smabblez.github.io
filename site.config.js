@@ -4,8 +4,8 @@
   without touching the page layout.
 */
 window.SMABBLEZ_SITE = {
-  siteUrl: "https://smabblez3223.github.io/smabblez/",
-  shareImage: "https://smabblez3223.github.io/smabblez/assets/emotes/hype.png",
+  siteUrl: "https://smabblez.github.io/",
+  shareImage: "https://smabblez.github.io/assets/emotes/hype.png",
   brand: {
     displayName: "Smabblez",
     twitchChannel: "smabblez"

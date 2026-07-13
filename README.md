@@ -23,9 +23,9 @@ No package installation or build step is required.
 
 Production deploys automatically from the `main` branch through `.github/workflows/deploy.yml`.
 
-Live site: `https://smabblez3223.github.io/smabblez/`
+Live site: `https://smabblez.github.io/`
 
-All styles, scripts, images, and section links use relative paths, so the site remains compatible with the `/smabblez/` repository subpath.
+All styles, scripts, images, and section links use relative paths, and the production site is published from the `smabblez.github.io` user-site repository root.
 
 Do not add a backend, server-only rendering, environment secrets, or root-relative asset paths. `scripts/serve.mjs` is only a local preview helper and is not needed in production.
 
