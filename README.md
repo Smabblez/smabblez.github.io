@@ -44,6 +44,7 @@ For Hermes/E4B from this directory, begin with `AGENTS.md`, then `site.config.js
 - TikTok: `https://www.tiktok.com/@Smabblez`
 - Discord: `https://discord.gg/5edKN6cw2K`
 - Spotify: `https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg`
+- YouTube: `https://www.youtube.com/@Smabblez`
 
 ## Conversion analytics
 

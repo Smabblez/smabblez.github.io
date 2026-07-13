@@ -9,6 +9,8 @@ const navLinks = [...document.querySelectorAll('.site-nav a')];
 const sections = [...document.querySelectorAll('main section[id]')];
 const siteConfig = window.SMABBLEZ_SITE || {};
 const root = document.documentElement;
+const body = document.body;
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let currentSectionName = 'Home';
 
 Object.entries(siteConfig.socials || {}).forEach(([name, url]) => {
@@ -289,6 +291,98 @@ window.addEventListener('keydown', (event) => {
     setMenuOpen(false, { returnFocus: true });
   }
 });
+
+const chaosButton = document.querySelector('[data-chaos-toggle]');
+const chaosLabel = document.querySelector('[data-chaos-label]');
+const chaosFlash = document.querySelector('.chaos-flash');
+const modeStatus = document.querySelector('[data-mode-status]');
+const chaosCharacter = document.querySelector('[data-chaos-character]');
+const sparkColors = ['#ff2638', '#70ef29', '#8f46e8', '#ffd42f', '#f6f1e7'];
+const chaosWords = ['HONK!', 'BONK!', 'CHAOS!', 'LIVE!', '???', 'BIG TOP'];
+
+const makeSparks = (x, y, amount = 24) => {
+  if (reduceMotion) return;
+  for (let index = 0; index < amount; index += 1) {
+    const spark = document.createElement('i');
+    const angle = (Math.PI * 2 * index) / amount;
+    const distance = 60 + Math.random() * 140;
+    spark.className = 'spark';
+    spark.style.left = `${x}px`;
+    spark.style.top = `${y}px`;
+    spark.style.setProperty('--spark-x', `${Math.cos(angle) * distance}px`);
+    spark.style.setProperty('--spark-y', `${Math.sin(angle) * distance}px`);
+    spark.style.setProperty('--spark-color', sparkColors[index % sparkColors.length]);
+    body.appendChild(spark);
+    spark.addEventListener('animationend', () => spark.remove());
+  }
+};
+
+const dropChaosSticker = (x, y, word = chaosWords[Math.floor(Math.random() * chaosWords.length)]) => {
+  if (reduceMotion) return;
+  const sticker = document.createElement('span');
+  sticker.className = 'chaos-sticker';
+  sticker.textContent = word;
+  sticker.style.left = `${x}px`;
+  sticker.style.top = `${y}px`;
+  sticker.style.setProperty('--sticker-color', sparkColors[Math.floor(Math.random() * (sparkColors.length - 1))]);
+  sticker.style.setProperty('--sticker-rotate', `${-14 + Math.random() * 28}deg`);
+  body.appendChild(sticker);
+  sticker.addEventListener('animationend', () => sticker.remove());
+};
+
+const broadcastChaos = () => {
+  chaosFlash.classList.remove('play');
+  void chaosFlash.offsetWidth;
+  chaosFlash.classList.add('play');
+  window.setTimeout(() => chaosFlash.classList.remove('play'), 900);
+  [[.18,.22],[.82,.2],[.22,.76],[.78,.72],[.5,.48]].forEach(([x, y], index) => {
+    window.setTimeout(() => {
+      makeSparks(window.innerWidth * x, window.innerHeight * y, 12);
+      dropChaosSticker(window.innerWidth * x, window.innerHeight * y, chaosWords[index]);
+    }, index * 70);
+  });
+};
+
+const setChaos = (active) => {
+  body.classList.toggle('chaos-on', active);
+  chaosButton.setAttribute('aria-pressed', String(active));
+  chaosLabel.textContent = active ? 'Calm it down' : 'Chaos mode';
+  modeStatus.textContent = active ? 'Chaos mode enabled. Click the page to drop chaos.' : 'Chaos mode disabled.';
+  chaosCharacter.src = active ? chaosCharacter.dataset.chaosSrc : chaosCharacter.dataset.normalSrc;
+  if (active) broadcastChaos();
+};
+
+chaosButton.addEventListener('click', () => {
+  const active = !body.classList.contains('chaos-on');
+  setChaos(active);
+  const rect = chaosButton.getBoundingClientRect();
+  makeSparks(rect.left + rect.width / 2, rect.top + rect.height / 2);
+});
+
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && body.classList.contains('chaos-on')) setChaos(false);
+});
+
+document.addEventListener('pointerdown', (event) => {
+  if (!body.classList.contains('chaos-on') || event.target.closest('a,button')) return;
+  dropChaosSticker(event.clientX, event.clientY);
+});
+
+if (!reduceMotion && window.matchMedia('(pointer:fine)').matches) {
+  const cursorNose = document.querySelector('.cursor-nose');
+  window.addEventListener('pointermove', (event) => {
+    root.style.setProperty('--cursor-x', `${event.clientX}px`);
+    root.style.setProperty('--cursor-y', `${event.clientY}px`);
+    cursorNose.classList.add('visible');
+  }, { passive: true });
+  document.addEventListener('pointerover', (event) => {
+    cursorNose.classList.toggle('hot', Boolean(event.target.closest('a,button')));
+  }, { passive: true });
+  document.addEventListener('pointerout', (event) => {
+    if (!event.relatedTarget) cursorNose.classList.remove('visible');
+    if (!event.relatedTarget?.closest?.('a,button')) cursorNose.classList.remove('hot');
+  }, { passive: true });
+}
 
 if ('IntersectionObserver' in window) {
   const revealObserver = new IntersectionObserver((entries) => {

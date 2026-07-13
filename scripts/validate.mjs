@@ -18,6 +18,7 @@ check(config?.socials?.twitch === 'https://www.twitch.tv/smabblez', 'Twitch must
 check(config?.socials?.tiktok === 'https://www.tiktok.com/@Smabblez', 'TikTok must use @Smabblez.');
 check(config?.socials?.discord === 'https://discord.gg/5edKN6cw2K', 'Discord invite is incorrect.');
 check(config?.socials?.spotify === 'https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg', 'Spotify artist URL is incorrect.');
+check(config?.socials?.youtube === 'https://www.youtube.com/@Smabblez', 'YouTube channel URL is incorrect.');
 check(config?.music?.spotifyTracks?.length === 5, 'Spotify track list must include the five artist-page tracks.');
 check(config?.content?.twitchVideos?.includes('/smabblez/videos'), 'Twitch recent-broadcast URL is missing.');
 check(config?.content?.twitchSchedule === 'https://www.twitch.tv/smabblez/schedule', 'Twitch schedule URL is incorrect.');
@@ -28,7 +29,9 @@ check(!/tiktok\.com\/@smabbles\b/i.test(index + configSource), 'Legacy TikTok ha
 check(index.includes('data-twitch-player'), 'Official Twitch live player is missing.');
 check(index.includes('id="follow"'), 'Simplified follow section is missing.');
 check((index.match(/<section\b/g) || []).length === 4, 'Homepage must stay focused at exactly four sections.');
-check(!/id="latest"|id="content"|class="finale"|data-follow-dock|data-chaos-toggle/i.test(index), 'Redundant homepage section or effect was reintroduced.');
+check(!/id="latest"|id="content"|class="finale"|data-follow-dock/i.test(index), 'Redundant homepage section was reintroduced.');
+check(index.includes('class="cursor-nose"'), 'Nose cursor is missing.');
+check(index.includes('data-chaos-toggle'), 'Chaos Mode control is missing.');
 check(index.includes('data-sound-restore'), 'Persistent soundtrack restore control is missing.');
 check(index.includes('data-discord-preview'), 'Live Discord community preview is missing.');
 check(index.includes('href="media-kit.html"'), 'Creator media-kit link is missing.');

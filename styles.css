@@ -335,10 +335,12 @@ h1,h2,h3 { margin: 0; font-family: var(--display); font-weight: 900; text-transf
 .simple-home .social-discord { grid-column: auto; min-height: 390px; }
 .simple-home .social-discord:hover img { opacity: .42; }
 .simple-home .discord-preview { position: relative; z-index: 2; }
-.music-strip { margin-top: 14px; min-height: 120px; padding: 24px 30px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 22px; border: 1px solid rgba(30,215,96,.45); border-radius: 22px; background: linear-gradient(110deg,#102a19,#168544); transition: border-color .2s ease,transform .2s ease; }
+.support-links { margin-top: 14px; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+.music-strip { min-height: 120px; padding: 24px 30px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 22px; border: 1px solid rgba(30,215,96,.45); border-radius: 22px; background: linear-gradient(110deg,#102a19,#168544); transition: border-color .2s ease,transform .2s ease; }
 .music-strip:hover { border-color: #1ed760; transform: translateY(-3px); }
 .music-note { width: 64px; height: 64px; display: grid; place-items: center; border-radius: 50%; color: #07170d; background: #1ed760; font-size: 1.8rem; font-weight: 900; }
 .music-strip > span:nth-child(2) { display: grid; gap: 5px; }.music-strip small { color: rgba(255,255,255,.66); font-size: .58rem; font-weight: 900; letter-spacing: .14em; }.music-strip strong { font: clamp(1.7rem,3vw,3rem)/1 var(--display); letter-spacing: .04em; text-transform: uppercase; }.music-strip > i { font-size: 1.7rem; font-style: normal; }
+.youtube-strip { border-color: rgba(255,38,56,.5); background: linear-gradient(110deg,#2d0d12,#9f1521); }.youtube-strip:hover { border-color: var(--red); }.youtube-strip .music-note { color: white; background: var(--red); }
 .spotify-controller-host { position: fixed; z-index: -10; left: 0; bottom: 0; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; }
 .spotify-controller-host iframe { width: 1px!important; height: 1px!important; border: 0; }
 .simple-about { display: grid; grid-template-columns: .82fr 1.18fr; gap: clamp(32px,6vw,90px); align-items: center; }
@@ -362,6 +364,6 @@ h1,h2,h3 { margin: 0; font-family: var(--display); font-weight: 900; text-transf
   .simple-home .social-grid { grid-template-columns: minmax(0,1fr); }
   .simple-home .social-card,.simple-home .social-discord { grid-column: auto; min-height: 350px; }
   .simple-home .social-card img,.simple-home .social-discord img { right: -18%; width: 72%; height: 100%; }
-  .music-strip { min-height: 104px; padding: 18px; gap: 14px; }.music-note { width: 52px; height: 52px; }.music-strip strong { font-size: 1.45rem; }
+  .support-links { grid-template-columns:1fr }.music-strip { min-height: 104px; padding: 18px; gap: 14px; }.music-note { width: 52px; height: 52px; }.music-strip strong { font-size: 1.45rem; }
   .simple-about { grid-template-columns: minmax(0,1fr); }.simple-about-copy { order:-1 }.simple-about-art { min-height:300px;padding:18px 18px 0 }.simple-about-art img { width:min(86%,310px);max-height:290px }.simple-about-copy h2 { font-size: clamp(3.8rem,16vw,6rem); }.about-actions { display: grid; }.about-actions .button { width: 100%; }.about-actions .text-link { padding: 12px 0; }
 }

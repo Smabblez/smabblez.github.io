@@ -14,7 +14,8 @@ window.SMABBLEZ_SITE = {
     twitch: "https://www.twitch.tv/smabblez",
     tiktok: "https://www.tiktok.com/@Smabblez",
     discord: "https://discord.gg/5edKN6cw2K",
-    spotify: "https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg"
+    spotify: "https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg",
+    youtube: "https://www.youtube.com/@Smabblez"
   },
   content: {
     twitchVideos: "https://www.twitch.tv/smabblez/videos?filter=archives&sort=time",

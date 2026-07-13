@@ -21,6 +21,7 @@ The live-show differentiator is audience control: Smabblez uses jumpscares, rede
 - TikTok: `https://www.tiktok.com/@Smabblez`
 - Discord: `https://discord.gg/5edKN6cw2K`
 - Spotify artist page: `https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg`
+- YouTube: `https://www.youtube.com/@Smabblez`
 - Some old workspace files contain legacy spellings and handles. Never copy them into this website.
 
 `site.config.js` is the source of truth for external URLs, recent-content destinations, and the Spotify track list. Keep fallback URLs in `index.html` synchronized for no-JavaScript visitors.
@@ -50,7 +51,7 @@ The live-show differentiator is audience control: Smabblez uses jumpscares, rede
 - `site.config.js` — edit first; public social destinations.
 - `index.html` — semantic content and conversion funnel.
 - `styles.css` — all responsive styling; no CSS framework.
-- `script.js` — navigation, reveals, compact Spotify controls, live Discord counts, and conversion events.
+- `script.js` — navigation, reveals, compact Spotify controls, live Discord counts, conversion events, nose cursor, and Chaos Mode.
 - `assets/emotes/` — six original transparent PNGs plus optimized WebP versions used on the page.
 - `assets/animated/` — two small decorative GIFs currently used.
 - `scripts/validate.mjs` — deterministic project checks.
