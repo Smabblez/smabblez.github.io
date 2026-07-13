@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b080d">
-  <meta name="description" content="The official home of Smabblez — interactive live streams, chat-triggered jumpscares, GTA RP, community chaos, and every place to follow the circus.">
+  <meta name="description" content="The official home of Smabblez — interactive Twitch streams, GTA RP, short-form chaos, music, and The Clown Tent community.">
   <meta name="robots" content="index, follow">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Smabblez">
@@ -18,9 +18,9 @@
   <meta name="twitter:description" content="Interactive live chaos, GTA RP, chat-triggered jumpscares, and a community that gets a hand on the wheel.">
   <title>Smabblez — Welcome to the Big Top</title>
   <link rel="canonical" href="https://smabblez.github.io/">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b080d'/%3E%3Ccircle cx='32' cy='32' r='15' fill='%23ff2638'/%3E%3Ccircle cx='27' cy='26' r='4' fill='%23ff9ca5'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b080d'/%3E%3Ccircle cx='32' cy='32' r='15' fill='%23ff2638'/%3E%3C/svg%3E">
   <link rel="preload" as="image" href="assets/emotes/hype.webp" type="image/webp" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=20260713m">
+  <link rel="stylesheet" href="styles.css?v=20260713n">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -30,21 +30,15 @@
       "description": "Streamer, performer, GTA RP creator, and community builder known for interactive live shows.",
       "sameAs": [
         "https://www.twitch.tv/smabblez",
-        "https://www.tiktok.com/@Smabblez"
+        "https://www.tiktok.com/@Smabblez",
+        "https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg"
       ]
     }
   </script>
 </head>
-<body>
+<body class="simple-home">
   <a class="skip-link" href="#main">Skip to the show</a>
-  <div class="cursor-nose" aria-hidden="true"></div>
-  <div class="scroll-progress" aria-hidden="true"><span data-scroll-progress></span></div>
-  <div class="chaos-flash" aria-hidden="true">
-    <span>SIGNAL CORRUPTED</span>
-    <strong>CHAOS MODE</strong>
-    <small>HONK RESPONSIBLY</small>
-  </div>
-  <p class="mode-status sr-only" role="status" aria-live="polite" data-mode-status></p>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
 
   <aside class="sound-prompt" data-sound-prompt aria-label="Spotify soundtrack controls">
     <button class="sound-restore" type="button" data-sound-restore aria-label="Expand soundtrack controls" title="Expand soundtrack controls"><span aria-hidden="true">♪</span><strong>Music</strong></button>
@@ -62,75 +56,45 @@
   </aside>
 
   <header class="site-header" data-header>
-    <a class="brand" href="#top" aria-label="Smabblez home">
-      <span class="brand-nose" aria-hidden="true"></span>
-      <span>SMABBLEZ</span>
-    </a>
-
+    <a class="brand" href="#top" aria-label="Smabblez home"><span class="brand-nose" aria-hidden="true"></span><span>SMABBLEZ</span></a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open sections menu">
       <span class="menu-current" data-menu-current>Home</span>
       <span class="menu-icon" aria-hidden="true"><i></i><i></i><i></i></span>
       <span class="sr-only" data-menu-label>Open sections menu</span>
     </button>
-
     <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
       <p class="nav-title">Jump to section</p>
       <a class="active" href="#top" data-section-name="Home" aria-current="page"><span aria-hidden="true">00</span>Home</a>
       <a href="#live" data-section-name="Live"><span aria-hidden="true">01</span>Live</a>
-      <a href="#latest" data-section-name="Latest"><span aria-hidden="true">02</span>Latest</a>
-      <a href="#socials" data-section-name="Socials"><span aria-hidden="true">03</span>Socials</a>
-      <a href="#content" data-section-name="The show"><span aria-hidden="true">04</span>The show</a>
-      <a href="#about" data-section-name="About"><span aria-hidden="true">05</span>About</a>
-      <a href="#collab" data-section-name="Work"><span aria-hidden="true">06</span>Work</a>
+      <a href="#follow" data-section-name="Follow"><span aria-hidden="true">02</span>Follow</a>
+      <a href="#about" data-section-name="About"><span aria-hidden="true">03</span>About</a>
     </nav>
-
-    <a class="header-cta" href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">
-      <span class="live-dot" aria-hidden="true"></span>
-      Watch on Twitch
-    </a>
+    <a class="header-cta" href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer"><span class="live-dot" aria-hidden="true"></span>Watch on Twitch</a>
   </header>
 
   <main id="main">
     <section class="hero" id="top" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <p class="kicker"><span>///</span> Streamer · performer · clown of chaos</p>
+        <p class="kicker"><span>///</span> Streamer · performer · GTA RP</p>
         <h1 id="hero-title"><span>WELCOME TO</span> THE BIG <em>TOP.</em></h1>
-        <p class="hero-lede">Interactive live chaos, GTA RP, chat-triggered jumpscares, community nights, and a suspicious amount of honking. This is the one place to find Smabblez everywhere.</p>
+        <p class="hero-lede">Live shows where chat triggers the chaos, GTA RP becomes a story, and the audience gets a hand on the wheel.</p>
         <div class="hero-actions">
-          <a class="button button-primary" href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">Watch live <span aria-hidden="true">↗</span></a>
-          <a class="button button-ghost" href="#socials">Follow everywhere <span aria-hidden="true">↓</span></a>
-        </div>
-        <div class="signal-card">
-          <div class="signal-icon" aria-hidden="true"><i></i><i></i><i></i></div>
-          <div><span>Next transmission</span><strong>Follow on Twitch for the next live alert</strong></div>
+          <a class="button button-primary" href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">Watch on Twitch <span aria-hidden="true">↗</span></a>
+          <a class="button button-ghost" href="#follow">Find Smabblez <span aria-hidden="true">↓</span></a>
         </div>
       </div>
-
-      <div class="hero-stage" data-parallax-stage>
-        <div class="spotlight" data-parallax-layer data-depth="0.25" aria-hidden="true"></div>
-        <div class="burst burst-one" data-parallax-layer data-depth="0.7" aria-hidden="true">✦</div>
-        <div class="burst burst-two" data-parallax-layer data-depth="0.5" aria-hidden="true">★</div>
-        <p class="stage-note stage-note-one" data-parallax-layer data-depth="0.8" aria-hidden="true">CLOWN<br>ENERGY</p>
-        <p class="stage-note stage-note-two" data-parallax-layer data-depth="0.6" aria-hidden="true">LIVE<br>AND<br>UNSTABLE</p>
-        <div class="hero-character" data-parallax-layer data-depth="0.35" aria-hidden="true"><img class="hero-clown" src="assets/emotes/hype.webp" data-chaos-character data-normal-src="assets/emotes/hype.webp" data-chaos-src="assets/emotes/chaos.webp" width="1024" height="1024" fetchpriority="high" decoding="async" alt=""></div>
-        <button class="chaos-button" type="button" data-chaos-toggle aria-pressed="false">
-          <span class="chaos-icon" aria-hidden="true">✦</span><span data-chaos-label>Chaos mode</span>
-        </button>
+      <div class="hero-stage" aria-hidden="true">
+        <div class="spotlight"></div>
+        <p class="stage-note stage-note-one">LIVE<br>CHAOS</p>
+        <div class="hero-character"><img class="hero-clown" src="assets/emotes/hype.webp" width="1024" height="1024" fetchpriority="high" decoding="async" alt=""></div>
       </div>
     </section>
 
-    <div class="ticker" aria-label="Smabblez content highlights">
-      <div class="ticker-track">
-        <span>LIVE STREAMS</span><b>✦</b><span>GTA RP</span><b>✦</b><span>SHORT-FORM CHAOS</span><b>✦</b><span>COMMUNITY NIGHTS</span><b>✦</b><span>LIVE STREAMS</span><b>✦</b><span>GTA RP</span><b>✦</b><span>SHORT-FORM CHAOS</span><b>✦</b><span>COMMUNITY NIGHTS</span><b>✦</b>
-      </div>
-    </div>
-
     <section class="section live-section" id="live" aria-labelledby="live-title">
       <div class="live-copy reveal">
-        <p class="kicker"><span>///</span> Live signal</p>
-        <span class="live-badge"><i aria-hidden="true"></i> TWITCH CHANNEL FEED</span>
-        <h2 id="live-title">SEE THE CHAOS<br><em>AS IT HAPPENS.</em></h2>
-        <p>The official Smabblez channel player shows the live broadcast whenever the tent opens. If the stream is offline, catch a recent broadcast or check the schedule.</p>
+        <p class="kicker"><span>///</span> The main event</p>
+        <h2 id="live-title">WATCH THE SHOW.<br><em>JOIN THE CHAT.</em></h2>
+        <p>Jumpscares, redeems, alerts, and audience choices make every stream unpredictable. The player shows the live channel or the latest broadcast.</p>
         <div class="live-actions">
           <a class="button button-primary" href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">Open Twitch <span aria-hidden="true">↗</span></a>
           <a class="text-link" href="https://www.twitch.tv/smabblez/schedule" data-content="twitchSchedule" target="_blank" rel="noreferrer">View schedule ↗</a>
@@ -142,208 +106,62 @@
       </div>
     </section>
 
-    <section class="section latest-section" id="latest" aria-labelledby="latest-title">
+    <section class="section simple-socials" id="follow" aria-labelledby="follow-title">
       <div class="section-heading reveal">
-        <p class="kicker"><span>///</span> Fresh from the tent</p>
-        <div>
-          <h2 id="latest-title">LATEST <em>DAMAGE.</em></h2>
-          <p>One stop for the newest broadcasts, short-form disasters, and music. These links always lead to the freshest posts on each platform.</p>
-        </div>
+        <p class="kicker"><span>///</span> Keep up</p>
+        <div><h2 id="follow-title">PICK YOUR <em>ENTRANCE.</em></h2><p>Three places, three reasons. No scavenger hunt.</p></div>
       </div>
-      <div class="latest-grid">
-        <a class="latest-card latest-twitch reveal" href="https://www.twitch.tv/smabblez/videos?filter=archives&amp;sort=time" data-content="twitchVideos" target="_blank" rel="noreferrer">
-          <span class="latest-number">01 / TWITCH</span>
-          <strong>RECENT<br>BROADCASTS</strong>
-          <small>Rewatch the newest streams and full-length chaos.</small>
-          <span class="latest-action">Watch recent streams ↗</span>
-          <img src="assets/emotes/evil.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="" aria-hidden="true">
-        </a>
-        <a class="latest-card latest-tiktok reveal" href="https://www.tiktok.com/@Smabblez" data-social="tiktok" target="_blank" rel="noreferrer">
-          <span class="latest-number">02 / TIKTOK</span>
-          <strong>NEWEST<br>SHORTS</strong>
-          <small>Fast hits, reactions, moments, and scroll-stopping damage.</small>
-          <span class="latest-action">See the latest posts ↗</span>
-          <img src="assets/emotes/love.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="" aria-hidden="true">
-        </a>
-        <a class="latest-card latest-spotify reveal" href="https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg" data-social="spotify" target="_blank" rel="noreferrer">
-          <span class="latest-number">03 / SPOTIFY</span>
-          <strong>CURRENT<br>SOUNDTRACK</strong>
-          <small>Hear every Smabblez release in the official artist catalog.</small>
-          <span class="latest-action">Open the catalog ↗</span>
-          <img src="assets/emotes/win.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="" aria-hidden="true">
-        </a>
-      </div>
-    </section>
-
-    <section class="section socials-section" id="socials" aria-labelledby="socials-title">
-      <div class="section-heading reveal">
-        <p class="kicker"><span>///</span> Follow the signal</p>
-        <div>
-          <h2 id="socials-title">THE CIRCUS IS <em>EVERYWHERE.</em></h2>
-          <p>Go live with the show, catch the short-form damage, get into the community, or hear the music. Pick your entrance.</p>
-        </div>
-      </div>
-
       <div class="social-grid">
-        <a class="social-card social-twitch reveal" href="https://www.twitch.tv/smabblez" data-social="twitch" data-tilt target="_blank" rel="noreferrer">
-          <span class="social-number">01</span>
-          <span class="social-platform">TWITCH</span>
-          <strong>Chat gets a hand on the wheel.</strong>
-          <small>Jumpscares, redeems, GTA RP, hangouts, and whatever chat breaks next.</small>
-          <span class="social-tags" aria-hidden="true"><i>JUMPSCARES</i><i>REDEEMS</i><i>GTA RP</i></span>
+        <a class="social-card social-twitch reveal" href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">
+          <span class="social-number">01 / LIVE</span><span class="social-platform">TWITCH</span>
+          <strong>Watch and control the chaos.</strong><small>Live shows, GTA RP, jumpscares, and chat-triggered moments.</small>
           <span class="social-action">Watch Smabblez <i aria-hidden="true">↗</i></span>
           <img src="assets/emotes/evil.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="" aria-hidden="true">
         </a>
-
-        <a class="social-card social-tiktok reveal" href="https://tiktok.com/@Smabblez" data-social="tiktok" data-tilt target="_blank" rel="noreferrer">
-          <span class="social-number">02</span>
-          <span class="social-platform">TIKTOK</span>
-          <strong>The fast-hit chaos.</strong>
-          <small>Reactions, moments, and bits built for the scroll.</small>
-          <span class="social-tags" aria-hidden="true"><i>BITS</i><i>REACTIONS</i><i>MOMENTS</i></span>
+        <a class="social-card social-tiktok reveal" href="https://www.tiktok.com/@Smabblez" data-social="tiktok" target="_blank" rel="noreferrer">
+          <span class="social-number">02 / SHORTS</span><span class="social-platform">TIKTOK</span>
+          <strong>Catch the best moments fast.</strong><small>Reactions, bits, stream highlights, and short-form damage.</small>
           <span class="social-action">Follow @Smabblez <i aria-hidden="true">↗</i></span>
           <img src="assets/emotes/love.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="" aria-hidden="true">
         </a>
-
-        <a class="social-card social-discord reveal" href="https://discord.gg/5edKN6cw2K" data-social="discord" data-tilt target="_blank" rel="noreferrer">
-          <span class="social-number">03</span>
-          <span class="social-platform">DISCORD</span>
-          <strong>Get inside the tent.</strong>
-          <small>Alerts, events, RP updates, and chaos coordination.</small>
-          <span class="social-tags" aria-hidden="true"><i>ALERTS</i><i>EVENTS</i><i>THE CREW</i></span>
-          <span class="discord-preview" data-discord-preview aria-live="polite">
-            <span><b data-discord-online>Live</b> online</span>
-            <span><b data-discord-members>community</b> members</span>
-          </span>
-          <span class="social-action">Join the circus <i aria-hidden="true">↗</i></span>
+        <a class="social-card social-discord reveal" href="https://discord.gg/5edKN6cw2K" data-social="discord" target="_blank" rel="noreferrer">
+          <span class="social-number">03 / COMMUNITY</span><span class="social-platform">DISCORD</span>
+          <strong>Get inside The Clown Tent.</strong><small>Live alerts, events, RP updates, and the people behind the recurring bits.</small>
+          <span class="discord-preview" data-discord-preview aria-live="polite"><span><b data-discord-online>Live</b> online</span><span><b data-discord-members>community</b> members</span></span>
+          <span class="social-action">Join the community <i aria-hidden="true">↗</i></span>
           <img src="assets/emotes/bonk.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="" aria-hidden="true">
         </a>
       </div>
-
-      <div class="spotify-feature reveal">
-        <span class="spotify-icon" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span class="spotify-copy">
-          <small>04 / SPOTIFY</small>
-          <strong>PRESS PLAY ON THE OTHER SIDE OF SMABBLEZ.</strong>
-          <span>The official artist player, built right into the big top.</span>
-        </span>
-        <span class="spotify-player">
-          <span class="spotify-embed" id="spotify-embed" data-spotify-embed></span>
-          <a class="spotify-action" href="https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg" data-social="spotify" target="_blank" rel="noreferrer">Open in Spotify <i aria-hidden="true">↗</i></a>
-        </span>
-        <img src="assets/emotes/win.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="" aria-hidden="true">
-      </div>
+      <a class="music-strip reveal" href="https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg" data-social="spotify" target="_blank" rel="noreferrer">
+        <span class="music-note" aria-hidden="true">♪</span>
+        <span><small>SMABBLEZ ON SPOTIFY</small><strong>Hear the official soundtrack.</strong></span>
+        <i aria-hidden="true">↗</i>
+      </a>
+      <span class="spotify-controller-host" data-spotify-embed aria-hidden="true"></span>
     </section>
 
-    <section class="section content-section" id="content" aria-labelledby="content-title">
-      <div class="content-intro reveal">
-        <p class="kicker"><span>///</span> What happens here</p>
-        <h2 id="content-title">NOT JUST A STREAM.<br><em>IT'S A SHOW.</em></h2>
-        <p>The camera turns on, chat gets access to the controls, and a regular night becomes a jumpscare-fueled story people bring up three streams later.</p>
-      </div>
-
-      <div class="interaction-rail reveal" aria-label="Live stream interaction features">
-        <div><span>01 / TRIGGER</span><strong>JUMPSCARES</strong><small>Chat can hit the button.</small></div>
-        <div><span>02 / REDEEM</span><strong>CHAT COMMANDS</strong><small>Interactions change the show.</small></div>
-        <div><span>03 / DERAIL</span><strong>LIVE CONSEQUENCES</strong><small>The audience gets the wheel.</small></div>
-      </div>
-
-      <div class="content-board">
-        <article class="content-card content-live reveal">
-          <span class="content-index">01 / LIVE</span>
-          <h3>CHAT-RUN<br>CHAOS</h3>
-          <p>Jumpscares, redeems, alerts, games, and reactions turn chat from an audience into part of the show.</p>
-          <a href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">Enter Twitch ↗</a>
-          <img src="assets/emotes/chaos.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="" aria-hidden="true">
-        </article>
-
-        <article class="content-card content-rp reveal">
-          <span class="content-index">02 / STORY</span>
-          <h3>GTA RP<br>MOMENTS</h3>
-          <p>In-character chaos, crew scenes, city politics, and storylines with just enough clown propaganda.</p>
-        </article>
-
-        <article class="content-card content-shorts reveal">
-          <span class="content-index">03 / REPLAY</span>
-          <h3>SHORT-FORM<br>DAMAGE</h3>
-          <p>The funniest disasters and sharpest moments, cut loose on TikTok.</p>
-          <div class="sticker sticker-one"><img src="assets/animated/glitch-out.gif" loading="lazy" decoding="async" alt="" aria-hidden="true"></div>
-        </article>
-
-        <article class="content-card content-community reveal">
-          <span class="content-index">04 / CREW</span>
-          <h3>COMMUNITY<br>NIGHTS</h3>
-          <p>Game nights, events, giveaways, side quests, and the weekly attempt to organize the unorganizable.</p>
-          <a href="https://discord.gg/5edKN6cw2K" data-social="discord" target="_blank" rel="noreferrer">Join Discord ↗</a>
-          <div class="sticker sticker-two"><img src="assets/animated/spin.gif" loading="lazy" decoding="async" alt="" aria-hidden="true"></div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section about-section" id="about" aria-labelledby="about-title">
-      <div class="about-art reveal" aria-hidden="true">
-        <span>SMAB<br>BLEZ</span>
-        <img src="assets/emotes/win.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="">
-      </div>
-      <div class="about-copy reveal">
-        <p class="kicker"><span>///</span> Behind the red nose</p>
-        <h2 id="about-title">CLOWN OF <em>CHAOS.</em></h2>
-        <p class="about-lede">Smabblez is a streamer, performer, RP troublemaker, and community builder turning every broadcast into a shared bit.</p>
-        <div class="about-list">
-          <div><span>01</span><strong>Chat gets controls</strong><p>Jumpscares, redeems, and audience-triggered interactions let chat make the bad decision in real time.</p></div>
-          <div><span>02</span><strong>Story-first chaos</strong><p>RP scenes and recurring bits give the clown world a memory bigger than any single stream.</p></div>
-          <div><span>03</span><strong>A real community</strong><p>Not a pile of viewer numbers—a room people recognize, return to, and help make louder.</p></div>
+    <section class="section simple-about" id="about" aria-labelledby="about-title">
+      <div class="simple-about-art reveal" aria-hidden="true"><img src="assets/emotes/win.webp" width="1024" height="1024" loading="lazy" decoding="async" alt=""></div>
+      <div class="simple-about-copy reveal">
+        <p class="kicker"><span>///</span> About Smabblez</p>
+        <h2 id="about-title">THE AUDIENCE IS<br><em>PART OF THE BIT.</em></h2>
+        <p>I’m Smabblez—a streamer, performer, GTA RP creator, and community builder. I build the show around interaction, so chat can trigger the scare, change the moment, and become part of the story.</p>
+        <div class="about-actions">
+          <a class="button button-primary" href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">Start with Twitch <span aria-hidden="true">↗</span></a>
+          <a class="text-link" href="media-kit.html" data-track="media-kit">Creator media kit →</a>
         </div>
       </div>
-    </section>
-
-    <section class="section collab-section" id="collab" aria-labelledby="collab-title">
-      <div class="collab-intro reveal">
-        <p class="kicker"><span>///</span> Put Smabblez in the brief</p>
-        <h2 id="collab-title">WORK WITH<br><em>THE CIRCUS.</em></h2>
-        <p>Interactive livestreams, short-form campaigns, community activations, and character-led creative built around an audience that participates.</p>
-        <div class="collab-actions">
-          <a class="button button-primary" href="media-kit.html" data-track="media-kit">Open media kit <span aria-hidden="true">→</span></a>
-          <a class="button button-ghost" href="https://discord.gg/5edKN6cw2K" data-social="discord" data-track="collab-discord" target="_blank" rel="noreferrer">Start a conversation <span aria-hidden="true">↗</span></a>
-        </div>
-      </div>
-      <div class="collab-grid reveal">
-        <article><span>01 / LIVE</span><strong>Interactive integrations</strong><p>Stream-native ideas that let chat trigger, choose, derail, and remember the moment.</p></article>
-        <article><span>02 / SHORT</span><strong>Social campaigns</strong><p>Character-led TikTok concepts with a fast hook and a natural place in the Smabblez world.</p></article>
-        <article><span>03 / CREW</span><strong>Community activations</strong><p>Discord events, themed community nights, launches, and audience challenges.</p></article>
-      </div>
-    </section>
-
-    <section class="finale" aria-labelledby="finale-title">
-      <div class="finale-stars" aria-hidden="true">✦ ★ ✦</div>
-      <p class="kicker"><span>///</span> The tent is open</p>
-      <h2 id="finale-title">PICK A PLATFORM.<br><em>JOIN THE PROBLEM.</em></h2>
-      <p>Start with the live show. Bring a redeem. See what chat breaks next.</p>
-      <div class="finale-actions">
-        <a class="button button-primary" href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">Twitch <span aria-hidden="true">↗</span></a>
-        <a class="button button-ghost" href="https://tiktok.com/@Smabblez" data-social="tiktok" target="_blank" rel="noreferrer">TikTok <span aria-hidden="true">↗</span></a>
-        <a class="button button-ghost" href="https://discord.gg/5edKN6cw2K" data-social="discord" target="_blank" rel="noreferrer">Discord <span aria-hidden="true">↗</span></a>
-        <a class="button button-ghost" href="https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg" data-social="spotify" target="_blank" rel="noreferrer">Spotify <span aria-hidden="true">↗</span></a>
-      </div>
-      <img src="assets/emotes/bonk.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="" aria-hidden="true">
     </section>
   </main>
 
   <footer class="site-footer">
     <a class="brand footer-brand" href="#top"><span class="brand-nose" aria-hidden="true"></span><span>SMABBLEZ</span></a>
     <p>© 2026 Smabblez. The bit remains undefeated.</p>
-    <div><a href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">Twitch</a><a href="https://tiktok.com/@Smabblez" data-social="tiktok" target="_blank" rel="noreferrer">TikTok</a><a href="https://discord.gg/5edKN6cw2K" data-social="discord" target="_blank" rel="noreferrer">Discord</a><a href="https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg" data-social="spotify" target="_blank" rel="noreferrer">Spotify</a></div>
+    <div><a href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">Twitch</a><a href="https://www.tiktok.com/@Smabblez" data-social="tiktok" target="_blank" rel="noreferrer">TikTok</a><a href="https://discord.gg/5edKN6cw2K" data-social="discord" target="_blank" rel="noreferrer">Discord</a><a href="https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg" data-social="spotify" target="_blank" rel="noreferrer">Spotify</a><a href="media-kit.html" data-track="media-kit">Media kit</a></div>
   </footer>
 
-  <aside class="follow-dock" data-follow-dock aria-label="Quick follow links">
-    <span>FOLLOW THE CHAOS</span>
-    <a href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">Twitch ↗</a>
-    <a href="https://tiktok.com/@Smabblez" data-social="tiktok" target="_blank" rel="noreferrer">TikTok ↗</a>
-    <a href="https://discord.gg/5edKN6cw2K" data-social="discord" target="_blank" rel="noreferrer">Discord ↗</a>
-  </aside>
-
-  <script src="site.config.js?v=20260713m"></script>
-  <script src="script.js?v=20260713m"></script>
+  <script src="site.config.js?v=20260713n"></script>
+  <script src="script.js?v=20260713n"></script>
   <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
 </body>
 </html>

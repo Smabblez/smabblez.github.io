@@ -26,13 +26,14 @@ check((index.match(/data-social="spotify"/g) || []).length >= 3, 'Spotify must b
 check(!/twitch\.tv\/smabbles\b/i.test(index + configSource), 'Legacy Twitch handle found.');
 check(!/tiktok\.com\/@smabbles\b/i.test(index + configSource), 'Legacy TikTok handle found.');
 check(index.includes('data-twitch-player'), 'Official Twitch live player is missing.');
-check(index.includes('id="latest"'), 'Latest-content section is missing.');
-check(index.includes('id="collab"'), 'Collaboration section is missing.');
+check(index.includes('id="follow"'), 'Simplified follow section is missing.');
+check((index.match(/<section\b/g) || []).length === 4, 'Homepage must stay focused at exactly four sections.');
+check(!/id="latest"|id="content"|class="finale"|data-follow-dock|data-chaos-toggle/i.test(index), 'Redundant homepage section or effect was reintroduced.');
 check(index.includes('data-sound-restore'), 'Persistent soundtrack restore control is missing.');
 check(index.includes('data-discord-preview'), 'Live Discord community preview is missing.');
 check(index.includes('href="media-kit.html"'), 'Creator media-kit link is missing.');
 check(existsSync(join(root, 'media-kit.html')), 'Standalone media-kit page is missing.');
-check((index.match(/loading="lazy"/g) || []).length >= 10, 'Below-fold media must be lazy-loaded.');
+check((index.match(/loading="lazy"/g) || []).length >= 4, 'Below-fold media must be lazy-loaded.');
 check(!/small amount of dignity/i.test(index), 'Removed dignity copy was reintroduced.');
 check(!/data-emote-dialog|badge-ladder|drop-grid|emote vault/i.test(index), 'Asset-catalog UI was reintroduced.');
 check((index.match(/class="social-card/g) || []).length === 3, 'The social funnel must have exactly three primary cards.');

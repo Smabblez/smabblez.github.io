@@ -1,6 +1,6 @@
 # Smabblez Creator Hub
 
-A finished, responsive creator website built to turn visitors into Twitch followers, TikTok followers, and Discord community members.
+A focused, responsive creator website that leads visitors from the live Twitch show to TikTok and the Discord community without repeated sections or competing calls to action.
 
 ## Start here
 

@@ -50,7 +50,7 @@ The live-show differentiator is audience control: Smabblez uses jumpscares, rede
 - `site.config.js` — edit first; public social destinations.
 - `index.html` — semantic content and conversion funnel.
 - `styles.css` — all responsive styling; no CSS framework.
-- `script.js` — navigation, reveals, follow dock, scroll signal, pointer effects, parallax, card tilt, and Chaos Mode.
+- `script.js` — navigation, reveals, compact Spotify controls, live Discord counts, and conversion events.
 - `assets/emotes/` — six original transparent PNGs plus optimized WebP versions used on the page.
 - `assets/animated/` — two small decorative GIFs currently used.
 - `scripts/validate.mjs` — deterministic project checks.
