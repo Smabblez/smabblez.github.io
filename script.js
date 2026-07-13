@@ -27,13 +27,27 @@ const twitchPlayer = document.querySelector('[data-twitch-player]');
 if (twitchPlayer) {
   const twitchChannel = siteConfig.brand?.twitchChannel || 'smabblez';
   const twitchParent = window.location.hostname || 'localhost';
-  twitchPlayer.src = `https://player.twitch.tv/?channel=${encodeURIComponent(twitchChannel)}&parent=${encodeURIComponent(twitchParent)}&autoplay=false&muted=true`;
+  const loadTwitchPlayer = () => {
+    if (twitchPlayer.src) return;
+    twitchPlayer.src = `https://player.twitch.tv/?channel=${encodeURIComponent(twitchChannel)}&parent=${encodeURIComponent(twitchParent)}&autoplay=false&muted=true`;
+  };
+  if ('IntersectionObserver' in window) {
+    const twitchObserver = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      loadTwitchPlayer();
+      twitchObserver.disconnect();
+    }, { rootMargin: '80px 0px' });
+    twitchObserver.observe(twitchPlayer);
+  } else {
+    loadTwitchPlayer();
+  }
 }
 
 const soundPrompt = document.querySelector('[data-sound-prompt]');
 const soundToggle = document.querySelector('[data-sound-toggle]');
 const soundSkip = document.querySelector('[data-sound-skip]');
 const soundPrevious = document.querySelector('[data-sound-previous]');
+const soundVolume = document.querySelector('[data-sound-volume]');
 const soundDismiss = document.querySelector('[data-sound-dismiss]');
 const soundRestore = document.querySelector('[data-sound-restore]');
 const soundStatus = document.querySelector('[data-sound-status]');
@@ -52,6 +66,27 @@ let spotifyCurrentUri = spotifyArtistUri;
 let spotifyCurrentPosition = 0;
 let spotifyInfoUri = '';
 let spotifyPlaybackTimer = 0;
+let spotifyApiRequested = false;
+let spotifyPlayAfterReady = false;
+let spotifyVolumeMuted = false;
+let spotifyMutedActivePlayback = false;
+
+function loadSpotifyApi() {
+  if (spotifyApiRequested || spotifyController) return;
+  spotifyApiRequested = true;
+  soundToggle.disabled = true;
+  setSoundState(false, 'Loading Spotify…');
+  const script = document.createElement('script');
+  script.src = 'https://open.spotify.com/embed/iframe-api/v1';
+  script.async = true;
+  script.addEventListener('error', () => {
+    spotifyApiRequested = false;
+    spotifyPlayAfterReady = false;
+    soundToggle.disabled = false;
+    setSoundState(false, 'Spotify unavailable — try again');
+  });
+  document.head.appendChild(script);
+}
 
 const syncSpotifyTrackInfo = async (uri) => {
   if (!uri?.startsWith('spotify:track:') || uri === spotifyInfoUri) return;
@@ -104,6 +139,14 @@ const requestSpotifyPlayback = () => {
   }, 1800);
 };
 
+const setVolumeState = (muted) => {
+  spotifyVolumeMuted = muted;
+  soundVolume.textContent = muted ? '\u{1F507}' : '\u{1F50A}';
+  soundVolume.setAttribute('aria-label', muted ? 'Unmute soundtrack' : 'Mute soundtrack');
+  soundVolume.setAttribute('aria-pressed', String(muted));
+  soundVolume.title = muted ? 'Unmute soundtrack' : 'Mute soundtrack';
+};
+
 const changeSpotifyTrack = (direction) => {
   if (!spotifyController || !spotifyTracks.length) return;
   const currentIndex = spotifyTracks.findIndex((track) => track.uri === spotifyCurrentUri);
@@ -128,19 +171,43 @@ const changeSpotifyTrack = (direction) => {
 };
 
 soundToggle.addEventListener('click', () => {
-  if (!spotifyController) return;
+  if (!spotifyController) {
+    spotifyPlayAfterReady = true;
+    loadSpotifyApi();
+    return;
+  }
   if (spotifyPlaying) {
     spotifyPlayRequested = false;
     spotifyAwaitingStart = false;
+    spotifyMutedActivePlayback = false;
     setSoundState(false, 'Paused');
     spotifyController.pause();
   } else {
+    if (spotifyVolumeMuted) setVolumeState(false);
     requestSpotifyPlayback();
   }
 });
 
 soundSkip.addEventListener('click', () => changeSpotifyTrack(1));
 soundPrevious.addEventListener('click', () => changeSpotifyTrack(-1));
+soundVolume.addEventListener('click', () => {
+  if (!spotifyController) return;
+  if (!spotifyVolumeMuted) {
+    spotifyMutedActivePlayback = spotifyPlaying || spotifyPlayRequested;
+    spotifyPlayRequested = false;
+    spotifyAwaitingStart = false;
+    setVolumeState(true);
+    setSoundState(false, 'Muted');
+    spotifyController.pause();
+    return;
+  }
+
+  const shouldResume = spotifyMutedActivePlayback;
+  spotifyMutedActivePlayback = false;
+  setVolumeState(false);
+  if (shouldResume) requestSpotifyPlayback();
+  else setSoundState(false, 'Paused');
+});
 
 const setSoundCollapsed = (collapsed) => {
   soundPrompt.classList.toggle('collapsed', collapsed);
@@ -157,6 +224,8 @@ try {
 } catch {
   setSoundCollapsed(true);
 }
+soundToggle.disabled = false;
+setSoundState(false, 'Press play to load');
 
 window.onSpotifyIframeApiReady = (IFrameAPI) => {
   if (!spotifyEmbed) return;
@@ -165,7 +234,12 @@ window.onSpotifyIframeApiReady = (IFrameAPI) => {
     soundToggle.disabled = false;
     soundSkip.disabled = false;
     soundPrevious.disabled = false;
+    soundVolume.disabled = false;
     setSoundState(false, 'Press play to listen');
+    if (spotifyPlayAfterReady) {
+      spotifyPlayAfterReady = false;
+      requestSpotifyPlayback();
+    }
 
     EmbedController.addListener('playback_started', (event) => {
       if (!spotifyPlayRequested) {

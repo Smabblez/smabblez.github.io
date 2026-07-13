@@ -20,7 +20,10 @@
   <link rel="canonical" href="https://smabblez.github.io/">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b080d'/%3E%3Ccircle cx='32' cy='32' r='15' fill='%23ff2638'/%3E%3C/svg%3E">
   <link rel="preload" as="image" href="assets/emotes/hype.webp" type="image/webp" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=20260713o">
+  <link rel="dns-prefetch" href="//player.twitch.tv">
+  <link rel="dns-prefetch" href="//open.spotify.com">
+  <link rel="dns-prefetch" href="//discord.com">
+  <link rel="stylesheet" href="styles.css?v=20260713q">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -59,6 +62,7 @@
     <button class="sound-previous" type="button" data-sound-previous aria-label="Play previous track" title="Play previous track" disabled>‹‹</button>
     <button class="sound-skip" type="button" data-sound-skip aria-label="Skip to next track" title="Skip to next track" disabled>››</button>
     <button class="sound-toggle" type="button" data-sound-toggle aria-label="Loading Spotify player" aria-pressed="false" disabled>…</button>
+    <button class="sound-volume" type="button" data-sound-volume aria-label="Mute soundtrack" aria-pressed="false" title="Mute soundtrack" disabled>&#128266;</button>
     <button class="sound-dismiss" type="button" data-sound-dismiss aria-label="Minimize soundtrack controls" title="Minimize soundtrack controls">−</button>
     <span class="sound-progress" aria-hidden="true"><span data-sound-progress></span></span>
   </aside>
@@ -87,7 +91,7 @@
         <h1 id="hero-title"><span>WELCOME TO</span> THE BIG <em>TOP.</em></h1>
         <p class="hero-lede">Live shows where chat triggers the chaos, GTA RP becomes a story, and the audience gets a hand on the wheel.</p>
         <div class="hero-actions">
-          <a class="button button-primary" href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">Watch on Twitch <span aria-hidden="true">↗</span></a>
+          <a class="button button-primary" href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">Enter the live show <span aria-hidden="true">↗</span></a>
           <a class="button button-ghost" href="#follow">Find Smabblez <span aria-hidden="true">↓</span></a>
         </div>
       </div>
@@ -120,26 +124,26 @@
     <section class="section simple-socials" id="follow" aria-labelledby="follow-title">
       <div class="section-heading reveal">
         <p class="kicker"><span>///</span> Keep up</p>
-        <div><h2 id="follow-title">PICK YOUR <em>ENTRANCE.</em></h2><p>Three places, three reasons. No scavenger hunt.</p></div>
+        <div><h2 id="follow-title">START WITH TWITCH.<br><em>STAY FOR THE CIRCUS.</em></h2><p>Live first. Clips next. Community after.</p></div>
       </div>
       <div class="social-grid">
         <a class="social-card social-twitch reveal" href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">
-          <span class="social-number">01 / LIVE</span><span class="social-platform">TWITCH</span>
+          <span class="social-number">01 / LIVE</span><span class="funnel-badge">START HERE</span><span class="social-platform">TWITCH</span>
           <strong>Watch and control the chaos.</strong><small>Live shows, GTA RP, jumpscares, and chat-triggered moments.</small>
-          <span class="social-action">Watch Smabblez <i aria-hidden="true">↗</i></span>
+          <span class="social-action">Enter the live show <i aria-hidden="true">↗</i></span>
           <img src="assets/emotes/evil.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="" aria-hidden="true">
         </a>
         <a class="social-card social-tiktok reveal" href="https://www.tiktok.com/@Smabblez" data-social="tiktok" target="_blank" rel="noreferrer">
           <span class="social-number">02 / SHORTS</span><span class="social-platform">TIKTOK</span>
           <strong>Catch the best moments fast.</strong><small>Reactions, bits, stream highlights, and short-form damage.</small>
-          <span class="social-action">Follow @Smabblez <i aria-hidden="true">↗</i></span>
+          <span class="social-action">Follow the clips <i aria-hidden="true">↗</i></span>
           <img src="assets/emotes/love.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="" aria-hidden="true">
         </a>
         <a class="social-card social-discord reveal" href="https://discord.gg/5edKN6cw2K" data-social="discord" target="_blank" rel="noreferrer">
           <span class="social-number">03 / COMMUNITY</span><span class="social-platform">DISCORD</span>
           <strong>Get inside The Clown Tent.</strong><small>Live alerts, events, RP updates, and the people behind the recurring bits.</small>
           <span class="discord-preview" data-discord-preview aria-live="polite"><span><b data-discord-online>Live</b> online</span><span><b data-discord-members>community</b> members</span></span>
-          <span class="social-action">Join the community <i aria-hidden="true">↗</i></span>
+          <span class="social-action">Join the tent <i aria-hidden="true">↗</i></span>
           <img src="assets/emotes/bonk.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="" aria-hidden="true">
         </a>
       </div>
@@ -178,8 +182,7 @@
     <div><a href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">Twitch</a><a href="https://www.tiktok.com/@Smabblez" data-social="tiktok" target="_blank" rel="noreferrer">TikTok</a><a href="https://discord.gg/5edKN6cw2K" data-social="discord" target="_blank" rel="noreferrer">Discord</a><a href="https://www.youtube.com/@Smabblez" data-social="youtube" target="_blank" rel="noreferrer">YouTube</a><a href="https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg" data-social="spotify" target="_blank" rel="noreferrer">Spotify</a><a href="media-kit.html" data-track="media-kit">Media kit</a></div>
   </footer>
 
-  <script src="site.config.js?v=20260713o"></script>
-  <script src="script.js?v=20260713o"></script>
-  <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+  <script src="site.config.js?v=20260713q"></script>
+  <script src="script.js?v=20260713q"></script>
 </body>
 </html>
