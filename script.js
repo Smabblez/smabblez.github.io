@@ -55,6 +55,7 @@ const soundTrack = document.querySelector('[data-sound-track]');
 const soundArt = document.querySelector('[data-sound-art]');
 const soundProgress = document.querySelector('[data-sound-progress]');
 const spotifyEmbed = document.querySelector('[data-spotify-embed]');
+const spotifyApiScript = document.querySelector('[data-spotify-api]');
 const spotifyArtistUri = 'spotify:artist:1JiqQUYL0EA1h3jVQIRQtg';
 const spotifyTracks = siteConfig.music?.spotifyTracks || [];
 let spotifyController = null;
@@ -66,26 +67,26 @@ let spotifyCurrentUri = spotifyArtistUri;
 let spotifyCurrentPosition = 0;
 let spotifyInfoUri = '';
 let spotifyPlaybackTimer = 0;
-let spotifyApiRequested = false;
 let spotifyPlayAfterReady = false;
 let spotifyVolumeMuted = false;
 let spotifyMutedActivePlayback = false;
+let spotifyIFrameApi = null;
+let spotifyControllerLoading = false;
 
 function loadSpotifyApi() {
-  if (spotifyApiRequested || spotifyController) return;
-  spotifyApiRequested = true;
+  if (spotifyController || spotifyControllerLoading) return;
   soundToggle.disabled = true;
   setSoundState(false, 'Loading Spotify…');
-  const script = document.createElement('script');
-  script.src = 'https://open.spotify.com/embed/iframe-api/v1';
-  script.async = true;
-  script.addEventListener('error', () => {
-    spotifyApiRequested = false;
+  if (spotifyIFrameApi) createSpotifyController();
+}
+
+if (spotifyApiScript) {
+  spotifyApiScript.addEventListener('error', () => {
+    spotifyControllerLoading = false;
     spotifyPlayAfterReady = false;
     soundToggle.disabled = false;
     setSoundState(false, 'Spotify unavailable — try again');
   });
-  document.head.appendChild(script);
 }
 
 const syncSpotifyTrackInfo = async (uri) => {
@@ -227,9 +228,11 @@ try {
 soundToggle.disabled = false;
 setSoundState(false, 'Press play to load');
 
-window.onSpotifyIframeApiReady = (IFrameAPI) => {
-  if (!spotifyEmbed) return;
-  IFrameAPI.createController(spotifyEmbed, { width: 1, height: 1, uri: spotifyArtistUri }, (EmbedController) => {
+function createSpotifyController() {
+  if (!spotifyEmbed || !spotifyIFrameApi || spotifyController || spotifyControllerLoading) return;
+  spotifyControllerLoading = true;
+  spotifyIFrameApi.createController(spotifyEmbed, { width: 1, height: 1, uri: spotifyArtistUri }, (EmbedController) => {
+    spotifyControllerLoading = false;
     spotifyController = EmbedController;
     soundToggle.disabled = false;
     soundSkip.disabled = false;
@@ -276,6 +279,11 @@ window.onSpotifyIframeApiReady = (IFrameAPI) => {
       setSoundState(!event.data.isPaused);
     });
   });
+}
+
+window.onSpotifyIframeApiReady = (IFrameAPI) => {
+  spotifyIFrameApi = IFrameAPI;
+  if (spotifyPlayAfterReady) createSpotifyController();
 };
 
 const discordPreview = document.querySelector('[data-discord-preview]');
