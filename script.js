@@ -54,163 +54,107 @@ const soundStatus = document.querySelector('[data-sound-status]');
 const soundTrack = document.querySelector('[data-sound-track]');
 const soundArt = document.querySelector('[data-sound-art]');
 const soundProgress = document.querySelector('[data-sound-progress]');
-const spotifyEmbed = document.querySelector('[data-spotify-embed]');
-const spotifyApiScript = document.querySelector('[data-spotify-api]');
-const spotifyArtistUri = 'spotify:artist:1JiqQUYL0EA1h3jVQIRQtg';
-const spotifyTracks = siteConfig.music?.spotifyTracks || [];
-let spotifyController = null;
-let spotifyPlaying = false;
-let spotifyPlayRequested = false;
-let spotifyAwaitingStart = false;
-let spotifyHasStarted = false;
-let spotifyCurrentUri = spotifyArtistUri;
-let spotifyCurrentPosition = 0;
-let spotifyInfoUri = '';
-let spotifyPlaybackTimer = 0;
-let spotifyPlayAfterReady = false;
-let spotifyVolumeMuted = false;
-let spotifyMutedActivePlayback = false;
-let spotifyIFrameApi = null;
-let spotifyControllerLoading = false;
-let spotifyControllerRequested = false;
+const soundAudio = document.querySelector('[data-sound-audio]');
+const soundVolumeIcon = document.querySelector('[data-sound-volume-icon]');
+const soundVolumeValue = document.querySelector('[data-sound-volume-value]');
+const spotifyTracks = (siteConfig.music?.spotifyTracks || []).filter((track) => track.preview);
+let currentTrackIndex = 0;
+let loadedTrackIndex = -1;
 
-function loadSpotifyApi() {
-  if (spotifyController || spotifyControllerLoading) return;
-  spotifyControllerRequested = true;
-  soundToggle.disabled = true;
-  setSoundState(false, 'Loading Spotify…');
-  if (spotifyIFrameApi) createSpotifyController();
-}
-
-if (spotifyApiScript) {
-  spotifyApiScript.addEventListener('error', () => {
-    spotifyControllerLoading = false;
-    spotifyControllerRequested = false;
-    spotifyPlayAfterReady = false;
-    soundToggle.disabled = false;
-    setSoundState(false, 'Spotify unavailable — try again');
-  });
-}
-
-const syncSpotifyTrackInfo = async (uri) => {
-  if (!uri?.startsWith('spotify:track:') || uri === spotifyInfoUri) return;
-  spotifyInfoUri = uri;
-  const trackId = uri.split(':').pop();
-  const trackUrl = `https://open.spotify.com/track/${trackId}`;
-
-  try {
-    const response = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(trackUrl)}`);
-    if (!response.ok) return;
-    const metadata = await response.json();
-    soundTrack.textContent = metadata.title || 'Smabblez soundtrack';
-    soundArt.href = trackUrl;
-    if (metadata.thumbnail_url) {
-      soundArt.style.backgroundImage = `url("${metadata.thumbnail_url}")`;
-      soundArt.classList.add('has-cover');
-    }
-  } catch {
-    soundTrack.textContent = 'Smabblez soundtrack';
-  }
-};
-
-const setSoundState = (playing, message = playing ? 'Soundtrack playing' : 'Soundtrack ready') => {
-  spotifyPlaying = playing;
+const setSoundState = (playing, message = playing ? 'Preview playing' : 'Preview ready') => {
   soundStatus.textContent = message;
   const action = playing ? 'Pause soundtrack' : 'Play soundtrack';
-  soundToggle.textContent = playing ? 'Ⅱ' : '▶';
+  soundToggle.textContent = playing ? '\u2161' : '\u25B6';
   soundToggle.setAttribute('aria-label', action);
   soundToggle.title = action;
   soundToggle.setAttribute('aria-pressed', String(playing));
 };
 
-const requestSpotifyPlayback = () => {
-  if (!spotifyController) return;
-  spotifyPlayRequested = true;
-  spotifyAwaitingStart = true;
-  window.clearTimeout(spotifyPlaybackTimer);
-  setSoundState(true, 'Connecting…');
-  if (spotifyHasStarted && spotifyCurrentUri !== spotifyArtistUri) {
-    spotifyController.loadEntity(spotifyCurrentUri, false, Math.floor(spotifyCurrentPosition / 1000));
-    spotifyController.play();
-  } else {
-    spotifyController.play();
+const updateVolumeUI = () => {
+  const percent = Math.round(soundAudio.volume * 100);
+  soundAudio.dataset.volume = String(percent);
+  soundVolume.value = String(percent);
+  soundVolume.style.setProperty('--volume-level', `${percent}%`);
+  soundVolumeValue.textContent = `${percent}%`;
+  soundVolumeIcon.textContent = percent === 0 ? '\u{1F507}' : percent < 50 ? '\u{1F509}' : '\u{1F50A}';
+};
+
+const updateTrackInfo = () => {
+  const track = spotifyTracks[currentTrackIndex];
+  if (!track) return;
+  soundTrack.textContent = track.title;
+  soundArt.href = track.url || siteConfig.socials?.spotify || soundArt.href;
+  if (track.art) {
+    soundArt.style.backgroundImage = `url("${track.art}")`;
+    soundArt.classList.add('has-cover');
   }
-  spotifyPlaybackTimer = window.setTimeout(() => {
-    if (!spotifyAwaitingStart) return;
-    spotifyPlayRequested = false;
-    spotifyAwaitingStart = false;
-    setSoundState(false, 'Tap to start the soundtrack');
-  }, 1800);
 };
 
-const setVolumeState = (muted) => {
-  spotifyVolumeMuted = muted;
-  soundVolume.textContent = muted ? '\u{1F507}' : '\u{1F50A}';
-  soundVolume.setAttribute('aria-label', muted ? 'Unmute soundtrack' : 'Mute soundtrack');
-  soundVolume.setAttribute('aria-pressed', String(muted));
-  soundVolume.title = muted ? 'Unmute soundtrack' : 'Mute soundtrack';
-};
-
-const changeSpotifyTrack = (direction) => {
-  if (!spotifyController || !spotifyTracks.length) return;
-  const currentIndex = spotifyTracks.findIndex((track) => track.uri === spotifyCurrentUri);
-  const nextIndex = currentIndex < 0
-    ? (direction > 0 ? 0 : spotifyTracks.length - 1)
-    : (currentIndex + direction + spotifyTracks.length) % spotifyTracks.length;
-  const nextTrack = spotifyTracks[nextIndex];
-  spotifyCurrentUri = nextTrack.uri;
-  spotifyCurrentPosition = 0;
-  spotifyHasStarted = true;
-  spotifyPlayRequested = true;
-  spotifyAwaitingStart = true;
-  spotifyInfoUri = '';
-  soundTrack.textContent = nextTrack.title;
+const loadCurrentTrack = (reset = true) => {
+  const track = spotifyTracks[currentTrackIndex];
+  if (!track) return false;
+  updateTrackInfo();
+  if (loadedTrackIndex !== currentTrackIndex) {
+    soundAudio.src = track.preview;
+    loadedTrackIndex = currentTrackIndex;
+  } else if (reset) {
+    soundAudio.currentTime = 0;
+  }
   soundProgress.style.width = '0%';
-  soundSkip.disabled = true;
-  soundPrevious.disabled = true;
-  setSoundState(true, direction > 0 ? 'Skipping…' : 'Going back…');
-  syncSpotifyTrackInfo(nextTrack.uri);
-  spotifyController.loadEntity(nextTrack.uri, false, 0);
-  spotifyController.play();
+  return true;
+};
+
+const playCurrentTrack = async () => {
+  if (loadedTrackIndex !== currentTrackIndex && !loadCurrentTrack(false)) return;
+  try {
+    await soundAudio.play();
+    delete soundAudio.dataset.playError;
+  } catch (error) {
+    soundAudio.dataset.playError = error?.name || 'PlaybackError';
+    setSoundState(false, 'Tap play to listen');
+  }
+};
+
+const changeTrack = (direction, keepPlaying = !soundAudio.paused) => {
+  if (!spotifyTracks.length) return;
+  currentTrackIndex = (currentTrackIndex + direction + spotifyTracks.length) % spotifyTracks.length;
+  loadCurrentTrack();
+  if (keepPlaying) playCurrentTrack();
+  else setSoundState(false, direction > 0 ? 'Next preview ready' : 'Previous preview ready');
 };
 
 soundToggle.addEventListener('click', () => {
-  if (!spotifyController) {
-    spotifyPlayAfterReady = true;
-    loadSpotifyApi();
-    return;
-  }
-  if (spotifyPlaying) {
-    spotifyPlayRequested = false;
-    spotifyAwaitingStart = false;
-    spotifyMutedActivePlayback = false;
-    setSoundState(false, 'Paused');
-    spotifyController.pause();
-  } else {
-    if (spotifyVolumeMuted) setVolumeState(false);
-    requestSpotifyPlayback();
-  }
+  if (!soundAudio.paused) soundAudio.pause();
+  else playCurrentTrack();
 });
 
-soundSkip.addEventListener('click', () => changeSpotifyTrack(1));
-soundPrevious.addEventListener('click', () => changeSpotifyTrack(-1));
-soundVolume.addEventListener('click', () => {
-  if (!spotifyController) return;
-  if (!spotifyVolumeMuted) {
-    spotifyMutedActivePlayback = spotifyPlaying || spotifyPlayRequested;
-    spotifyPlayRequested = false;
-    spotifyAwaitingStart = false;
-    setVolumeState(true);
-    setSoundState(false, 'Muted');
-    spotifyController.pause();
+soundSkip.addEventListener('click', () => changeTrack(1));
+soundPrevious.addEventListener('click', () => {
+  if (loadedTrackIndex === currentTrackIndex && soundAudio.currentTime > 3) {
+    soundAudio.currentTime = 0;
+    soundProgress.style.width = '0%';
+    setSoundState(!soundAudio.paused, 'Preview restarted');
     return;
   }
+  changeTrack(-1);
+});
+soundVolume.addEventListener('input', () => {
+  soundAudio.volume = Math.min(1, Math.max(0, Number(soundVolume.value) / 100));
+  updateVolumeUI();
+  try { window.localStorage.setItem('smabblez-player-volume', soundVolume.value); } catch {}
+});
 
-  const shouldResume = spotifyMutedActivePlayback;
-  spotifyMutedActivePlayback = false;
-  setVolumeState(false);
-  if (shouldResume) requestSpotifyPlayback();
-  else setSoundState(false, 'Paused');
+soundAudio.addEventListener('play', () => setSoundState(true));
+soundAudio.addEventListener('pause', () => {
+  if (!soundAudio.ended) setSoundState(false, 'Paused');
+});
+soundAudio.addEventListener('timeupdate', () => {
+  const progress = soundAudio.duration > 0 ? (soundAudio.currentTime / soundAudio.duration) * 100 : 0;
+  soundProgress.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+});
+soundAudio.addEventListener('ended', () => changeTrack(1, true));
+soundAudio.addEventListener('error', () => {
+  setSoundState(false, 'Preview unavailable — open Spotify');
 });
 
 const setSoundCollapsed = (collapsed) => {
@@ -220,81 +164,33 @@ const setSoundCollapsed = (collapsed) => {
 };
 
 soundDismiss.addEventListener('click', () => setSoundCollapsed(true));
-soundRestore.addEventListener('click', () => {
-  setSoundCollapsed(false);
-  loadSpotifyApi();
-});
+soundRestore.addEventListener('click', () => setSoundCollapsed(false));
 
-let playerStartsExpanded = false;
 try {
   const savedPlayerState = window.localStorage.getItem('smabblez-player-collapsed');
-  playerStartsExpanded = savedPlayerState === 'false';
-  setSoundCollapsed(!playerStartsExpanded);
+  setSoundCollapsed(savedPlayerState !== 'false');
 } catch {
   setSoundCollapsed(true);
 }
-soundToggle.disabled = false;
-setSoundState(false, 'Press play to load');
-if (playerStartsExpanded) loadSpotifyApi();
 
-function createSpotifyController() {
-  if (!spotifyEmbed || !spotifyIFrameApi || spotifyController || spotifyControllerLoading) return;
-  spotifyControllerRequested = false;
-  spotifyControllerLoading = true;
-  spotifyIFrameApi.createController(spotifyEmbed, { width: 1, height: 1, uri: spotifyArtistUri }, (EmbedController) => {
-    spotifyControllerLoading = false;
-    spotifyController = EmbedController;
-    soundToggle.disabled = false;
-    soundSkip.disabled = false;
-    soundPrevious.disabled = false;
-    soundVolume.disabled = false;
-    setSoundState(false, 'Press play to listen');
-    if (spotifyPlayAfterReady) {
-      spotifyPlayAfterReady = false;
-      requestSpotifyPlayback();
-    }
-
-    EmbedController.addListener('playback_started', (event) => {
-      if (!spotifyPlayRequested) {
-        EmbedController.pause();
-        setSoundState(false, spotifyHasStarted ? 'Paused' : 'Press play to listen');
-        return;
-      }
-      window.clearTimeout(spotifyPlaybackTimer);
-      spotifyAwaitingStart = false;
-      spotifyHasStarted = true;
-      if (event?.data?.playingURI) {
-        spotifyCurrentUri = event.data.playingURI;
-        syncSpotifyTrackInfo(event.data.playingURI);
-      }
-      setSoundState(true);
-    });
-
-    EmbedController.addListener('playback_update', (event) => {
-      if (!event?.data) return;
-      const duration = Number(event.data.duration) || 0;
-      const position = Number(event.data.position) || 0;
-      if (event.data.playingURI) {
-        spotifyCurrentUri = event.data.playingURI;
-        syncSpotifyTrackInfo(event.data.playingURI);
-      }
-      spotifyCurrentPosition = position;
-      soundProgress.style.width = `${duration > 0 ? Math.min(100, Math.max(0, (position / duration) * 100)) : 0}%`;
-      if (!spotifyPlayRequested) {
-        if (!event.data.isPaused) EmbedController.pause();
-        setSoundState(false, spotifyHasStarted ? 'Paused' : 'Press play to listen');
-        return;
-      }
-      if (!event.data.isPaused) spotifyAwaitingStart = false;
-      setSoundState(!event.data.isPaused);
-    });
-  });
+try {
+  const savedVolume = window.localStorage.getItem('smabblez-player-volume');
+  const savedVolumeNumber = Number(savedVolume);
+  soundAudio.volume = savedVolume !== null && Number.isFinite(savedVolumeNumber)
+    ? Math.min(1, Math.max(0, savedVolumeNumber / 100))
+    : .72;
+} catch {
+  soundAudio.volume = .72;
 }
 
-window.onSpotifyIframeApiReady = (IFrameAPI) => {
-  spotifyIFrameApi = IFrameAPI;
-  if (spotifyControllerRequested) createSpotifyController();
-};
+updateVolumeUI();
+updateTrackInfo();
+const hasPlayableTracks = spotifyTracks.length > 0;
+soundToggle.disabled = !hasPlayableTracks;
+soundSkip.disabled = !hasPlayableTracks;
+soundPrevious.disabled = !hasPlayableTracks;
+soundVolume.disabled = !hasPlayableTracks;
+setSoundState(false, hasPlayableTracks ? 'Press play for preview' : 'Previews unavailable');
 
 const discordPreview = document.querySelector('[data-discord-preview]');
 const discordOnline = document.querySelector('[data-discord-online]');

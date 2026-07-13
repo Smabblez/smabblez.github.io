@@ -30,11 +30,41 @@ window.SMABBLEZ_SITE = {
   },
   music: {
     spotifyTracks: [
-      { title: "Smabble's Show", uri: "spotify:track:411HCjwGmBLorc7Mk5wSSn" },
-      { title: "Velvet Control", uri: "spotify:track:2RgDoI61SEpHt1O8E3ki6h" },
-      { title: "Smab's City", uri: "spotify:track:1uSkiAwmaIvb9ePgO83qVh" },
-      { title: "Big Top Boss", uri: "spotify:track:1hM0UJOcJfYXVm8ajVr68F" },
-      { title: "Say it", uri: "spotify:track:6pqMDrYXvGTaqhGN882ZEu" }
+      {
+        title: "Smabble's Show",
+        uri: "spotify:track:411HCjwGmBLorc7Mk5wSSn",
+        url: "https://open.spotify.com/track/411HCjwGmBLorc7Mk5wSSn",
+        preview: "https://p.scdn.co/mp3-preview/107e3c694244fca8ba0942c8b7abb18469b18a22",
+        art: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e0293a7fe5042f0b6b2dabea017"
+      },
+      {
+        title: "Velvet Control",
+        uri: "spotify:track:2RgDoI61SEpHt1O8E3ki6h",
+        url: "https://open.spotify.com/track/2RgDoI61SEpHt1O8E3ki6h",
+        preview: "https://p.scdn.co/mp3-preview/4e64a455a200c4c06eb48dea703e8052474b1825",
+        art: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e0298d51f540af1b6bbc3e7da8b"
+      },
+      {
+        title: "Smab's City",
+        uri: "spotify:track:1uSkiAwmaIvb9ePgO83qVh",
+        url: "https://open.spotify.com/track/1uSkiAwmaIvb9ePgO83qVh",
+        preview: "https://p.scdn.co/mp3-preview/c3c3ee7c53593db99b32a5a6bfcdc0a497f1c037",
+        art: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e023ade2aafbfb0e50f46172c89"
+      },
+      {
+        title: "Big Top Boss",
+        uri: "spotify:track:1hM0UJOcJfYXVm8ajVr68F",
+        url: "https://open.spotify.com/track/1hM0UJOcJfYXVm8ajVr68F",
+        preview: "https://p.scdn.co/mp3-preview/df380171848f46337aef249d583935097fd52967",
+        art: "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e02b57815c70d279be8d13ed4ee"
+      },
+      {
+        title: "Say it",
+        uri: "spotify:track:6pqMDrYXvGTaqhGN882ZEu",
+        url: "https://open.spotify.com/track/6pqMDrYXvGTaqhGN882ZEu",
+        preview: "https://p.scdn.co/mp3-preview/9ce0fa2c3b8c3d36c33ccf03dfa1586b44d332f1",
+        art: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e0243551d1d1af5c6dab53de221"
+      }
     ]
   }
 };
