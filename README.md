@@ -27,6 +27,8 @@ Live site: `https://smabblez.github.io/`
 
 All styles, scripts, images, and section links use relative paths, and the production site is published from the `smabblez.github.io` user-site repository root.
 
+Search metadata is kept directly in the HTML so crawlers and social preview bots can read it without JavaScript. `robots.txt` advertises `sitemap.xml`; both files are copied by the Pages workflow. See `SEO_LAUNCH.md` for the one-time Google Search Console steps.
+
 Do not add a backend, server-only rendering, environment secrets, or root-relative asset paths. `scripts/serve.mjs` is only a local preview helper and is not needed in production.
 
 ## Editing order

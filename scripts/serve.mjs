@@ -13,12 +13,20 @@ const types = {
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
   '.png': 'image/png',
-  '.svg': 'image/svg+xml'
+  '.svg': 'image/svg+xml',
+  '.txt': 'text/plain; charset=utf-8',
+  '.xml': 'application/xml; charset=utf-8'
 };
 
 createServer((request, response) => {
   const pathname = decodeURIComponent(new URL(request.url, `http://${host}`).pathname);
-  const relative = normalize(pathname).replace(/^(\.\.[/\\])+/, '').replace(/^[/\\]+/, '');
+  const requested = normalize(pathname).replace(/^(\.\.[/\\])+/, '').replace(/^[/\\]+/, '').replaceAll('\\', '/');
+  const projectPrefix = 'smabblez-all-in-one';
+  const relative = requested === projectPrefix
+    ? ''
+    : requested.startsWith(`${projectPrefix}/`)
+      ? requested.slice(projectPrefix.length + 1)
+      : requested;
   let target = join(root, relative || 'index.html');
   if (existsSync(target) && statSync(target).isDirectory()) target = join(target, 'index.html');
 

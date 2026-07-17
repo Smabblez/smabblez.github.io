@@ -52,8 +52,7 @@ The live-show differentiator is audience control: Smabblez uses jumpscares, rede
 - `index.html` — semantic content and conversion funnel.
 - `styles.css` — all responsive styling; no CSS framework.
 - `script.js` — navigation, reveals, compact Spotify controls, live Discord counts, conversion events, nose cursor, and Chaos Mode.
-- `assets/emotes/` — six original transparent PNGs plus optimized WebP versions used on the page.
-- `assets/animated/` — two small decorative GIFs currently used.
+- `assets/emotes/` — six optimized WebP accents plus the crawlable PNG used for social previews.
 - `assets/fonts/` — the locally hosted Bungee display face and its open-font license.
 - `scripts/validate.mjs` — deterministic project checks.
 - `scripts/serve.mjs` — dependency-free local server.

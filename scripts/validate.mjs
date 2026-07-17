@@ -7,6 +7,7 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const read = (file) => readFileSync(join(root, file), 'utf8');
 const index = read('index.html');
 const styles = read('styles.css');
+const mediaKit = read('media-kit.html');
 const configSource = read('site.config.js');
 const sandbox = { window: {} };
 runInNewContext(configSource, sandbox, { filename: 'site.config.js' });
@@ -23,6 +24,18 @@ check(config?.music?.spotifyTracks?.length === 5, 'Spotify track list must inclu
 check(config?.content?.twitchVideos?.includes('/smabblez/videos'), 'Twitch recent-broadcast URL is missing.');
 check(config?.content?.twitchSchedule === 'https://www.twitch.tv/smabblez/schedule', 'Twitch schedule URL is incorrect.');
 check(config?.community?.discordInviteCode === '5edKN6cw2K', 'Discord live-preview invite code is missing.');
+check(index.includes('<title>Smabblez | Interactive Twitch Streamer & GTA RP Creator</title>'), 'Homepage SEO title is missing.');
+check(index.includes('<link rel="canonical" href="https://smabblez.github.io/">'), 'Homepage canonical URL is missing.');
+check(index.includes('"@type": "ProfilePage"') && index.includes('"mainEntity"'), 'Homepage ProfilePage structured data is missing.');
+check(index.includes('https://www.tiktok.com/@Smabblez') && index.includes('https://www.twitch.tv/smabblez'), 'Structured social identity is incomplete.');
+check(index.includes('name="twitter:image"') && index.includes('property="og:image"'), 'Homepage social preview metadata is incomplete.');
+check(mediaKit.includes('<link rel="canonical" href="https://smabblez.github.io/media-kit.html">'), 'Media-kit canonical URL is missing.');
+check(existsSync(join(root, 'assets', 'favicon.svg')), 'Stable favicon file is missing.');
+check(existsSync(join(root, 'robots.txt')), 'robots.txt is missing.');
+check(existsSync(join(root, 'sitemap.xml')), 'sitemap.xml is missing.');
+check(read('robots.txt').includes('Sitemap: https://smabblez.github.io/sitemap.xml'), 'robots.txt must advertise the sitemap.');
+check(read('sitemap.xml').includes('<loc>https://smabblez.github.io/</loc>') && read('sitemap.xml').includes('<loc>https://smabblez.github.io/media-kit.html</loc>'), 'Sitemap is missing canonical public pages.');
+check(!index.includes('${manifest.'), 'Unresolved manifest placeholders are visible in the homepage.');
 check((index.match(/data-social="spotify"/g) || []).length >= 3, 'Spotify must be visible in the feature, finale, and footer.');
 check(!/twitch\.tv\/smabbles\b/i.test(index + configSource), 'Legacy Twitch handle found.');
 check(!/tiktok\.com\/@smabbles\b/i.test(index + configSource), 'Legacy TikTok handle found.');
@@ -51,5 +64,5 @@ if (failures.length) {
   failures.forEach((failure) => console.error(`- ${failure}`));
   process.exitCode = 1;
 } else {
-  console.log(`Validation passed: ${assetRefs.length} local assets, correct social handles, GitHub Pages-safe paths, finished social funnel.`);
+  console.log(`Validation passed: ${assetRefs.length} local assets, correct social handles, crawlable SEO files, structured profile data, GitHub Pages-safe paths, finished social funnel.`);
 }
