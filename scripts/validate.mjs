@@ -119,6 +119,8 @@ check(config?.community?.discordInviteCode === '5edKN6cw2K', 'Discord live-previ
 check(scriptSource.includes('utm_source') && scriptSource.includes('referrerOrigin') && scriptSource.includes('attribution'), 'Conversion analytics attribution is missing.');
 check(!/localStorage|sessionStorage|document\.cookie/.test(analyticsSource), 'Conversion analytics must not add browser storage or cookies.');
 check(analyticsFile.includes('outbound_click') && analyticsFile.includes('utm_source') && analyticsFile.includes('referrerOrigin') && analyticsFile.includes('sendAnalyticsEvent'), 'Secondary-page analytics listener is incomplete.');
+check(analyticsFile.includes('window.SMABBLEZ_ANALYTICS') && analyticsFile.includes('trackConversion'), 'Secondary-page analytics helper must expose a shared conversion tracking path.');
+check(mediaKitSource.includes('SMABBLEZ_ANALYTICS') && mediaKitSource.includes("event: 'media_kit_copy_link'"), 'Media-kit copy-link success must emit a conversion event through the shared analytics helper.');
 check([scriptSource, analyticsFile].every((source) => source.includes('sendAnalyticsEvent') && source.includes('navigator.sendBeacon') && source.includes('fetch(analyticsEndpoint') && source.includes('catch {}')), 'Analytics transport must fall back when sendBeacon fails or throws.');
 check(!/localStorage|sessionStorage|document\.cookie/.test(analyticsFile), 'Secondary-page analytics must not use browser storage or cookies.');
 check(contentHubs.every((page) => read(page).includes('analytics.js')), 'Every secondary public page must load analytics.js.');

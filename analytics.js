@@ -38,6 +38,20 @@ const sendAnalyticsEvent = (body) => {
   fetch(analyticsEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => {});
 };
 
+const trackConversion = (detail) => {
+  const enriched = {
+    ...detail,
+    page: detail.page || window.location.pathname,
+    timestamp: detail.timestamp || new Date().toISOString(),
+    attribution: detail.attribution || getAttribution()
+  };
+  const payload = JSON.stringify(enriched);
+  window.dispatchEvent(new CustomEvent('smabblez:conversion', { detail: enriched }));
+  sendAnalyticsEvent(payload);
+};
+
+window.SMABBLEZ_ANALYTICS = { track: trackConversion };
+
 const getLabel = (link, destination) => {
   const explicit = link.dataset.track || link.dataset.social || link.dataset.content;
   if (explicit) return explicit;
@@ -58,6 +72,5 @@ document.addEventListener('click', (event) => {
     timestamp: new Date().toISOString(),
     attribution: getAttribution()
   };
-  window.dispatchEvent(new CustomEvent('smabblez:conversion', { detail }));
-  sendAnalyticsEvent(JSON.stringify(detail));
+  trackConversion(detail);
 });

@@ -35,6 +35,7 @@ copyKitButton?.addEventListener('click', async () => {
     }
   } catch {}
   if (!copied) copied = fallbackCopy(value);
+  if (copied) window.SMABBLEZ_ANALYTICS?.track({ event: 'media_kit_copy_link', label: 'media-kit-copy', destination: value });
   if (copyKitStatus) copyKitStatus.textContent = copied ? 'Kit link copied.' : 'Copy unavailable — copy the page URL from your browser.';
   if (copied) window.setTimeout(() => { if (copyKitStatus) copyKitStatus.textContent = ''; }, 3000);
 });
