@@ -104,6 +104,7 @@ check(mediaKit.includes('class="kit-brief"') && (mediaKit.match(/class="kit-brie
 check(mediaKit.includes('data-print-kit') && mediaKit.includes('src="media-kit.js?v=20260723a"') && !mediaKit.includes('onclick="window.print()"'), 'Media-kit print control must use the dedicated accessible script.');
 check(mediaKit.includes('href="#kit-contact"') && mediaKit.includes('id="kit-contact"'), 'Media-kit must expose an above-the-fold path to collaboration contact.');
 check(mediaKit.includes('https://www.twitch.tv/smabblez/clips?range=all') && mediaKit.includes('https://www.youtube.com/@Smabblez/shorts'), 'Media-kit official channels must include verified clip destinations.');
+check(['twitch', 'tiktok', 'discord', 'spotify', 'youtube'].every((label) => mediaKit.includes(`data-social="${label}"`)), 'Media-kit platform and contact links must carry explicit analytics labels.');
 check(styles.includes('.kit-nav { order:3;width:100%;justify-content:center;flex-wrap:wrap;column-gap:12px;row-gap:8px;'), 'Media-kit mobile navigation must wrap so every collaboration route remains reachable.');
 check(existsSync(join(root, 'media-kit.js')) && readFileSync(join(root, 'scripts', 'build-site.mjs'), 'utf8').includes("'media-kit.js'"), 'Media-kit behavior script must be included in the deployment artifact.');
 check(about.includes('<title>About Smabblez | Interactive Twitch Streamer & GTA RP Creator</title>'), 'About-page SEO title is missing.');
