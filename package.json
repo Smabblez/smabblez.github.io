@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/serve.mjs",
+    "sitemap": "node scripts/generate-sitemap.mjs",
     "validate": "node scripts/validate.mjs"
   }
 }

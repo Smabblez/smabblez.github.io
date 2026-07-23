@@ -28,6 +28,10 @@ window.SMABBLEZ_SITE = {
     /* Add a privacy-friendly event endpoint here when one is available. */
     endpoint: ""
   },
+  seo: {
+    /* Only these reviewed HTML files are public, indexable pages. */
+    indexablePages: ["index.html", "media-kit.html"]
+  },
   music: {
     spotifyTracks: [
       {

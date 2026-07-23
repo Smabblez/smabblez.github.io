@@ -35,7 +35,13 @@ check(existsSync(join(root, 'assets', 'favicon.svg')), 'Stable favicon file is m
 check(existsSync(join(root, 'robots.txt')), 'robots.txt is missing.');
 check(existsSync(join(root, 'sitemap.xml')), 'sitemap.xml is missing.');
 check(read('robots.txt').includes('Sitemap: https://smabblez.github.io/sitemap.xml'), 'robots.txt must advertise the sitemap.');
-check(read('sitemap.xml').includes('<loc>https://smabblez.github.io/</loc>') && read('sitemap.xml').includes('<loc>https://smabblez.github.io/media-kit.html</loc>'), 'Sitemap is missing canonical public pages.');
+const sitemap = read('sitemap.xml');
+const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+const expectedSitemapUrls = (config.seo?.indexablePages || []).map((page) => {
+  const html = read(page);
+  return html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i)?.[1];
+}).sort();
+check(sitemapUrls.length === expectedSitemapUrls.length && sitemapUrls.slice().sort().every((url, index) => url === expectedSitemapUrls[index]), 'Sitemap must exactly match configured canonical public pages.');
 check(!index.includes('${manifest.'), 'Unresolved manifest placeholders are visible in the homepage.');
 check((index.match(/data-social="spotify"/g) || []).length >= 3, 'Spotify must be visible in the feature, finale, and footer.');
 check(!/twitch\.tv\/smabbles\b/i.test(index + configSource), 'Legacy Twitch handle found.');
