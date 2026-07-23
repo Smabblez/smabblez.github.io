@@ -717,3 +717,10 @@ body.chaos-on .hero-nose-button span { background: var(--green); box-shadow: 5px
   .simple-home .site-footer { padding-bottom: 84px; }
   .about-faq { margin-top: 38px; }
 }
+
+.clips-page .music-hero h1 em,.clips-page .music-list h2 em,.clips-page .music-next h2 em { color:var(--red); }
+.clips-page .music-art { border-color:rgba(255,38,56,.5); background:radial-gradient(circle at 50% 46%,rgba(255,38,56,.36),transparent 33%),var(--paper); }
+.clips-page .music-art span { color:var(--red); }
+.clips-page .track-grid li > span { color:var(--red); }
+.clips-page .track-grid li:hover strong,.clips-page .track-grid li:hover a { color:var(--red); }
+.clips-page .music-next { background:linear-gradient(135deg,#3a1019,#110c12); }
