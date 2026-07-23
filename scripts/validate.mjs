@@ -46,6 +46,8 @@ const duplicateValues = (values) => values.filter((value, index) => value && val
 const headingLevels = (html) => [...html.matchAll(/<h([1-6])\b[^>]*>/gi)].map((match) => Number(match[1]));
 const imagesHaveAlt = (html) => [...html.matchAll(/<img\b[^>]*>/gi)].every(([tag]) => /\salt="[^"]*"/i.test(tag));
 const blankTargetsHaveRel = (html) => [...html.matchAll(/<a\b[^>]*target="_blank"[^>]*>/gi)].every(([tag]) => /\srel="[^"]*(?:noreferrer|noopener)[^"]*"/i.test(tag));
+const anchorTags = (html) => [...html.matchAll(/<a\b[^>]*>/gi)].map(([tag]) => tag);
+const anchorWithData = (html, attribute, value) => anchorTags(html).find((tag) => tag.includes(`${attribute}="${value}"`));
 const pageIds = Object.fromEntries(indexablePages.map((page) => [page, new Set([...read(page).matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]))]));
 const checkInternalFragments = () => {
   indexablePages.forEach((page) => {
@@ -73,6 +75,23 @@ check(config?.content?.twitchSchedule === 'https://www.twitch.tv/smabblez/schedu
 check(config?.content?.youtubeShorts === 'https://www.youtube.com/@Smabblez/shorts', 'YouTube Shorts URL is incorrect.');
 check(index.includes('href="https://www.twitch.tv/smabblez/clips?range=all"') && index.includes('data-content="twitchClips"'), 'Homepage must expose the configured Twitch clips URL.');
 check(index.includes('href="https://www.youtube.com/@Smabblez/shorts"') && index.includes('data-content="youtubeShorts"'), 'Homepage must expose the configured YouTube Shorts URL.');
+const configuredMediaKitLinks = [
+  ['data-social', 'twitch', config?.socials?.twitch],
+  ['data-social', 'tiktok', config?.socials?.tiktok],
+  ['data-social', 'discord', config?.socials?.discord],
+  ['data-social', 'spotify', config?.socials?.spotify],
+  ['data-social', 'youtube', config?.socials?.youtube],
+  ['data-content', 'twitchClips', config?.content?.twitchClips],
+  ['data-content', 'youtubeShorts', config?.content?.youtubeShorts]
+];
+configuredMediaKitLinks.forEach(([attribute, label, href]) => {
+  check(Boolean(href) && Boolean(anchorWithData(mediaKit, attribute, label)?.includes(`href="${href}"`)), `Media-kit ${attribute}="${label}" link must match site.config.js.`);
+});
+const mediaKitJsonLd = [...mediaKit.matchAll(/<script\s+type="application\/ld\+json">([\s\S]*?)<\/script>/gi)]
+  .map(([, block]) => { try { return JSON.parse(block); } catch { return null; } })
+  .find((block) => block?.['@type'] === 'ProfilePage');
+const profileSocialKeys = ['twitch', 'tiktok', 'spotify', 'youtube'];
+check(profileSocialKeys.every((key) => mediaKitJsonLd?.mainEntity?.sameAs?.includes(config?.socials?.[key])), 'Media-kit ProfilePage sameAs URLs must match configured social profiles.');
 check(config?.community?.discordInviteCode === '5edKN6cw2K', 'Discord live-preview invite code is missing.');
 check(scriptSource.includes('utm_source') && scriptSource.includes('referrerOrigin') && scriptSource.includes('attribution'), 'Conversion analytics attribution is missing.');
 check(!/localStorage|sessionStorage|document\.cookie/.test(analyticsSource), 'Conversion analytics must not add browser storage or cookies.');
@@ -103,6 +122,7 @@ check(mediaKit.includes('<link rel="canonical" href="https://smabblez.github.io/
 check(mediaKit.includes('class="kit-brief"') && (mediaKit.match(/class="kit-brief"/g) || []).length === 1, 'Media-kit collaboration brief checklist is missing.');
 check(mediaKit.includes('data-print-kit') && mediaKit.includes('src="media-kit.js?v=20260723a"') && !mediaKit.includes('onclick="window.print()"'), 'Media-kit print control must use the dedicated accessible script.');
 check(mediaKit.includes('href="#kit-contact"') && mediaKit.includes('id="kit-contact"'), 'Media-kit must expose an above-the-fold path to collaboration contact.');
+check(mediaKit.includes('"description": "Smabblez is an interactive Twitch streamer, GTA RP creator, musician, performer, and community builder."') && mediaKit.includes('"jobTitle": "Interactive Twitch streamer, GTA RP creator, musician, performer, and community builder"') && mediaKit.includes('"image": "https://smabblez.github.io/assets/emotes/hype.png"'), 'Media-kit profile identity must expose verified creator positioning and image data.');
 check(mediaKit.includes('https://www.twitch.tv/smabblez/clips?range=all') && mediaKit.includes('https://www.youtube.com/@Smabblez/shorts'), 'Media-kit official channels must include verified clip destinations.');
 check(['twitch', 'tiktok', 'discord', 'spotify', 'youtube'].every((label) => mediaKit.includes(`data-social="${label}"`)), 'Media-kit platform and contact links must carry explicit analytics labels.');
 check(styles.includes('.kit-nav { order:3;width:100%;justify-content:center;flex-wrap:wrap;column-gap:12px;row-gap:8px;'), 'Media-kit mobile navigation must wrap so every collaboration route remains reachable.');
