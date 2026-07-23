@@ -66,7 +66,11 @@ check(config?.socials?.spotify === 'https://open.spotify.com/artist/1JiqQUYL0EA1
 check(config?.socials?.youtube === 'https://www.youtube.com/@Smabblez', 'YouTube channel URL is incorrect.');
 check(config?.music?.spotifyTracks?.length === 5, 'Spotify track list must include the five artist-page tracks.');
 check(config?.content?.twitchVideos?.includes('/smabblez/videos'), 'Twitch recent-broadcast URL is missing.');
+check(config?.content?.twitchClips === 'https://www.twitch.tv/smabblez/clips?range=all', 'Twitch clips URL is incorrect.');
 check(config?.content?.twitchSchedule === 'https://www.twitch.tv/smabblez/schedule', 'Twitch schedule URL is incorrect.');
+check(config?.content?.youtubeShorts === 'https://www.youtube.com/@Smabblez/shorts', 'YouTube Shorts URL is incorrect.');
+check(index.includes('href="https://www.twitch.tv/smabblez/clips?range=all"') && index.includes('data-content="twitchClips"'), 'Homepage must expose the configured Twitch clips URL.');
+check(index.includes('href="https://www.youtube.com/@Smabblez/shorts"') && index.includes('data-content="youtubeShorts"'), 'Homepage must expose the configured YouTube Shorts URL.');
 check(config?.community?.discordInviteCode === '5edKN6cw2K', 'Discord live-preview invite code is missing.');
 check(scriptSource.includes('utm_source') && scriptSource.includes('referrerOrigin') && scriptSource.includes('attribution'), 'Conversion analytics attribution is missing.');
 check(!/localStorage|sessionStorage|document\.cookie/.test(analyticsSource), 'Conversion analytics must not add browser storage or cookies.');

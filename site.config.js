@@ -19,7 +19,9 @@ window.SMABBLEZ_SITE = {
   },
   content: {
     twitchVideos: "https://www.twitch.tv/smabblez/videos?filter=archives&sort=time",
-    twitchSchedule: "https://www.twitch.tv/smabblez/schedule"
+    twitchClips: "https://www.twitch.tv/smabblez/clips?range=all",
+    twitchSchedule: "https://www.twitch.tv/smabblez/schedule",
+    youtubeShorts: "https://www.youtube.com/@Smabblez/shorts"
   },
   community: {
     discordInviteCode: "5edKN6cw2K"
