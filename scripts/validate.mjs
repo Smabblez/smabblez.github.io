@@ -100,6 +100,7 @@ check(index.includes('"@type": "FAQPage"') && index.includes('What does Smabblez
 check(index.includes('https://www.tiktok.com/@Smabblez') && index.includes('https://www.twitch.tv/smabblez'), 'Structured social identity is incomplete.');
 check(index.includes('name="twitter:image"') && index.includes('property="og:image"'), 'Homepage social preview metadata is incomplete.');
 check(mediaKit.includes('<link rel="canonical" href="https://smabblez.github.io/media-kit.html">'), 'Media-kit canonical URL is missing.');
+check(mediaKit.includes('class="kit-brief"') && (mediaKit.match(/class="kit-brief"/g) || []).length === 1, 'Media-kit collaboration brief checklist is missing.');
 check(about.includes('<title>About Smabblez | Interactive Twitch Streamer & GTA RP Creator</title>'), 'About-page SEO title is missing.');
 check(about.includes('<link rel="canonical" href="https://smabblez.github.io/about.html">') && about.includes('id="about-page-title"'), 'About-page canonical URL or H1 is missing.');
 check(about.includes('"@type": "AboutPage"') && about.includes('https://www.twitch.tv/smabblez'), 'About-page structured identity is incomplete.');
