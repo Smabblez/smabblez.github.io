@@ -78,6 +78,7 @@ check(duplicateValues(pageMetadata.map(({ description }) => description)).length
 check(duplicateValues(pageMetadata.map(({ canonical }) => canonical)).length === 0, 'Public page canonical URLs must be unique.');
 check(pageMetadata.every(({ shareReady }) => shareReady), 'Every public page must include complete Open Graph and X/Twitter metadata.');
 check(pageMetadata.every(({ jsonLdValid }) => jsonLdValid), 'Every public page must contain parseable JSON-LD structured data.');
+check(indexablePages.every((page) => read(page).includes('<meta name="referrer" content="strict-origin-when-cross-origin">')), 'Every public page must declare the privacy-safe referrer policy.');
 check(index.includes('<title>Smabblez | Interactive Twitch Streamer & GTA RP Creator</title>'), 'Homepage SEO title is missing.');
 check(index.includes('<link rel="canonical" href="https://smabblez.github.io/">'), 'Homepage canonical URL is missing.');
 check(index.includes('"@type": "ProfilePage"') && index.includes('"mainEntity"'), 'Homepage ProfilePage structured data is missing.');
