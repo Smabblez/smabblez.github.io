@@ -27,6 +27,7 @@ check(config?.community?.discordInviteCode === '5edKN6cw2K', 'Discord live-previ
 check(index.includes('<title>Smabblez | Interactive Twitch Streamer & GTA RP Creator</title>'), 'Homepage SEO title is missing.');
 check(index.includes('<link rel="canonical" href="https://smabblez.github.io/">'), 'Homepage canonical URL is missing.');
 check(index.includes('"@type": "ProfilePage"') && index.includes('"mainEntity"'), 'Homepage ProfilePage structured data is missing.');
+check(index.includes('"@type": "FAQPage"') && index.includes('What does Smabblez stream?'), 'Homepage FAQ structured data is missing.');
 check(index.includes('https://www.tiktok.com/@Smabblez') && index.includes('https://www.twitch.tv/smabblez'), 'Structured social identity is incomplete.');
 check(index.includes('name="twitter:image"') && index.includes('property="og:image"'), 'Homepage social preview metadata is incomplete.');
 check(mediaKit.includes('<link rel="canonical" href="https://smabblez.github.io/media-kit.html">'), 'Media-kit canonical URL is missing.');
@@ -41,6 +42,7 @@ check(!/twitch\.tv\/smabbles\b/i.test(index + configSource), 'Legacy Twitch hand
 check(!/tiktok\.com\/@smabbles\b/i.test(index + configSource), 'Legacy TikTok handle found.');
 check(index.includes('data-twitch-player'), 'Official Twitch live player is missing.');
 check(index.includes('id="follow"'), 'Simplified follow section is missing.');
+check(index.includes('id="faq"') && (index.match(/<details>/g) || []).length === 4, 'Homepage FAQ content is missing or incomplete.');
 check((index.match(/<section\b/g) || []).length === 4, 'Homepage must stay focused at exactly four sections.');
 check(!/id="latest"|id="content"|class="finale"|data-follow-dock/i.test(index), 'Redundant homepage section was reintroduced.');
 check(index.includes('class="cursor-nose"'), 'Nose cursor is missing.');
