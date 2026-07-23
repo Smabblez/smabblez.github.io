@@ -65,6 +65,7 @@ const secondaryHeroImages = [
   const section = read(page).match(new RegExp(`<section\\s+class="${className}"[\\s\\S]*?<\\/section>`, 'i'))?.[0] || '';
   return section.match(/<img\b[^>]*>/i)?.[0] || '';
 });
+const homepageBelowFoldImages = ['evil.webp', 'love.webp', 'bonk.webp', 'win.webp'].map((asset) => index.match(new RegExp(`<img\\b[^>]*src="assets/emotes/${asset}"[^>]*>`, 'i'))?.[0] || '');
 const pageIds = Object.fromEntries(indexablePages.map((page) => [page, new Set([...read(page).matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]))]));
 const checkInternalFragments = () => {
   indexablePages.forEach((page) => {
@@ -199,7 +200,7 @@ check(index.includes('href="media-kit.html"'), 'Creator media-kit link is missin
 check(contentHubs.every((page) => index.includes(`href="${page}"`)), 'Homepage must link to every public content page.');
 check(!mediaKit.includes('index.html#collab'), 'Media kit contains a stale removed section link.');
 check(existsSync(join(root, 'media-kit.html')), 'Standalone media-kit page is missing.');
-check((index.match(/loading="lazy"/g) || []).length >= 4, 'Below-fold media must be lazy-loaded.');
+check(homepageBelowFoldImages.every((tag) => /\bloading="lazy"/i.test(tag) && /\bdecoding="async"/i.test(tag)), 'Each homepage below-fold image must be lazy-loaded and asynchronously decoded.');
 check(!/small amount of dignity/i.test(index), 'Removed dignity copy was reintroduced.');
 check(!/data-emote-dialog|badge-ladder|drop-grid|emote vault/i.test(index), 'Asset-catalog UI was reintroduced.');
 check((index.match(/class="social-card/g) || []).length === 3, 'The social funnel must have exactly three primary cards.');
