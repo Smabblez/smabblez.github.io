@@ -12,6 +12,8 @@ const about = read('about.html');
 const music = read('music.html');
 const gtaRp = read('gta-rp.html');
 const configSource = read('site.config.js');
+const scriptSource = read('script.js');
+const analyticsSource = scriptSource.slice(scriptSource.indexOf('const analyticsEndpoint'));
 const sandbox = { window: {} };
 runInNewContext(configSource, sandbox, { filename: 'site.config.js' });
 const config = sandbox.window.SMABBLEZ_SITE;
@@ -38,6 +40,8 @@ check(config?.music?.spotifyTracks?.length === 5, 'Spotify track list must inclu
 check(config?.content?.twitchVideos?.includes('/smabblez/videos'), 'Twitch recent-broadcast URL is missing.');
 check(config?.content?.twitchSchedule === 'https://www.twitch.tv/smabblez/schedule', 'Twitch schedule URL is incorrect.');
 check(config?.community?.discordInviteCode === '5edKN6cw2K', 'Discord live-preview invite code is missing.');
+check(scriptSource.includes('utm_source') && scriptSource.includes('referrerOrigin') && scriptSource.includes('attribution'), 'Conversion analytics attribution is missing.');
+check(!/localStorage|sessionStorage|document\.cookie/.test(analyticsSource), 'Conversion analytics must not add browser storage or cookies.');
 check(indexablePages.length > 0 && pageMetadata.every(({ title, description, canonical }) => title && description && canonical), 'Every configured public page must have a title, description, and canonical URL.');
 check(duplicateValues(pageMetadata.map(({ title }) => title)).length === 0, 'Public page titles must be unique.');
 check(duplicateValues(pageMetadata.map(({ description }) => description)).length === 0, 'Public page descriptions must be unique.');

@@ -53,6 +53,6 @@ For Hermes/E4B from this directory, begin with `AGENTS.md`, then `site.config.js
 
 ## Conversion analytics
 
-Tracked calls to action emit a browser event named `smabblez:conversion`. To collect those events, set `analytics.endpoint` in `site.config.js` to a POST endpoint you control. The payload contains only the event label, destination origin/path, page path, and timestamp; it does not set cookies or create a user identifier. With no endpoint configured, nothing is transmitted.
+Tracked calls to action emit a browser event named `smabblez:conversion`. To collect those events, set `analytics.endpoint` in `site.config.js` to a POST endpoint you control. The payload contains the event label, destination origin/path, page path, timestamp, an allowlisted UTM attribution object, and the referring page's origin only. It does not set cookies, use local storage, capture a full referrer URL, or create a user identifier. With no endpoint configured, nothing is transmitted.
 
 The standalone `about.html` page is the crawlable creator overview, `gta-rp.html` is the focused roleplay content page, `music.html` is the crawlable Spotify track list, and `media-kit.html` is the public collaboration one-sheet with a print/save-PDF layout. They intentionally use only verified public claims and links.

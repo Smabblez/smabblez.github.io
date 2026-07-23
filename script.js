@@ -238,6 +238,23 @@ if (discordPreview && discordInviteCode) {
 }
 
 const analyticsEndpoint = siteConfig.analytics?.endpoint?.trim();
+const getAttribution = () => {
+  const params = new URLSearchParams(window.location.search);
+  const utm = Object.fromEntries(['source', 'medium', 'campaign', 'content', 'term']
+    .map((key) => [`utm_${key}`, params.get(`utm_${key}`)?.slice(0, 160) || ''])
+    .filter(([, value]) => value));
+  let referrerOrigin = '';
+  try {
+    referrerOrigin = document.referrer ? new URL(document.referrer).origin : '';
+  } catch {
+    referrerOrigin = '';
+  }
+  return {
+    source: utm.utm_source ? 'utm' : (referrerOrigin ? 'referral' : 'direct'),
+    ...utm,
+    referrerOrigin
+  };
+};
 document.addEventListener('click', (event) => {
   const link = event.target.closest('a[href]');
   if (!link) return;
@@ -249,7 +266,8 @@ document.addEventListener('click', (event) => {
     label,
     destination: `${destination.origin}${destination.pathname}`,
     page: window.location.pathname,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    attribution: getAttribution()
   };
   window.dispatchEvent(new CustomEvent('smabblez:conversion', { detail }));
   if (!analyticsEndpoint) return;
