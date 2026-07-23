@@ -328,7 +328,6 @@ const modeStatus = document.querySelector('[data-mode-status]');
 const chaosCharacter = document.querySelector('[data-chaos-character]');
 const heroCharacter = document.querySelector('.hero-character');
 const honkButton = document.querySelector('[data-honk]');
-const honkLabel = document.querySelector('[data-honk-label]');
 const sparkColors = ['#ff2638', '#ffd42f', '#f6f1e7'];
 const chaosWords = ['HONK!', 'BONK!', 'CHAOS!', 'LIVE!', '???', 'BIG TOP'];
 
@@ -399,8 +398,7 @@ honkButton?.addEventListener('click', (event) => {
 const setChaos = (active) => {
   body.classList.toggle('chaos-on', active);
   honkButton?.setAttribute('aria-pressed', String(active));
-  honkButton?.setAttribute('aria-label', active ? "Honk Smabblez's nose and turn off Chaos Mode" : "Honk Smabblez's nose and turn on Chaos Mode");
-  if (honkLabel) honkLabel.textContent = active ? 'Honk to calm' : 'Honk for chaos';
+  honkButton?.setAttribute('aria-label', active ? "Honk Smabblez's nose to turn off Chaos Mode" : "Honk Smabblez's nose to turn on Chaos Mode");
   modeStatus.textContent = active ? 'Chaos mode enabled. Click the page to drop chaos.' : 'Chaos mode disabled.';
   chaosCharacter.src = active ? chaosCharacter.dataset.chaosSrc : chaosCharacter.dataset.normalSrc;
   if (active) broadcastChaos();
