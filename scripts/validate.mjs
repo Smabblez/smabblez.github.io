@@ -16,6 +16,7 @@ const configSource = read('site.config.js');
 const scriptSource = read('script.js');
 const analyticsFile = read('analytics.js');
 const mediaKitSource = read('media-kit.js');
+const serveSource = read('scripts/serve.mjs');
 const analyticsSource = scriptSource.slice(scriptSource.indexOf('const analyticsEndpoint'));
 const sandbox = { window: {} };
 runInNewContext(configSource, sandbox, { filename: 'site.config.js' });
@@ -125,6 +126,7 @@ check([scriptSource, analyticsFile].every((source) => source.includes('sendAnaly
 check(!/localStorage|sessionStorage|document\.cookie/.test(analyticsFile), 'Secondary-page analytics must not use browser storage or cookies.');
 check(contentHubs.every((page) => read(page).includes('analytics.js')), 'Every secondary public page must load analytics.js.');
 check(existsSync(join(root, 'scripts', 'build-site.mjs')), 'Static deployment builder is missing.');
+check(serveSource.includes("'.webp': 'image/webp'") && serveSource.includes("'.woff2': 'font/woff2'"), 'Local preview server must serve shipped WebP and WOFF2 assets with correct MIME types.');
 check(readFileSync(join(root, '.github', 'workflows', 'deploy.yml'), 'utf8').includes('node scripts/build-site.mjs _site'), 'Pages workflow must use the static deployment builder.');
 check(indexablePages.length > 0 && pageMetadata.every(({ title, description, canonical }) => title && description && canonical), 'Every configured public page must have a title, description, and canonical URL.');
 check(duplicateValues(pageMetadata.map(({ title }) => title)).length === 0, 'Public page titles must be unique.');
