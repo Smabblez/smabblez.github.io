@@ -30,6 +30,7 @@ jobs:
           node scripts/validate.mjs
           node --check script.js
           node --check analytics.js
+          node --check media-kit.js
           node --check scripts/build-site.mjs
           node scripts/generate-sitemap.mjs --check
           node scripts/build-site.mjs _site
