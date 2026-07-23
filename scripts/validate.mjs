@@ -95,6 +95,7 @@ check(gtaRp.includes('<title>Smabblez GTA RP | Character-Led Interactive Rolepla
 check(gtaRp.includes('<link rel="canonical" href="https://smabblez.github.io/gta-rp.html">') && gtaRp.includes('id="rp-title"'), 'GTA RP page canonical URL or H1 is missing.');
 check(gtaRp.includes('"@type": "Article"') && gtaRp.includes('GTA RP streams'), 'GTA RP page structured content is incomplete.');
 check(about.includes('href="about.html" aria-current="page"') && gtaRp.includes('href="gta-rp.html" aria-current="page"') && music.includes('href="music.html" aria-current="page"'), 'Public content navigation must identify the current page.');
+check(mediaKit.includes('href="media-kit.html" aria-current="page"'), 'Media-kit navigation must identify the current page.');
 check(existsSync(join(root, 'assets', 'favicon.svg')), 'Stable favicon file is missing.');
 check(existsSync(join(root, 'robots.txt')), 'robots.txt is missing.');
 check(existsSync(join(root, 'sitemap.xml')), 'sitemap.xml is missing.');
