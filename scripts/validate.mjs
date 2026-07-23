@@ -27,7 +27,9 @@ const pageMetadata = indexablePages.map((page) => {
     page,
     title: html.match(/<title>([^<]+)<\/title>/i)?.[1]?.trim(),
     description: html.match(/<meta\s+name="description"\s+content="([^"]+)"/i)?.[1]?.trim(),
-    canonical: html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i)?.[1]?.trim()
+    canonical: html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i)?.[1]?.trim(),
+    shareReady: ['og:title', 'og:description', 'og:url', 'og:image', 'twitter:card', 'twitter:title', 'twitter:description', 'twitter:image']
+      .every((name) => html.includes(`content="`) && (html.includes(`property="${name}"`) || html.includes(`name="${name}"`)))
   };
 });
 const duplicateValues = (values) => values.filter((value, index) => value && values.indexOf(value) !== index);
@@ -52,6 +54,7 @@ check(indexablePages.length > 0 && pageMetadata.every(({ title, description, can
 check(duplicateValues(pageMetadata.map(({ title }) => title)).length === 0, 'Public page titles must be unique.');
 check(duplicateValues(pageMetadata.map(({ description }) => description)).length === 0, 'Public page descriptions must be unique.');
 check(duplicateValues(pageMetadata.map(({ canonical }) => canonical)).length === 0, 'Public page canonical URLs must be unique.');
+check(pageMetadata.every(({ shareReady }) => shareReady), 'Every public page must include complete Open Graph and X/Twitter metadata.');
 check(index.includes('<title>Smabblez | Interactive Twitch Streamer & GTA RP Creator</title>'), 'Homepage SEO title is missing.');
 check(index.includes('<link rel="canonical" href="https://smabblez.github.io/">'), 'Homepage canonical URL is missing.');
 check(index.includes('"@type": "ProfilePage"') && index.includes('"mainEntity"'), 'Homepage ProfilePage structured data is missing.');
