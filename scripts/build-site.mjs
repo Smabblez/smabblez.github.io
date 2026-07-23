@@ -1,5 +1,5 @@
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync } from 'node:fs';
-import { resolve, join } from 'node:path';
+import { resolve, join, relative, isAbsolute } from 'node:path';
 import { runInNewContext } from 'node:vm';
 import { fileURLToPath } from 'node:url';
 
@@ -10,10 +10,10 @@ runInNewContext(read('site.config.js'), sandbox, { filename: 'site.config.js' })
 const pages = sandbox.window.SMABBLEZ_SITE?.seo?.indexablePages;
 const outputArg = process.argv[2] || '_site';
 const output = resolve(root, outputArg);
-const rootWithSeparator = root.endsWith('\\') ? root : `${root}\\`;
+const relativeOutput = relative(root, output);
 
 if (!Array.isArray(pages) || pages.length === 0) throw new Error('No public pages configured in site.config.js.');
-if (!output.startsWith(rootWithSeparator) || output === root) throw new Error('Build output must stay inside the site directory.');
+if (!relativeOutput || relativeOutput.startsWith('..') || isAbsolute(relativeOutput)) throw new Error('Build output must stay inside the site directory.');
 
 const files = [
   ...pages,
