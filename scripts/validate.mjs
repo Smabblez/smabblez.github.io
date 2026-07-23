@@ -55,6 +55,8 @@ const blankTargetsHaveRel = (html) => [...html.matchAll(/<a\b[^>]*target="_blank
 const htmlAttributeValue = (value) => String(value).replaceAll('&', '&amp;').replaceAll('"', '&quot;');
 const anchorTags = (html) => [...html.matchAll(/<a\b[^>]*>/gi)].map(([tag]) => tag);
 const anchorWithData = (html, attribute, value) => anchorTags(html).find((tag) => tag.includes(`${attribute}="${value}"`));
+const externalAnchorTags = (html) => [...html.matchAll(/<a\b[^>]*href="https:\/\/[^\"]+"[^>]*>/gi)].map(([tag]) => tag);
+const siteOrigin = new URL(siteUrl).origin;
 const secondaryHeroImages = [
   ['about.html', 'about-hero'],
   ['clips.html', 'music-hero'],
@@ -130,6 +132,7 @@ check(pageMetadata.every(({ ogImage, twitterImage, ogImageCount, twitterImageCou
 check(pageMetadata.every(({ shareReady }) => shareReady), 'Every public page must include complete Open Graph and X/Twitter metadata.');
 check(pageMetadata.every(({ jsonLdValid }) => jsonLdValid), 'Every public page must contain parseable JSON-LD structured data.');
 check(secondaryHeroImages.every((tag) => /\bfetchpriority="high"/i.test(tag) && /\bdecoding="async"/i.test(tag) && !/\bloading="lazy"/i.test(tag)), 'Every secondary-page hero image must be high-priority and asynchronously decoded.');
+check(indexablePages.every((page) => externalAnchorTags(read(page)).every((tag) => { const href = tag.match(/href="([^"]+)"/i)?.[1]; try { return new URL(href, siteUrl).origin === siteOrigin || /\sdata-(?:social|content|track)="[^"]+"/i.test(tag); } catch { return false; } })), 'Every public external link must declare an explicit analytics label unless it is same-origin.');
 check(contentHubs.every((page) => read(page).includes('"@type": "BreadcrumbList"') && read(page).includes('"itemListElement"')), 'Every secondary public page must expose breadcrumb structured data.');
 check(indexablePages.every((page) => read(page).includes('<meta name="referrer" content="strict-origin-when-cross-origin">')), 'Every public page must declare the privacy-safe referrer policy.');
 check(indexablePages.every((page) => read(page).includes('<link rel="preload" as="font" href="assets/fonts/bungee-latin.woff2" type="font/woff2" crossorigin>')), 'Every public page must preload the shared display font.');
