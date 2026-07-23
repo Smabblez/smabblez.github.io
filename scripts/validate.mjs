@@ -35,7 +35,7 @@ const pageMetadata = indexablePages.map((page) => {
     title: html.match(/<title>([^<]+)<\/title>/i)?.[1]?.trim(),
     description: html.match(/<meta\s+name="description"\s+content="([^"]+)"/i)?.[1]?.trim(),
     canonical: html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i)?.[1]?.trim(),
-    shareReady: ['og:title', 'og:description', 'og:url', 'og:image', 'twitter:card', 'twitter:title', 'twitter:description', 'twitter:image']
+    shareReady: ['og:title', 'og:description', 'og:url', 'og:image', 'og:image:width', 'og:image:height', 'twitter:card', 'twitter:title', 'twitter:description', 'twitter:image']
       .every((name) => html.includes(`content="`) && (html.includes(`property="${name}"`) || html.includes(`name="${name}"`))),
     jsonLdValid
   };
