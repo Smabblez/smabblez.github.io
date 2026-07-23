@@ -33,6 +33,20 @@ const pageMetadata = indexablePages.map((page) => {
   };
 });
 const duplicateValues = (values) => values.filter((value, index) => value && values.indexOf(value) !== index);
+const pageIds = Object.fromEntries(indexablePages.map((page) => [page, new Set([...read(page).matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]))]));
+const checkInternalFragments = () => {
+  indexablePages.forEach((page) => {
+    const html = read(page);
+    [...html.matchAll(/\bhref="([^"]+)"/g)].forEach(([, href]) => {
+      if (/^(?:[a-z]+:|\/\/)/i.test(href) || !href.includes('#')) return;
+      const [path, fragment] = href.split('#');
+      const targetPage = path || page;
+      if (!indexablePages.includes(targetPage)) return;
+      check(Boolean(fragment) && pageIds[targetPage]?.has(fragment), `Missing internal fragment target: ${page} -> ${href}`);
+    });
+  });
+};
+checkInternalFragments();
 
 check(config?.socials?.twitch === 'https://www.twitch.tv/smabblez', 'Twitch must use /smabblez.');
 check(config?.socials?.tiktok === 'https://www.tiktok.com/@Smabblez', 'TikTok must use @Smabblez.');
