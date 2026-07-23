@@ -97,7 +97,8 @@ check(profileSocialKeys.every((key) => mediaKitJsonLd?.mainEntity?.sameAs?.inclu
 check(config?.community?.discordInviteCode === '5edKN6cw2K', 'Discord live-preview invite code is missing.');
 check(scriptSource.includes('utm_source') && scriptSource.includes('referrerOrigin') && scriptSource.includes('attribution'), 'Conversion analytics attribution is missing.');
 check(!/localStorage|sessionStorage|document\.cookie/.test(analyticsSource), 'Conversion analytics must not add browser storage or cookies.');
-check(analyticsFile.includes('outbound_click') && analyticsFile.includes('utm_source') && analyticsFile.includes('referrerOrigin'), 'Secondary-page analytics listener is incomplete.');
+check(analyticsFile.includes('outbound_click') && analyticsFile.includes('utm_source') && analyticsFile.includes('referrerOrigin') && analyticsFile.includes('sendAnalyticsEvent'), 'Secondary-page analytics listener is incomplete.');
+check([scriptSource, analyticsFile].every((source) => source.includes('sendAnalyticsEvent') && source.includes('navigator.sendBeacon') && source.includes('fetch(analyticsEndpoint') && source.includes('catch {}')), 'Analytics transport must fall back when sendBeacon fails or throws.');
 check(!/localStorage|sessionStorage|document\.cookie/.test(analyticsFile), 'Secondary-page analytics must not use browser storage or cookies.');
 check(contentHubs.every((page) => read(page).includes('analytics.js')), 'Every secondary public page must load analytics.js.');
 check(existsSync(join(root, 'scripts', 'build-site.mjs')), 'Static deployment builder is missing.');

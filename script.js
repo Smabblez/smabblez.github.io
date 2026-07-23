@@ -255,6 +255,13 @@ const getAttribution = () => {
     referrerOrigin
   };
 };
+const sendAnalyticsEvent = (body) => {
+  if (!analyticsEndpoint) return;
+  try {
+    if (typeof navigator.sendBeacon === 'function' && navigator.sendBeacon(analyticsEndpoint, new Blob([body], { type: 'application/json' }))) return;
+  } catch {}
+  fetch(analyticsEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => {});
+};
 document.addEventListener('click', (event) => {
   const link = event.target.closest('a[href]');
   if (!link) return;
@@ -270,10 +277,7 @@ document.addEventListener('click', (event) => {
     attribution: getAttribution()
   };
   window.dispatchEvent(new CustomEvent('smabblez:conversion', { detail }));
-  if (!analyticsEndpoint) return;
-  const body = JSON.stringify(detail);
-  if (navigator.sendBeacon) navigator.sendBeacon(analyticsEndpoint, new Blob([body], { type: 'application/json' }));
-  else fetch(analyticsEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => {});
+  sendAnalyticsEvent(JSON.stringify(detail));
 });
 
 const syncScroll = () => {
