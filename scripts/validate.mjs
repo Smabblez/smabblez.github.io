@@ -82,11 +82,12 @@ const configuredMediaKitLinks = [
   ['data-social', 'discord', config?.socials?.discord],
   ['data-social', 'spotify', config?.socials?.spotify],
   ['data-social', 'youtube', config?.socials?.youtube],
+  ['data-content', 'twitchVideos', config?.content?.twitchVideos],
   ['data-content', 'twitchClips', config?.content?.twitchClips],
   ['data-content', 'youtubeShorts', config?.content?.youtubeShorts]
 ];
 configuredMediaKitLinks.forEach(([attribute, label, href]) => {
-  check(Boolean(href) && Boolean(anchorWithData(mediaKit, attribute, label)?.includes(`href="${href}"`)), `Media-kit ${attribute}="${label}" link must match site.config.js.`);
+  check(Boolean(href) && Boolean(anchorWithData(mediaKit, attribute, label)?.includes(`href="${htmlAttributeValue(href)}"`)), `Media-kit ${attribute}="${label}" link must match site.config.js.`);
 });
 const mediaKitJsonLd = [...mediaKit.matchAll(/<script\s+type="application\/ld\+json">([\s\S]*?)<\/script>/gi)]
   .map(([, block]) => { try { return JSON.parse(block); } catch { return null; } })
