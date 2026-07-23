@@ -22,6 +22,7 @@ const config = sandbox.window.SMABBLEZ_SITE;
 const failures = [];
 const check = (condition, message) => { if (!condition) failures.push(message); };
 const indexablePages = config?.seo?.indexablePages || [];
+const siteUrl = String(config?.siteUrl || '').replace(/\/$/, '');
 const contentHubs = ['about.html', 'clips.html', 'gta-rp.html', 'media-kit.html', 'music.html'];
 const pageMetadata = indexablePages.map((page) => {
   const html = read(page);
@@ -37,6 +38,11 @@ const pageMetadata = indexablePages.map((page) => {
     title: html.match(/<title>([^<]+)<\/title>/i)?.[1]?.trim(),
     description: html.match(/<meta\s+name="description"\s+content="([^"]+)"/i)?.[1]?.trim(),
     canonical: html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i)?.[1]?.trim(),
+    ogUrl: html.match(/<meta\s+property="og:url"\s+content="([^"]+)"/i)?.[1]?.trim(),
+    ogImage: html.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i)?.[1]?.trim(),
+    twitterImage: html.match(/<meta\s+name="twitter:image"\s+content="([^"]+)"/i)?.[1]?.trim(),
+    ogImageCount: (html.match(/<meta\s+property="og:image"\s+content="[^"]+"/gi) || []).length,
+    twitterImageCount: (html.match(/<meta\s+name="twitter:image"\s+content="[^"]+"/gi) || []).length,
     shareReady: ['og:title', 'og:description', 'og:url', 'og:image', 'og:image:width', 'og:image:height', 'twitter:card', 'twitter:title', 'twitter:description', 'twitter:image']
       .every((name) => html.includes(`content="`) && (html.includes(`property="${name}"`) || html.includes(`name="${name}"`))),
     jsonLdValid
@@ -107,6 +113,9 @@ check(indexablePages.length > 0 && pageMetadata.every(({ title, description, can
 check(duplicateValues(pageMetadata.map(({ title }) => title)).length === 0, 'Public page titles must be unique.');
 check(duplicateValues(pageMetadata.map(({ description }) => description)).length === 0, 'Public page descriptions must be unique.');
 check(duplicateValues(pageMetadata.map(({ canonical }) => canonical)).length === 0, 'Public page canonical URLs must be unique.');
+check(pageMetadata.every(({ page, canonical }) => canonical === (page === 'index.html' ? `${siteUrl}/` : `${siteUrl}/${page}`)), 'Public page canonicals must match the configured site URL and page inventory.');
+check(pageMetadata.every(({ canonical, ogUrl }) => canonical === ogUrl), 'Every public page og:url must match its canonical URL.');
+check(pageMetadata.every(({ ogImage, twitterImage, ogImageCount, twitterImageCount }) => ogImageCount === 1 && twitterImageCount === 1 && ogImage === config?.shareImage && twitterImage === config?.shareImage), 'Every public page must use the configured share image exactly once for Open Graph and Twitter.');
 check(pageMetadata.every(({ shareReady }) => shareReady), 'Every public page must include complete Open Graph and X/Twitter metadata.');
 check(pageMetadata.every(({ jsonLdValid }) => jsonLdValid), 'Every public page must contain parseable JSON-LD structured data.');
 check(contentHubs.every((page) => read(page).includes('"@type": "BreadcrumbList"') && read(page).includes('"itemListElement"')), 'Every secondary public page must expose breadcrumb structured data.');
