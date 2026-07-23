@@ -16,6 +16,17 @@ runInNewContext(configSource, sandbox, { filename: 'site.config.js' });
 const config = sandbox.window.SMABBLEZ_SITE;
 const failures = [];
 const check = (condition, message) => { if (!condition) failures.push(message); };
+const indexablePages = config?.seo?.indexablePages || [];
+const pageMetadata = indexablePages.map((page) => {
+  const html = read(page);
+  return {
+    page,
+    title: html.match(/<title>([^<]+)<\/title>/i)?.[1]?.trim(),
+    description: html.match(/<meta\s+name="description"\s+content="([^"]+)"/i)?.[1]?.trim(),
+    canonical: html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i)?.[1]?.trim()
+  };
+});
+const duplicateValues = (values) => values.filter((value, index) => value && values.indexOf(value) !== index);
 
 check(config?.socials?.twitch === 'https://www.twitch.tv/smabblez', 'Twitch must use /smabblez.');
 check(config?.socials?.tiktok === 'https://www.tiktok.com/@Smabblez', 'TikTok must use @Smabblez.');
@@ -26,6 +37,10 @@ check(config?.music?.spotifyTracks?.length === 5, 'Spotify track list must inclu
 check(config?.content?.twitchVideos?.includes('/smabblez/videos'), 'Twitch recent-broadcast URL is missing.');
 check(config?.content?.twitchSchedule === 'https://www.twitch.tv/smabblez/schedule', 'Twitch schedule URL is incorrect.');
 check(config?.community?.discordInviteCode === '5edKN6cw2K', 'Discord live-preview invite code is missing.');
+check(indexablePages.length > 0 && pageMetadata.every(({ title, description, canonical }) => title && description && canonical), 'Every configured public page must have a title, description, and canonical URL.');
+check(duplicateValues(pageMetadata.map(({ title }) => title)).length === 0, 'Public page titles must be unique.');
+check(duplicateValues(pageMetadata.map(({ description }) => description)).length === 0, 'Public page descriptions must be unique.');
+check(duplicateValues(pageMetadata.map(({ canonical }) => canonical)).length === 0, 'Public page canonical URLs must be unique.');
 check(index.includes('<title>Smabblez | Interactive Twitch Streamer & GTA RP Creator</title>'), 'Homepage SEO title is missing.');
 check(index.includes('<link rel="canonical" href="https://smabblez.github.io/">'), 'Homepage canonical URL is missing.');
 check(index.includes('"@type": "ProfilePage"') && index.includes('"mainEntity"'), 'Homepage ProfilePage structured data is missing.');
