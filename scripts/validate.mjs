@@ -146,13 +146,16 @@ check((index.match(/class="social-card/g) || []).length === 3, 'The social funne
 check(!/(?:src|href)="\/(?!\/)/i.test(index), 'Root-relative paths break GitHub Pages project-subpath hosting.');
 check(styles.includes('@media (prefers-reduced-motion:reduce)'), 'Reduced-motion CSS is missing.');
 
-const assetRefs = [...index.matchAll(/(?:src|href)="(assets\/[^"?#]+)["?#]/g)].map((match) => match[1]);
-assetRefs.forEach((asset) => check(existsSync(join(root, asset)), `Missing asset: ${asset}`));
+const assetRefs = indexablePages.flatMap((page) => [...read(page).matchAll(/(?:src|href)="(assets\/[^"?#]+)["?#]/g)].map((match) => ({ page, asset: match[1] })));
+const cssAssetRefs = [...styles.matchAll(/url\(["']?(assets\/[^"')]+)["']?\)/g)].map((match) => ({ page: 'styles.css', asset: match[1] }));
+for (const { page, asset } of [...assetRefs, ...cssAssetRefs]) {
+  check(existsSync(join(root, asset)), `Missing asset: ${page} -> ${asset}`);
+}
 
 if (failures.length) {
   console.error(`Validation failed (${failures.length}):`);
   failures.forEach((failure) => console.error(`- ${failure}`));
   process.exitCode = 1;
 } else {
-  console.log(`Validation passed: ${assetRefs.length} local assets, correct social handles, crawlable SEO files, structured profile data, GitHub Pages-safe paths, finished social funnel.`);
+  console.log(`Validation passed: ${assetRefs.length + cssAssetRefs.length} local assets, correct social handles, crawlable SEO files, structured profile data, GitHub Pages-safe paths, finished social funnel.`);
 }
