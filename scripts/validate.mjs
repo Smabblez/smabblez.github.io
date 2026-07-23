@@ -15,6 +15,7 @@ const gtaRp = read('gta-rp.html');
 const configSource = read('site.config.js');
 const scriptSource = read('script.js');
 const analyticsFile = read('analytics.js');
+const mediaKitSource = read('media-kit.js');
 const analyticsSource = scriptSource.slice(scriptSource.indexOf('const analyticsEndpoint'));
 const sandbox = { window: {} };
 runInNewContext(configSource, sandbox, { filename: 'site.config.js' });
@@ -150,6 +151,8 @@ check(index.includes('name="twitter:image"') && index.includes('property="og:ima
 check(mediaKit.includes('<link rel="canonical" href="https://smabblez.github.io/media-kit.html">'), 'Media-kit canonical URL is missing.');
 check(mediaKit.includes('class="kit-brief"') && (mediaKit.match(/class="kit-brief"/g) || []).length === 1, 'Media-kit collaboration brief checklist is missing.');
 check(mediaKit.includes('data-print-kit') && mediaKit.includes('src="media-kit.js?v=20260723a"') && !mediaKit.includes('onclick="window.print()"'), 'Media-kit print control must use the dedicated accessible script.');
+check(mediaKit.includes('data-copy-kit') && mediaKit.includes('id="kit-copy-status"') && mediaKit.includes('aria-live="polite"'), 'Media-kit must expose an accessible copy-link handoff status.');
+check(mediaKitSource.includes('navigator.clipboard') && mediaKitSource.includes("execCommand('copy')") && mediaKitSource.includes('data-copy-kit'), 'Media-kit copy-link control must include Clipboard API and legacy fallback behavior.');
 check(mediaKit.includes('href="#kit-contact"') && mediaKit.includes('id="kit-contact"'), 'Media-kit must expose an above-the-fold path to collaboration contact.');
 check(mediaKit.includes('"description": "Smabblez is an interactive Twitch streamer, GTA RP creator, musician, performer, and community builder."') && mediaKit.includes('"jobTitle": "Interactive Twitch streamer, GTA RP creator, musician, performer, and community builder"') && mediaKit.includes('"image": "https://smabblez.github.io/assets/emotes/hype.png"'), 'Media-kit profile identity must expose verified creator positioning and image data.');
 check(mediaKit.includes('https://www.twitch.tv/smabblez/clips?range=all') && mediaKit.includes('https://www.youtube.com/@Smabblez/shorts'), 'Media-kit official channels must include verified clip destinations.');
