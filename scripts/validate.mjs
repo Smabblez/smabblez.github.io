@@ -103,6 +103,7 @@ check(mediaKit.includes('<link rel="canonical" href="https://smabblez.github.io/
 check(mediaKit.includes('class="kit-brief"') && (mediaKit.match(/class="kit-brief"/g) || []).length === 1, 'Media-kit collaboration brief checklist is missing.');
 check(mediaKit.includes('data-print-kit') && mediaKit.includes('src="media-kit.js?v=20260723a"') && !mediaKit.includes('onclick="window.print()"'), 'Media-kit print control must use the dedicated accessible script.');
 check(mediaKit.includes('href="#kit-contact"') && mediaKit.includes('id="kit-contact"'), 'Media-kit must expose an above-the-fold path to collaboration contact.');
+check(mediaKit.includes('https://www.twitch.tv/smabblez/clips?range=all') && mediaKit.includes('https://www.youtube.com/@Smabblez/shorts'), 'Media-kit official channels must include verified clip destinations.');
 check(existsSync(join(root, 'media-kit.js')) && readFileSync(join(root, 'scripts', 'build-site.mjs'), 'utf8').includes("'media-kit.js'"), 'Media-kit behavior script must be included in the deployment artifact.');
 check(about.includes('<title>About Smabblez | Interactive Twitch Streamer & GTA RP Creator</title>'), 'About-page SEO title is missing.');
 check(about.includes('<link rel="canonical" href="https://smabblez.github.io/about.html">') && about.includes('id="about-page-title"'), 'About-page canonical URL or H1 is missing.');
