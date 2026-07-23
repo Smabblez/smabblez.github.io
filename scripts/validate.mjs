@@ -46,6 +46,7 @@ const duplicateValues = (values) => values.filter((value, index) => value && val
 const headingLevels = (html) => [...html.matchAll(/<h([1-6])\b[^>]*>/gi)].map((match) => Number(match[1]));
 const imagesHaveAlt = (html) => [...html.matchAll(/<img\b[^>]*>/gi)].every(([tag]) => /\salt="[^"]*"/i.test(tag));
 const blankTargetsHaveRel = (html) => [...html.matchAll(/<a\b[^>]*target="_blank"[^>]*>/gi)].every(([tag]) => /\srel="[^"]*(?:noreferrer|noopener)[^"]*"/i.test(tag));
+const htmlAttributeValue = (value) => String(value).replaceAll('&', '&amp;').replaceAll('"', '&quot;');
 const anchorTags = (html) => [...html.matchAll(/<a\b[^>]*>/gi)].map(([tag]) => tag);
 const anchorWithData = (html, attribute, value) => anchorTags(html).find((tag) => tag.includes(`${attribute}="${value}"`));
 const pageIds = Object.fromEntries(indexablePages.map((page) => [page, new Set([...read(page).matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]))]));
@@ -139,9 +140,10 @@ check(music.includes('"@type": "MusicPlaylist"') && (music.match(/open\.spotify\
 check(gtaRp.includes('<title>Smabblez GTA RP | Character-Led Interactive Roleplay</title>'), 'GTA RP page SEO title is missing.');
 check(gtaRp.includes('<link rel="canonical" href="https://smabblez.github.io/gta-rp.html">') && gtaRp.includes('id="rp-title"'), 'GTA RP page canonical URL or H1 is missing.');
 check(gtaRp.includes('"@type": "Article"') && gtaRp.includes('GTA RP streams'), 'GTA RP page structured content is incomplete.');
-check(clips.includes('<title>Smabblez Clips | Twitch Clips, YouTube Shorts & TikTok</title>'), 'Clips-page SEO title is missing.');
+check(clips.includes('<title>Smabblez Clips & Replays | Twitch, YouTube & TikTok</title>'), 'Clips-page SEO title is missing.');
 check(clips.includes('<link rel="canonical" href="https://smabblez.github.io/clips.html">') && clips.includes('id="clips-title"'), 'Clips-page canonical URL or H1 is missing.');
-check(clips.includes('"@type": "CollectionPage"') && clips.includes('"@type": "ItemList"') && clips.includes('https://www.twitch.tv/smabblez/clips?range=all'), 'Clips-page structured content is incomplete.');
+check(clips.includes('"@type": "CollectionPage"') && clips.includes('"@type": "ItemList"') && clips.includes('https://www.twitch.tv/smabblez/clips?range=all') && clips.includes('https://www.twitch.tv/smabblez/videos?filter=archives&sort=time'), 'Clips-page structured content is incomplete.');
+check(clips.includes(`href="${htmlAttributeValue(config?.content?.twitchVideos)}" data-content="twitchVideos"`), 'Clips page must expose the configured Twitch broadcast archive.');
 check(about.includes('href="about.html" aria-current="page"') && clips.includes('href="clips.html" aria-current="page"') && gtaRp.includes('href="gta-rp.html" aria-current="page"') && music.includes('href="music.html" aria-current="page"'), 'Public content navigation must identify the current page.');
 check(mediaKit.includes('href="media-kit.html" aria-current="page"'), 'Media-kit navigation must identify the current page.');
 check(existsSync(join(root, 'assets', 'favicon.svg')), 'Stable favicon file is missing.');
