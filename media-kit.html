@@ -67,16 +67,17 @@
     <nav class="kit-nav" aria-label="Media kit navigation"><a href="media-kit.html" aria-current="page">Media kit</a><a href="about.html">About me</a><a href="clips.html">Clips</a><a href="gta-rp.html">GTA RP</a><a href="music.html">Music</a><a href="index.html#follow">Follow the show</a></nav>
     <div>
       <a class="kit-back" href="index.html#about">← Back to the big top</a>
-      <button class="kit-print" type="button" onclick="window.print()">Print / save PDF</button>
+      <button class="kit-print" type="button" data-print-kit>Print / save PDF</button>
     </div>
   </header>
 
   <main class="media-kit" id="media-kit">
-    <section class="kit-hero">
+    <section class="kit-hero" aria-labelledby="kit-hero-title">
       <div>
         <p class="kicker"><span>///</span> Creator media kit · 2026</p>
-        <h1>MAKE THE<br>AUDIENCE <em>PART<br>OF THE BIT.</em></h1>
+        <h1 id="kit-hero-title">MAKE THE<br>AUDIENCE <em>PART<br>OF THE BIT.</em></h1>
         <p class="kit-lede">I’m Smabblez—a streamer, performer, GTA RP creator, and community builder turning live interaction into memorable, character-led entertainment.</p>
+        <div class="kit-hero-actions"><a class="button button-primary" href="#kit-contact">Start a conversation ↓</a><a class="button button-ghost" href="#kit-platforms">See official channels ↓</a></div>
       </div>
       <div class="kit-portrait" aria-hidden="true">
         <span>LIVE<br>CHAOS</span>
@@ -88,7 +89,7 @@
       <span>INTERACTIVE LIVESTREAMS</span><i>✦</i><span>GTA RP</span><i>✦</i><span>SHORT-FORM</span><i>✦</i><span>COMMUNITY EVENTS</span>
     </section>
 
-    <section class="kit-two-column">
+    <section class="kit-two-column" id="kit-platforms" aria-label="Creator premise and official channels">
       <div class="kit-panel">
         <p class="kicker"><span>01</span> The premise</p>
         <h2>NOT JUST A STREAM.<br><em>IT'S A SHOW.</em></h2>
@@ -104,10 +105,10 @@
       </div>
     </section>
 
-    <section class="kit-formats">
+    <section class="kit-formats" id="kit-formats" aria-labelledby="kit-formats-title">
       <div class="kit-heading">
         <p class="kicker"><span>03</span> Collaboration formats</p>
-        <h2>WAYS INTO<br><em>THE TENT.</em></h2>
+        <h2 id="kit-formats-title">WAYS INTO<br><em>THE TENT.</em></h2>
       </div>
       <div class="kit-format-grid">
         <article><span>LIVE</span><strong>Interactive integrations</strong><p>Product moments, sponsored challenges, chat-controlled mechanics, and stream-native launches.</p></article>
@@ -117,9 +118,9 @@
       </div>
     </section>
 
-    <section class="kit-contact">
+    <section class="kit-contact" id="kit-contact" aria-labelledby="kit-contact-title">
       <p class="kicker"><span>04</span> Start a conversation</p>
-      <h2>BRING THE BRIEF.<br><em>WE'LL BRING THE HONK.</em></h2>
+      <h2 id="kit-contact-title">BRING THE BRIEF.<br><em>WE'LL BRING THE HONK.</em></h2>
       <p>Use an official community channel to start the conversation. A public business email is not currently listed, so this kit does not invent one.</p>
       <ul class="kit-brief" aria-label="Helpful collaboration brief details">
         <li><strong>THE IDEA</strong><span>What are you promoting, and what should the audience do?</span></li>
@@ -137,5 +138,6 @@
   <footer class="kit-footer"><span>SMABBLEZ · CREATOR MEDIA KIT · 2026</span><a href="https://smabblez.github.io/">smabblez.github.io</a></footer>
   <script src="site.config.js?v=20260713z"></script>
   <script src="analytics.js?v=20260723a"></script>
+  <script src="media-kit.js?v=20260723a"></script>
 </body>
 </html>

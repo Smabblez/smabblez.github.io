@@ -18,6 +18,7 @@ if (!relativeOutput || relativeOutput.startsWith('..') || isAbsolute(relativeOut
 const files = [
   ...pages,
   'analytics.js',
+  'media-kit.js',
   'robots.txt',
   'sitemap.xml',
   'styles.css',
