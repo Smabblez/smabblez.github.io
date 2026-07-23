@@ -55,4 +55,4 @@ For Hermes/E4B from this directory, begin with `AGENTS.md`, then `site.config.js
 
 Tracked calls to action emit a browser event named `smabblez:conversion`. To collect those events, set `analytics.endpoint` in `site.config.js` to a POST endpoint you control. The payload contains only the event label, destination origin/path, page path, and timestamp; it does not set cookies or create a user identifier. With no endpoint configured, nothing is transmitted.
 
-The standalone `about.html` page is the crawlable creator overview, while `media-kit.html` is the public collaboration one-sheet with a print/save-PDF layout. Both intentionally use only verified public claims and links.
+The standalone `about.html` page is the crawlable creator overview, `music.html` is the crawlable Spotify track list, and `media-kit.html` is the public collaboration one-sheet with a print/save-PDF layout. They intentionally use only verified public claims and links.

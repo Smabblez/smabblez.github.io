@@ -34,7 +34,7 @@ jobs:
       - name: Prepare static site artifact
         run: |
           mkdir -p _site
-          cp about.html index.html media-kit.html robots.txt sitemap.xml styles.css script.js site.config.js .nojekyll _site/
+          cp about.html index.html media-kit.html music.html robots.txt sitemap.xml styles.css script.js site.config.js .nojekyll _site/
           cp -R assets _site/assets
 
       - name: Upload site

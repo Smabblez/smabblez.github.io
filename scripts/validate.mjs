@@ -9,6 +9,7 @@ const index = read('index.html');
 const styles = read('styles.css');
 const mediaKit = read('media-kit.html');
 const about = read('about.html');
+const music = read('music.html');
 const configSource = read('site.config.js');
 const sandbox = { window: {} };
 runInNewContext(configSource, sandbox, { filename: 'site.config.js' });
@@ -35,6 +36,9 @@ check(mediaKit.includes('<link rel="canonical" href="https://smabblez.github.io/
 check(about.includes('<title>About Smabblez | Interactive Twitch Streamer & GTA RP Creator</title>'), 'About-page SEO title is missing.');
 check(about.includes('<link rel="canonical" href="https://smabblez.github.io/about.html">') && about.includes('id="about-page-title"'), 'About-page canonical URL or H1 is missing.');
 check(about.includes('"@type": "AboutPage"') && about.includes('https://www.twitch.tv/smabblez'), 'About-page structured identity is incomplete.');
+check(music.includes('<title>Smabblez Music | The Big Top Soundtrack</title>'), 'Music-page SEO title is missing.');
+check(music.includes('<link rel="canonical" href="https://smabblez.github.io/music.html">') && music.includes('id="music-title"'), 'Music-page canonical URL or H1 is missing.');
+check(music.includes('"@type": "MusicPlaylist"') && (music.match(/open\.spotify\.com\/track\//g) || []).length >= 10, 'Music-page track data is incomplete.');
 check(existsSync(join(root, 'assets', 'favicon.svg')), 'Stable favicon file is missing.');
 check(existsSync(join(root, 'robots.txt')), 'robots.txt is missing.');
 check(existsSync(join(root, 'sitemap.xml')), 'sitemap.xml is missing.');
