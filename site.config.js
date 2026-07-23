@@ -30,7 +30,7 @@ window.SMABBLEZ_SITE = {
   },
   seo: {
     /* Only these reviewed HTML files are public, indexable pages. */
-    indexablePages: ["about.html", "index.html", "media-kit.html", "music.html"]
+    indexablePages: ["about.html", "gta-rp.html", "index.html", "media-kit.html", "music.html"]
   },
   music: {
     spotifyTracks: [

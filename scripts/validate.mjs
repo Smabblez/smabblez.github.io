@@ -10,6 +10,7 @@ const styles = read('styles.css');
 const mediaKit = read('media-kit.html');
 const about = read('about.html');
 const music = read('music.html');
+const gtaRp = read('gta-rp.html');
 const configSource = read('site.config.js');
 const sandbox = { window: {} };
 runInNewContext(configSource, sandbox, { filename: 'site.config.js' });
@@ -54,6 +55,9 @@ check(about.includes('"@type": "AboutPage"') && about.includes('https://www.twit
 check(music.includes('<title>Smabblez Music | The Big Top Soundtrack</title>'), 'Music-page SEO title is missing.');
 check(music.includes('<link rel="canonical" href="https://smabblez.github.io/music.html">') && music.includes('id="music-title"'), 'Music-page canonical URL or H1 is missing.');
 check(music.includes('"@type": "MusicPlaylist"') && (music.match(/open\.spotify\.com\/track\//g) || []).length >= 10, 'Music-page track data is incomplete.');
+check(gtaRp.includes('<title>Smabblez GTA RP | Character-Led Interactive Roleplay</title>'), 'GTA RP page SEO title is missing.');
+check(gtaRp.includes('<link rel="canonical" href="https://smabblez.github.io/gta-rp.html">') && gtaRp.includes('id="rp-title"'), 'GTA RP page canonical URL or H1 is missing.');
+check(gtaRp.includes('"@type": "Article"') && gtaRp.includes('GTA RP streams'), 'GTA RP page structured content is incomplete.');
 check(existsSync(join(root, 'assets', 'favicon.svg')), 'Stable favicon file is missing.');
 check(existsSync(join(root, 'robots.txt')), 'robots.txt is missing.');
 check(existsSync(join(root, 'sitemap.xml')), 'sitemap.xml is missing.');
