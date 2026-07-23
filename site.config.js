@@ -19,7 +19,9 @@ window.SMABBLEZ_SITE = {
   },
   content: {
     twitchVideos: "https://www.twitch.tv/smabblez/videos?filter=archives&sort=time",
-    twitchSchedule: "https://www.twitch.tv/smabblez/schedule"
+    twitchClips: "https://www.twitch.tv/smabblez/clips?range=all",
+    twitchSchedule: "https://www.twitch.tv/smabblez/schedule",
+    youtubeShorts: "https://www.youtube.com/@Smabblez/shorts"
   },
   community: {
     discordInviteCode: "5edKN6cw2K"
@@ -27,6 +29,10 @@ window.SMABBLEZ_SITE = {
   analytics: {
     /* Add a privacy-friendly event endpoint here when one is available. */
     endpoint: ""
+  },
+  seo: {
+    /* Only these reviewed HTML files are public, indexable pages. */
+    indexablePages: ["about.html", "clips.html", "gta-rp.html", "index.html", "media-kit.html", "music.html"]
   },
   music: {
     spotifyTracks: [

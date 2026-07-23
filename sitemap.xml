@@ -2,10 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://smabblez.github.io/</loc>
-    <lastmod>2026-07-16</lastmod>
+  </url>
+  <url>
+    <loc>https://smabblez.github.io/about.html</loc>
+  </url>
+  <url>
+    <loc>https://smabblez.github.io/clips.html</loc>
+  </url>
+  <url>
+    <loc>https://smabblez.github.io/gta-rp.html</loc>
   </url>
   <url>
     <loc>https://smabblez.github.io/media-kit.html</loc>
-    <lastmod>2026-07-16</lastmod>
+  </url>
+  <url>
+    <loc>https://smabblez.github.io/music.html</loc>
   </url>
 </urlset>

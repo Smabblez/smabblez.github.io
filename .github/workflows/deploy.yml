@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -16,7 +19,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate static site
+        run: |
+          node scripts/validate.mjs
+          node --check script.js
+          node --check analytics.js
+          node --check media-kit.js
+          node --check scripts/build-site.mjs
+          node scripts/generate-sitemap.mjs --check
+          node scripts/build-site.mjs _site
+
   deploy:
+    if: github.event_name != 'pull_request'
+    needs: validate
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -28,11 +49,12 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
+      - name: Check sitemap freshness
+        run: node scripts/generate-sitemap.mjs --check
+
       - name: Prepare static site artifact
-        run: |
-          mkdir -p _site
-          cp index.html media-kit.html robots.txt sitemap.xml styles.css script.js site.config.js .nojekyll _site/
-          cp -R assets _site/assets
+        # build-site.mjs copies robots.txt, sitemap.xml, and every configured public page.
+        run: node scripts/build-site.mjs _site
 
       - name: Upload site
         uses: actions/upload-pages-artifact@v3

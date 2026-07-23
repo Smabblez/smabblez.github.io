@@ -15,6 +15,8 @@ Validate after changes:
 ```powershell
 node scripts/validate.mjs
 node --check script.js
+node scripts/generate-sitemap.mjs --check
+node scripts/build-site.mjs _site
 ```
 
 No package installation or build step is required.
@@ -28,6 +30,10 @@ Live site: `https://smabblez.github.io/`
 All styles, scripts, images, and section links use relative paths, and the production site is published from the `smabblez.github.io` user-site repository root.
 
 Search metadata is kept directly in the HTML so crawlers and social preview bots can read it without JavaScript. `robots.txt` advertises `sitemap.xml`; both files are copied by the Pages workflow. See `SEO_LAUNCH.md` for the one-time Google Search Console steps.
+
+The sitemap is generated from the reviewed `seo.indexablePages` allowlist in `site.config.js`. Run `node scripts/generate-sitemap.mjs` after adding a public page; validation and the Pages workflow fail if `sitemap.xml` is stale.
+
+GitHub Pages uses `scripts/build-site.mjs` to copy every configured public page and required runtime asset into `_site`, so the deployment artifact cannot silently omit a newly approved page.
 
 Do not add a backend, server-only rendering, environment secrets, or root-relative asset paths. `scripts/serve.mjs` is only a local preview helper and is not needed in production.
 
@@ -50,6 +56,6 @@ For Hermes/E4B from this directory, begin with `AGENTS.md`, then `site.config.js
 
 ## Conversion analytics
 
-Tracked calls to action emit a browser event named `smabblez:conversion`. To collect those events, set `analytics.endpoint` in `site.config.js` to a POST endpoint you control. The payload contains only the event label, destination origin/path, page path, and timestamp; it does not set cookies or create a user identifier. With no endpoint configured, nothing is transmitted.
+Tracked calls to action on the homepage and secondary public pages emit a browser event named `smabblez:conversion`. To collect those events, set `analytics.endpoint` in `site.config.js` to a POST endpoint you control. The payload contains the event label, destination origin/path, page path, timestamp, an allowlisted UTM attribution object, and the referring page's origin only. It does not set cookies, use local storage, capture a full referrer URL, or create a user identifier. With no endpoint configured, nothing is transmitted.
 
-The standalone `media-kit.html` page is the public collaboration one-sheet and includes a print/save-PDF layout. It intentionally uses only verified public claims and links.
+The standalone `about.html` page is the crawlable creator overview, `clips.html` is the official clip-route hub, `gta-rp.html` is the focused roleplay content page, `music.html` is the crawlable Spotify track list, and `media-kit.html` is the public collaboration one-sheet with a print/save-PDF layout. They intentionally use only verified public claims and links.

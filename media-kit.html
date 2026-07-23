@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="theme-color" content="#0b080d">
   <meta name="description" content="Smabblez creator media kit: brand story, collaboration formats, platforms, and official contact routes.">
   <meta name="robots" content="index, follow, max-image-preview:large">
@@ -25,29 +26,65 @@
   <title>Smabblez Creator Media Kit | Interactive Livestreams & GTA RP</title>
   <link rel="canonical" href="https://smabblez.github.io/media-kit.html">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" as="font" href="assets/fonts/bungee-latin.woff2" type="font/woff2" crossorigin>
   <link rel="apple-touch-icon" href="assets/emotes/hype.png">
   <link rel="stylesheet" href="styles.css?v=20260713m">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "@id": "https://smabblez.github.io/media-kit.html#profile",
+      "url": "https://smabblez.github.io/media-kit.html",
+      "name": "Smabblez Creator Media Kit",
+      "mainEntity": {
+        "@type": "Person",
+        "name": "Smabblez",
+        "description": "Smabblez is an interactive Twitch streamer, GTA RP creator, musician, performer, and community builder.",
+        "jobTitle": "Interactive Twitch streamer, GTA RP creator, musician, performer, and community builder",
+        "image": "https://smabblez.github.io/assets/emotes/hype.png",
+        "url": "https://smabblez.github.io/",
+        "sameAs": [
+          "https://www.twitch.tv/smabblez",
+          "https://www.tiktok.com/@Smabblez",
+          "https://www.youtube.com/@Smabblez",
+          "https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg"
+        ]
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Smabblez", "item": "https://smabblez.github.io/" },
+        { "@type": "ListItem", "position": 2, "name": "Creator Media Kit", "item": "https://smabblez.github.io/media-kit.html" }
+      ]
+    }
+  </script>
 </head>
 <body class="media-kit-body">
   <a class="skip-link" href="#media-kit">Skip to media kit</a>
   <header class="kit-header">
     <a class="brand" href="index.html#top" aria-label="Back to Smabblez home"><span class="brand-nose" aria-hidden="true"></span><span>SMABBLEZ</span></a>
+    <nav class="kit-nav" aria-label="Media kit navigation"><a href="media-kit.html" aria-current="page">Media kit</a><a href="about.html">About me</a><a href="clips.html">Clips</a><a href="gta-rp.html">GTA RP</a><a href="music.html">Music</a><a href="index.html#follow">Follow the show</a></nav>
     <div>
-      <a class="kit-back" href="index.html#collab">← Back to the big top</a>
-      <button class="kit-print" type="button" onclick="window.print()">Print / save PDF</button>
+      <a class="kit-back" href="index.html#about">← Back to the big top</a>
+      <button class="kit-print" type="button" data-print-kit>Print / save PDF</button>
     </div>
   </header>
 
   <main class="media-kit" id="media-kit">
-    <section class="kit-hero">
+    <section class="kit-hero" aria-labelledby="kit-hero-title">
       <div>
         <p class="kicker"><span>///</span> Creator media kit · 2026</p>
-        <h1>MAKE THE<br>AUDIENCE <em>PART<br>OF THE BIT.</em></h1>
-        <p class="kit-lede">I’m Smabblez—a streamer, performer, GTA RP creator, and community builder turning live interaction into memorable, character-led entertainment.</p>
+        <h1 id="kit-hero-title">MAKE THE<br>AUDIENCE <em>PART<br>OF THE BIT.</em></h1>
+        <p class="kit-lede">I’m Smabblez—a streamer, performer, GTA RP creator, musician, and community builder turning live interaction into memorable, character-led entertainment.</p>
+        <div class="kit-hero-actions"><a class="button button-primary" href="#kit-contact">Start a conversation ↓</a><a class="button button-ghost" href="#kit-platforms">See official channels ↓</a></div>
       </div>
       <div class="kit-portrait" aria-hidden="true">
         <span>LIVE<br>CHAOS</span>
-        <img src="assets/emotes/hype.webp" width="1024" height="1024" alt="">
+        <img src="assets/emotes/hype.webp" width="1024" height="1024" fetchpriority="high" decoding="async" alt="">
       </div>
     </section>
 
@@ -55,7 +92,7 @@
       <span>INTERACTIVE LIVESTREAMS</span><i>✦</i><span>GTA RP</span><i>✦</i><span>SHORT-FORM</span><i>✦</i><span>COMMUNITY EVENTS</span>
     </section>
 
-    <section class="kit-two-column">
+    <section class="kit-two-column" id="kit-platforms" aria-label="Creator premise and official channels">
       <div class="kit-panel">
         <p class="kicker"><span>01</span> The premise</p>
         <h2>NOT JUST A STREAM.<br><em>IT'S A SHOW.</em></h2>
@@ -63,18 +100,21 @@
       </div>
       <div class="kit-panel kit-platforms">
         <p class="kicker"><span>02</span> Official channels</p>
-        <a href="https://www.twitch.tv/smabblez" target="_blank" rel="noreferrer"><strong>Twitch</strong><span>Live shows + broadcasts ↗</span></a>
-        <a href="https://www.tiktok.com/@Smabblez" target="_blank" rel="noreferrer"><strong>TikTok</strong><span>Short-form moments ↗</span></a>
-        <a href="https://discord.gg/5edKN6cw2K" target="_blank" rel="noreferrer"><strong>Discord</strong><span>The Clown Tent community ↗</span></a>
-        <a href="https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg" target="_blank" rel="noreferrer"><strong>Spotify</strong><span>Original artist catalog ↗</span></a>
-        <a href="https://www.youtube.com/@Smabblez" target="_blank" rel="noreferrer"><strong>YouTube</strong><span>Videos and channel ↗</span></a>
+        <a href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer" aria-label="Open Smabblez on Twitch in a new tab"><strong>Twitch</strong><span>Live shows + broadcasts ↗</span></a>
+        <a href="https://www.twitch.tv/smabblez/videos?filter=archives&amp;sort=time" data-content="twitchVideos" target="_blank" rel="noreferrer" aria-label="Open Smabblez Twitch broadcasts in a new tab"><strong>Twitch broadcasts</strong><span>Past live shows ↗</span></a>
+        <a href="https://www.twitch.tv/smabblez/clips?range=all" data-content="twitchClips" target="_blank" rel="noreferrer" aria-label="Open Smabblez Twitch clips in a new tab"><strong>Twitch Clips</strong><span>Clipped live moments ↗</span></a>
+        <a href="https://www.tiktok.com/@Smabblez" data-social="tiktok" target="_blank" rel="noreferrer" aria-label="Open Smabblez on TikTok in a new tab"><strong>TikTok</strong><span>Short-form moments ↗</span></a>
+        <a href="https://www.youtube.com/@Smabblez/shorts" data-content="youtubeShorts" target="_blank" rel="noreferrer" aria-label="Open Smabblez YouTube Shorts in a new tab"><strong>YouTube Shorts</strong><span>Short-form videos ↗</span></a>
+        <a href="https://discord.gg/5edKN6cw2K" data-social="discord" target="_blank" rel="noreferrer" aria-label="Open The Clown Tent Discord in a new tab"><strong>Discord</strong><span>The Clown Tent community ↗</span></a>
+        <a href="https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg" data-social="spotify" target="_blank" rel="noreferrer" aria-label="Open Smabblez on Spotify in a new tab"><strong>Spotify</strong><span>Original artist catalog ↗</span></a>
+        <a href="https://www.youtube.com/@Smabblez" data-social="youtube" target="_blank" rel="noreferrer" aria-label="Open the Smabblez YouTube channel in a new tab"><strong>YouTube</strong><span>Videos and channel ↗</span></a>
       </div>
     </section>
 
-    <section class="kit-formats">
+    <section class="kit-formats" id="kit-formats" aria-labelledby="kit-formats-title">
       <div class="kit-heading">
         <p class="kicker"><span>03</span> Collaboration formats</p>
-        <h2>WAYS INTO<br><em>THE TENT.</em></h2>
+        <h2 id="kit-formats-title">WAYS INTO<br><em>THE TENT.</em></h2>
       </div>
       <div class="kit-format-grid">
         <article><span>LIVE</span><strong>Interactive integrations</strong><p>Product moments, sponsored challenges, chat-controlled mechanics, and stream-native launches.</p></article>
@@ -84,17 +124,28 @@
       </div>
     </section>
 
-    <section class="kit-contact">
+    <section class="kit-contact" id="kit-contact" aria-labelledby="kit-contact-title">
       <p class="kicker"><span>04</span> Start a conversation</p>
-      <h2>BRING THE BRIEF.<br><em>WE'LL BRING THE HONK.</em></h2>
+      <h2 id="kit-contact-title">BRING THE BRIEF.<br><em>WE'LL BRING THE HONK.</em></h2>
       <p>Use an official community channel to start the conversation. A public business email is not currently listed, so this kit does not invent one.</p>
+      <ul class="kit-brief" aria-label="Helpful collaboration brief details">
+        <li><strong>THE IDEA</strong><span>What are you promoting, and what should the audience do?</span></li>
+        <li><strong>THE FORMAT</strong><span>Which channels or deliverables are you considering?</span></li>
+        <li><strong>THE TIMING</strong><span>When would the activation need to happen?</span></li>
+        <li><strong>THE FOLLOW-UP</strong><span>What is the best public route for the next conversation?</span></li>
+      </ul>
       <div>
-        <a class="button button-primary" href="https://discord.gg/5edKN6cw2K" target="_blank" rel="noreferrer">Open Discord <span aria-hidden="true">↗</span></a>
-        <a class="button button-ghost" href="https://www.twitch.tv/smabblez" target="_blank" rel="noreferrer">Open Twitch <span aria-hidden="true">↗</span></a>
+        <a class="button button-primary" href="https://discord.gg/5edKN6cw2K" data-social="discord" target="_blank" rel="noreferrer" aria-label="Open The Clown Tent Discord in a new tab">Open Discord <span aria-hidden="true">↗</span></a>
+        <a class="button button-ghost" href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer" aria-label="Open Smabblez on Twitch in a new tab">Open Twitch <span aria-hidden="true">↗</span></a>
+        <button class="button button-ghost kit-copy" type="button" data-copy-kit aria-describedby="kit-copy-status">Copy kit link</button>
       </div>
+      <p class="kit-copy-status" id="kit-copy-status" role="status" aria-live="polite"></p>
     </section>
   </main>
 
   <footer class="kit-footer"><span>SMABBLEZ · CREATOR MEDIA KIT · 2026</span><a href="https://smabblez.github.io/">smabblez.github.io</a></footer>
+  <script src="site.config.js?v=20260713z"></script>
+  <script src="analytics.js?v=20260723a"></script>
+  <script src="media-kit.js?v=20260723a"></script>
 </body>
 </html>
