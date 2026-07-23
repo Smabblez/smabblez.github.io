@@ -82,6 +82,7 @@ check(pageMetadata.every(({ shareReady }) => shareReady), 'Every public page mus
 check(pageMetadata.every(({ jsonLdValid }) => jsonLdValid), 'Every public page must contain parseable JSON-LD structured data.');
 check([about, gtaRp, music, mediaKit].every((html) => html.includes('"@type": "BreadcrumbList"') && html.includes('"itemListElement"')), 'Every secondary public page must expose breadcrumb structured data.');
 check(indexablePages.every((page) => read(page).includes('<meta name="referrer" content="strict-origin-when-cross-origin">')), 'Every public page must declare the privacy-safe referrer policy.');
+check(indexablePages.every((page) => read(page).includes('<link rel="preload" as="font" href="assets/fonts/bungee-latin.woff2" type="font/woff2" crossorigin>')), 'Every public page must preload the shared display font.');
 check(indexablePages.every((page) => { const levels = headingLevels(read(page)); return levels.filter((level) => level === 1).length === 1 && levels[0] === 1 && levels.every((level, index) => index === 0 || level <= levels[index - 1] + 1); }), 'Every public page must have one H1 and no skipped heading levels.');
 check(indexablePages.every((page) => imagesHaveAlt(read(page))), 'Every public-page image must declare an alt attribute, including an explicit empty value for decoration.');
 check(index.includes('<title>Smabblez | Interactive Twitch Streamer & GTA RP Creator</title>'), 'Homepage SEO title is missing.');
