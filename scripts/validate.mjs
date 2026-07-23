@@ -91,6 +91,7 @@ check(about.includes('<link rel="canonical" href="https://smabblez.github.io/abo
 check(about.includes('"@type": "AboutPage"') && about.includes('https://www.twitch.tv/smabblez'), 'About-page structured identity is incomplete.');
 check(about.includes('href="gta-rp.html"') && about.includes('href="music.html"'), 'About page must link to the dedicated GTA RP and music pages.');
 check([about, gtaRp, music, mediaKit].every((html) => ['about.html', 'gta-rp.html', 'music.html', 'media-kit.html'].every((page) => html.includes(`href="${page}"`))), 'Every public content page must link to the complete content hub set.');
+check([about, gtaRp, music].every((html) => html.includes('href="media-kit.html" data-track="media-kit"')), 'Secondary-page collaboration links must emit the media-kit conversion label.');
 check(music.includes('<title>Smabblez Music | The Big Top Soundtrack</title>'), 'Music-page SEO title is missing.');
 check(music.includes('<link rel="canonical" href="https://smabblez.github.io/music.html">') && music.includes('id="music-title"'), 'Music-page canonical URL or H1 is missing.');
 check(music.includes('"@type": "MusicPlaylist"') && (music.match(/open\.spotify\.com\/track\//g) || []).length >= 10, 'Music-page track data is incomplete.');
