@@ -124,6 +124,7 @@ check((index.match(/data-social="spotify"/g) || []).length >= 3, 'Spotify must b
 check(!/twitch\.tv\/smabbles\b/i.test(index + configSource), 'Legacy Twitch handle found.');
 check(!/tiktok\.com\/@smabbles\b/i.test(index + configSource), 'Legacy TikTok handle found.');
 check(index.includes('data-twitch-player'), 'Official Twitch live player is missing.');
+check(index.includes('class="live-player-fallback"') && index.includes('Open Smabblez on Twitch'), 'Twitch player fallback link is missing.');
 check(index.includes('id="follow"'), 'Simplified follow section is missing.');
 check(index.includes('id="faq"') && (index.match(/<details>/g) || []).length === 4, 'Homepage FAQ content is missing or incomplete.');
 check((index.match(/<section\b/g) || []).length === 4, 'Homepage must stay focused at exactly four sections.');

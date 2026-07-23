@@ -172,7 +172,7 @@ h1,h2,h3 { margin: 0; font-family: var(--headline); font-weight: 400; text-trans
 .live-player { min-width: 0; overflow: hidden; border: 1px solid rgba(255,255,255,.18); border-radius: 24px; background: #050407; box-shadow: 0 30px 80px rgba(0,0,0,.48); }
 .live-player-top { min-height: 44px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 20px; color: rgba(255,255,255,.58); background: rgba(255,255,255,.04); font-size: .58rem; font-weight: 900; letter-spacing: .13em; }
 .live-player-top span:last-child { color: #9146ff; letter-spacing: .35em; }
-.live-player iframe { width: 100%; aspect-ratio: 16/9; display: block; border: 0; background: #0e0e10; }
+.live-player iframe { width: 100%; aspect-ratio: 16/9; display: block; border: 0; background: #0e0e10; }.live-player-fallback { margin: 0; padding: 12px 16px 14px; color: rgba(255,255,255,.62); font-size: .72rem; line-height: 1.5; }.live-player-fallback a { color: var(--paper); font-weight: 900; }
 
 .latest-section { position: relative; }
 .latest-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; }
