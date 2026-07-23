@@ -16,6 +16,7 @@ Validate after changes:
 node scripts/validate.mjs
 node --check script.js
 node scripts/generate-sitemap.mjs --check
+node scripts/build-site.mjs _site
 ```
 
 No package installation or build step is required.
@@ -31,6 +32,8 @@ All styles, scripts, images, and section links use relative paths, and the produ
 Search metadata is kept directly in the HTML so crawlers and social preview bots can read it without JavaScript. `robots.txt` advertises `sitemap.xml`; both files are copied by the Pages workflow. See `SEO_LAUNCH.md` for the one-time Google Search Console steps.
 
 The sitemap is generated from the reviewed `seo.indexablePages` allowlist in `site.config.js`. Run `node scripts/generate-sitemap.mjs` after adding a public page; validation and the Pages workflow fail if `sitemap.xml` is stale.
+
+GitHub Pages uses `scripts/build-site.mjs` to copy every configured public page and required runtime asset into `_site`, so the deployment artifact cannot silently omit a newly approved page.
 
 Do not add a backend, server-only rendering, environment secrets, or root-relative asset paths. `scripts/serve.mjs` is only a local preview helper and is not needed in production.
 

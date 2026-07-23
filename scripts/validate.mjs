@@ -46,6 +46,8 @@ check(!/localStorage|sessionStorage|document\.cookie/.test(analyticsSource), 'Co
 check(analyticsFile.includes('outbound_click') && analyticsFile.includes('utm_source') && analyticsFile.includes('referrerOrigin'), 'Secondary-page analytics listener is incomplete.');
 check(!/localStorage|sessionStorage|document\.cookie/.test(analyticsFile), 'Secondary-page analytics must not use browser storage or cookies.');
 check(['about.html', 'gta-rp.html', 'music.html', 'media-kit.html'].every((page) => read(page).includes('analytics.js')), 'Every secondary public page must load analytics.js.');
+check(existsSync(join(root, 'scripts', 'build-site.mjs')), 'Static deployment builder is missing.');
+check(readFileSync(join(root, '.github', 'workflows', 'deploy.yml'), 'utf8').includes('node scripts/build-site.mjs _site'), 'Pages workflow must use the static deployment builder.');
 check(indexablePages.length > 0 && pageMetadata.every(({ title, description, canonical }) => title && description && canonical), 'Every configured public page must have a title, description, and canonical URL.');
 check(duplicateValues(pageMetadata.map(({ title }) => title)).length === 0, 'Public page titles must be unique.');
 check(duplicateValues(pageMetadata.map(({ description }) => description)).length === 0, 'Public page descriptions must be unique.');
