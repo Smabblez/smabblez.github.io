@@ -23,13 +23,21 @@ const check = (condition, message) => { if (!condition) failures.push(message); 
 const indexablePages = config?.seo?.indexablePages || [];
 const pageMetadata = indexablePages.map((page) => {
   const html = read(page);
+  const jsonLdBlocks = [...html.matchAll(/<script\s+type="application\/ld\+json">([\s\S]*?)<\/script>/gi)].map((match) => match[1].trim());
+  let jsonLdValid = jsonLdBlocks.length > 0;
+  try {
+    jsonLdBlocks.forEach((block) => JSON.parse(block));
+  } catch {
+    jsonLdValid = false;
+  }
   return {
     page,
     title: html.match(/<title>([^<]+)<\/title>/i)?.[1]?.trim(),
     description: html.match(/<meta\s+name="description"\s+content="([^"]+)"/i)?.[1]?.trim(),
     canonical: html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i)?.[1]?.trim(),
     shareReady: ['og:title', 'og:description', 'og:url', 'og:image', 'twitter:card', 'twitter:title', 'twitter:description', 'twitter:image']
-      .every((name) => html.includes(`content="`) && (html.includes(`property="${name}"`) || html.includes(`name="${name}"`)))
+      .every((name) => html.includes(`content="`) && (html.includes(`property="${name}"`) || html.includes(`name="${name}"`))),
+    jsonLdValid
   };
 });
 const duplicateValues = (values) => values.filter((value, index) => value && values.indexOf(value) !== index);
@@ -69,6 +77,7 @@ check(duplicateValues(pageMetadata.map(({ title }) => title)).length === 0, 'Pub
 check(duplicateValues(pageMetadata.map(({ description }) => description)).length === 0, 'Public page descriptions must be unique.');
 check(duplicateValues(pageMetadata.map(({ canonical }) => canonical)).length === 0, 'Public page canonical URLs must be unique.');
 check(pageMetadata.every(({ shareReady }) => shareReady), 'Every public page must include complete Open Graph and X/Twitter metadata.');
+check(pageMetadata.every(({ jsonLdValid }) => jsonLdValid), 'Every public page must contain parseable JSON-LD structured data.');
 check(index.includes('<title>Smabblez | Interactive Twitch Streamer & GTA RP Creator</title>'), 'Homepage SEO title is missing.');
 check(index.includes('<link rel="canonical" href="https://smabblez.github.io/">'), 'Homepage canonical URL is missing.');
 check(index.includes('"@type": "ProfilePage"') && index.includes('"mainEntity"'), 'Homepage ProfilePage structured data is missing.');
