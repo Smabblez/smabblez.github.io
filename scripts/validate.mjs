@@ -70,7 +70,7 @@ const secondaryHeroImages = [
   const section = read(page).match(new RegExp(`<section\\s+class="${className}"[\\s\\S]*?<\\/section>`, 'i'))?.[0] || '';
   return section.match(/<img\b[^>]*>/i)?.[0] || '';
 });
-const homepageBelowFoldImages = ['evil.webp', 'love.webp', 'bonk.webp', 'win.webp'].map((asset) => index.match(new RegExp(`<img\\b[^>]*src="assets/emotes/${asset}"[^>]*>`, 'i'))?.[0] || '');
+const homepageBelowFoldImages = ['evil.webp', 'love.webp', 'bonk.webp', 'win.webp'].map((asset) => index.match(new RegExp(`<img\\b[^>]*\\ssrc="assets/emotes/${asset}"[^>]*>`, 'i'))?.[0] || '');
 const pageIds = Object.fromEntries(indexablePages.map((page) => [page, new Set([...read(page).matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]))]));
 const checkInternalFragments = () => {
   indexablePages.forEach((page) => {
@@ -206,6 +206,9 @@ check((index.match(/<section\b/g) || []).length === 4, 'Homepage must stay focus
 check(!/id="latest"|id="content"|class="finale"|data-follow-dock/i.test(index), 'Redundant homepage section was reintroduced.');
 check(index.includes('class="cursor-nose"'), 'Nose cursor is missing.');
 check(index.includes('data-honk') && !index.includes('data-chaos-toggle'), 'Chaos Mode must be merged into the hero nose control.');
+check(index.includes('data-normal-src="assets/emotes/hype.webp"') && index.includes('data-chaos-src="assets/emotes/evil.webp"') && !index.includes('data-honk-label'), 'Hero nose must switch between distinct verified emotes without a floating label.');
+check(scriptSource.includes('chaosCharacter.src = active ? chaosCharacter.dataset.chaosSrc : chaosCharacter.dataset.normalSrc'), 'Hero nose must swap the character emote with Chaos Mode.');
+check(styles.includes('left: 50%;\n  top: 45%;\n  width: 21%;') && styles.includes('body.chaos-on .hero-nose-button { left: 50%; top: 55%; width: 21%; }') && !styles.includes('honk-label'), 'Hero nose hit frame must stay centered on each emote and avoid floating label styles.');
 check(index.includes('data-sound-restore'), 'Persistent soundtrack restore control is missing.');
 check(index.includes('data-discord-preview'), 'Live Discord community preview is missing.');
 check(index.includes('href="media-kit.html"'), 'Creator media-kit link is missing.');
