@@ -442,21 +442,10 @@ const honkButton = document.querySelector('[data-honk]');
 const chaosKicker = document.querySelector('[data-chaos-kicker]');
 const chaosTitle = document.querySelector('[data-chaos-title]');
 const chaosHint = document.querySelector('[data-chaos-hint]');
-const cueDeck = document.querySelector('[data-cue-deck]');
-const cueButtons = [...document.querySelectorAll('[data-show-cue]')];
-const cueMonitor = document.querySelector('[data-cue-monitor]');
-const cueStatus = document.querySelector('[data-cue-status]');
 const sparkColors = ['#ff2638', '#ffd42f', '#f6f1e7'];
 const chaosWords = ['HONK!', 'BONK!', 'NO BRAKES', 'CHAT DID IT', 'GTA MOMENT', 'WHOOPS'];
 const chaosHints = ['CLICK SOMETHING DUMB', 'THE PLAN IS GONE', 'CHAT HAS THE WHEEL', 'THIS SEEMED FUNNY', 'NO REFUNDS'];
-const cueResponses = {
-  jumpscare: { monitor: 'Lights out', sticker: 'BOO!', status: 'Jumpscare armed. I immediately regret giving you that one.' },
-  redeem: { monitor: 'Redeemed', sticker: 'REDEEMED!', status: 'Redeem accepted. The plan has been made noticeably worse.' },
-  wildcard: { monitor: 'Plot twist', sticker: 'PLOT TWIST!', status: 'RP wild card played. Whatever was supposed to happen is gone.' },
-  honk: { monitor: 'Honk confirmed', sticker: 'HONK!', status: 'Honk confirmed. A timeless and responsible use of technology.' }
-};
 let chaosClicks = 0;
-let cueResetTimer = 0;
 
 const makeSparks = (x, y, amount = 24) => {
   if (reduceMotion) return;
@@ -518,40 +507,6 @@ const honkNose = () => {
   window.setTimeout(() => heroCharacter?.classList.remove('honked'), 460);
   modeStatus.textContent = 'Honk! You found Smabblez\'s nose.';
 };
-
-cueButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    const cue = button.dataset.showCue;
-    const response = cueResponses[cue];
-    if (!cueDeck || !response) return;
-    const rect = button.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
-
-    window.clearTimeout(cueResetTimer);
-    cueButtons.forEach((item) => item.classList.remove('fired'));
-    cueDeck.classList.remove('fired');
-    cueDeck.dataset.activeCue = cue;
-    button.classList.add('fired');
-    void cueDeck.offsetWidth;
-    cueDeck.classList.add('fired');
-    cueMonitor.textContent = response.monitor;
-    cueStatus.textContent = response.status;
-    makeSparks(x, y, cue === 'jumpscare' ? 18 : 12);
-    dropChaosSticker(x, y, response.sticker);
-
-    heroCharacter?.classList.remove('honked');
-    void heroCharacter?.offsetWidth;
-    heroCharacter?.classList.add('honked');
-    window.setTimeout(() => heroCharacter?.classList.remove('honked'), 460);
-
-    cueResetTimer = window.setTimeout(() => {
-      cueDeck.classList.remove('fired');
-      button.classList.remove('fired');
-      cueMonitor.textContent = 'Standby';
-    }, 1500);
-  });
-});
 
 honkButton?.addEventListener('click', (event) => {
   event.stopPropagation();
