@@ -328,8 +328,13 @@ const modeStatus = document.querySelector('[data-mode-status]');
 const chaosCharacter = document.querySelector('[data-chaos-character]');
 const heroCharacter = document.querySelector('.hero-character');
 const honkButton = document.querySelector('[data-honk]');
+const chaosKicker = document.querySelector('[data-chaos-kicker]');
+const chaosTitle = document.querySelector('[data-chaos-title]');
+const chaosHint = document.querySelector('[data-chaos-hint]');
 const sparkColors = ['#ff2638', '#ffd42f', '#f6f1e7'];
-const chaosWords = ['HONK!', 'BONK!', 'CHAOS!', 'LIVE!', '???', 'BIG TOP'];
+const chaosWords = ['HONK!', 'BONK!', 'NO BRAKES', 'CHAT DID IT', 'GTA MOMENT', 'WHOOPS'];
+const chaosHints = ['CLICK SOMETHING DUMB', 'THE PLAN IS GONE', 'CHAT HAS THE WHEEL', 'THIS SEEMED FUNNY', 'NO REFUNDS'];
+let chaosClicks = 0;
 
 const makeSparks = (x, y, amount = 24) => {
   if (reduceMotion) return;
@@ -362,6 +367,10 @@ const dropChaosSticker = (x, y, word = chaosWords[Math.floor(Math.random() * cha
 };
 
 const broadcastChaos = () => {
+  const word = chaosWords[Math.floor(Math.random() * chaosWords.length)];
+  if (chaosKicker) chaosKicker.textContent = 'THE TENT IS TILTING';
+  if (chaosTitle) chaosTitle.textContent = word;
+  if (chaosHint) chaosHint.textContent = chaosHints[Math.floor(Math.random() * chaosHints.length)];
   chaosFlash.classList.remove('play');
   void chaosFlash.offsetWidth;
   chaosFlash.classList.add('play');
@@ -401,7 +410,13 @@ const setChaos = (active) => {
   honkButton?.setAttribute('aria-label', active ? "Honk Smabblez's nose to turn off Chaos Mode" : "Honk Smabblez's nose to turn on Chaos Mode");
   modeStatus.textContent = active ? 'Chaos mode enabled. Click the page to drop chaos.' : 'Chaos mode disabled.';
   chaosCharacter.src = active ? chaosCharacter.dataset.chaosSrc : chaosCharacter.dataset.normalSrc;
+  chaosClicks = 0;
   if (active) broadcastChaos();
+  else {
+    if (chaosKicker) chaosKicker.textContent = 'THE TENT IS QUIET';
+    if (chaosTitle) chaosTitle.textContent = 'CHAOS MODE';
+    if (chaosHint) chaosHint.textContent = 'HONK TO BRING IT BACK';
+  }
 };
 
 window.addEventListener('keydown', (event) => {
@@ -410,7 +425,15 @@ window.addEventListener('keydown', (event) => {
 
 document.addEventListener('pointerdown', (event) => {
   if (!body.classList.contains('chaos-on') || event.target.closest('a,button,input,label')) return;
-  dropChaosSticker(event.clientX, event.clientY);
+  chaosClicks += 1;
+  const word = chaosWords[chaosClicks % chaosWords.length];
+  makeSparks(event.clientX, event.clientY, 12);
+  dropChaosSticker(event.clientX, event.clientY, word);
+  heroCharacter?.classList.remove('honked');
+  void heroCharacter?.offsetWidth;
+  heroCharacter?.classList.add('honked');
+  window.setTimeout(() => heroCharacter?.classList.remove('honked'), 460);
+  modeStatus.textContent = `Chaos click ${chaosClicks}: ${word}`;
 });
 
 if (!reduceMotion && window.matchMedia('(pointer:fine)').matches) {

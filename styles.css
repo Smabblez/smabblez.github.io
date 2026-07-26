@@ -577,9 +577,9 @@ body.simple-home.chaos-on .social-card:nth-child(3) { transform: rotate(-.2deg);
 .hero-nose-button {
   position: absolute;
   z-index: 6;
-  left: 50%;
-  top: 45%;
-  width: 21%;
+  left: 44%;
+  top: 46%;
+  width: 18%;
   aspect-ratio: 1;
   padding: 0;
   border: 0;
@@ -596,16 +596,15 @@ body.simple-home.chaos-on .social-card:nth-child(3) { transform: rotate(-.2deg);
   inset: 3%;
   border: 3px dashed var(--gold);
   border-radius: 50%;
-  opacity: .96;
-  scale: 1;
+  opacity: .14;
+  scale: .92;
   box-shadow: 0 0 0 8px rgba(255,38,56,.24),0 0 34px rgba(255,38,56,.86);
   transition: opacity .18s ease,scale .18s ease;
-  animation: honk-target 1.7s ease-in-out infinite;
 }
-.hero-nose-button:hover::before,.hero-nose-button:focus-visible::before { opacity: 1; scale: 1.12; }
+.hero-nose-button:hover::before,.hero-nose-button:focus-visible::before { opacity: 1; scale: 1.12; animation: honk-target 1.2s ease-in-out infinite; }
 .hero-nose-button:active { scale: .9; }
 .hero-nose-button:focus-visible { outline-color: var(--gold); outline-offset: 6px; }
-body.chaos-on .hero-nose-button { left: 50%; top: 55%; width: 21%; }
+body.chaos-on .hero-nose-button { left: 47%; top: 54%; width: 17%; }
 body.chaos-on .hero-nose-button::before { border-color: var(--green); box-shadow: 0 0 0 8px rgba(112,239,41,.2),0 0 34px rgba(112,239,41,.8); }
 .hero-character.honked .hero-character-float { animation: float 4.2s ease-in-out infinite,honk-pop .42s cubic-bezier(.18,.8,.28,1); }
 .simple-home .hero-stage .spotlight { animation: spotlight-breathe 6.5s ease-in-out infinite; }
