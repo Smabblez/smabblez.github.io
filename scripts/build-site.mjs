@@ -24,6 +24,7 @@ const files = [
   'styles.css',
   'script.js',
   'site.config.js',
+  'schedule.json',
   '.nojekyll'
 ];
 files.forEach((file) => {

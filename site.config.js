@@ -10,6 +10,12 @@ window.SMABBLEZ_SITE = {
     displayName: "Smabblez",
     twitchChannel: "smabblez"
   },
+  schedule: {
+    broadcasterId: "46623904",
+    feed: "schedule.json",
+    refreshHours: 6,
+    timezone: "America/Chicago"
+  },
   socials: {
     twitch: "https://www.twitch.tv/smabblez",
     tiktok: "https://www.tiktok.com/@Smabblez",

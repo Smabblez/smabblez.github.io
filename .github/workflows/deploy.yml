@@ -8,6 +8,8 @@ on:
     branches:
       - main
   workflow_dispatch:
+  schedule:
+    - cron: '17 */6 * * *'
 
 permissions:
   contents: read
@@ -32,6 +34,7 @@ jobs:
           node --check analytics.js
           node --check media-kit.js
           node --check scripts/build-site.mjs
+          node --check scripts/fetch-twitch-schedule.mjs
           node --check scripts/serve.mjs
           node scripts/generate-sitemap.mjs --check
           node scripts/build-site.mjs _site
@@ -49,6 +52,9 @@ jobs:
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
+
+      - name: Refresh Twitch schedule
+        run: node scripts/fetch-twitch-schedule.mjs --allow-stale
 
       - name: Check sitemap freshness
         run: node scripts/generate-sitemap.mjs --check

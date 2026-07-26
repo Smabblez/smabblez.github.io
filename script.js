@@ -43,6 +43,116 @@ if (twitchPlayer) {
   }
 }
 
+const scheduleRoot = document.querySelector('[data-twitch-schedule]');
+const scheduleList = document.querySelector('[data-schedule-list]');
+const scheduleStatus = document.querySelector('[data-schedule-status]');
+const scheduleDayOrder = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+const scheduleDayLabels = { SU: 'SUN', MO: 'MON', TU: 'TUE', WE: 'WED', TH: 'THU', FR: 'FRI', SA: 'SAT' };
+
+const scheduleClock = (value) => {
+  const [hours = 0, minutes = 0] = String(value || '').split(':').map(Number);
+  const suffix = hours >= 12 ? 'PM' : 'AM';
+  const hour = hours % 12 || 12;
+  return `${hour}${minutes ? `:${String(minutes).padStart(2, '0')}` : ''} ${suffix}`;
+};
+
+const timeZoneParts = (date, timeZone) => Object.fromEntries(
+  new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    weekday: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23'
+  }).formatToParts(date).filter((part) => part.type !== 'literal').map((part) => [part.type, part.value])
+);
+
+const scheduleDayCode = (shortDay) => Object.entries(scheduleDayLabels)
+  .find(([, label]) => label.startsWith(String(shortDay || '').toUpperCase().slice(0, 2)))?.[0];
+
+const renderSchedule = (payload) => {
+  const events = Array.isArray(payload?.events) ? payload.events : [];
+  if (!scheduleList || !events.length) throw new Error('No scheduled streams are available.');
+  const timeZone = payload.timezone || siteConfig.schedule?.timezone || 'America/Chicago';
+  const now = new Date();
+  const nowParts = timeZoneParts(now, timeZone);
+  const todayCode = scheduleDayCode(nowParts.weekday);
+  const todayIndex = scheduleDayOrder.indexOf(todayCode);
+  const nowMinutes = Number(nowParts.hour) * 60 + Number(nowParts.minute);
+  const upcoming = events.map((event) => {
+    const eventIndex = scheduleDayOrder.indexOf(event.day);
+    const [endHour = 0, endMinute = 0] = String(event.end || '').split(':').map(Number);
+    let daysAway = (eventIndex - todayIndex + 7) % 7;
+    if (daysAway === 0 && endHour * 60 + endMinute <= nowMinutes) daysAway = 7;
+    return { ...event, daysAway };
+  }).sort((left, right) => left.daysAway - right.daysAway || left.start.localeCompare(right.start)).slice(0, 5);
+
+  const fragment = document.createDocumentFragment();
+  upcoming.forEach((event, index) => {
+    const streamDate = new Date(now.getTime() + event.daysAway * 86400000);
+    const dateLabel = new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      month: 'short',
+      day: 'numeric'
+    }).format(streamDate).toUpperCase();
+    const card = document.createElement('li');
+    card.className = 'schedule-card';
+    if (index === 0) card.setAttribute('aria-label', 'Next scheduled stream');
+
+    const date = document.createElement('span');
+    date.className = 'schedule-date';
+    const day = document.createElement('strong');
+    day.textContent = scheduleDayLabels[event.day] || event.day;
+    const calendarDate = document.createElement('small');
+    calendarDate.textContent = dateLabel;
+    date.append(day, calendarDate);
+
+    const show = document.createElement('span');
+    show.className = 'schedule-show';
+    const title = document.createElement('strong');
+    title.textContent = event.title || event.category || 'Live on Twitch';
+    const source = document.createElement('small');
+    source.className = index === 0 ? 'schedule-next' : '';
+    source.textContent = index === 0 ? 'Next show' : 'Twitch schedule';
+    show.append(title, source);
+
+    const time = document.createElement('span');
+    time.className = 'schedule-time';
+    time.textContent = `${scheduleClock(event.start)} – ${scheduleClock(event.end)}`;
+    card.append(date, show, time);
+    fragment.append(card);
+  });
+  scheduleList.replaceChildren(fragment);
+  const refreshHours = payload.refreshHours || siteConfig.schedule?.refreshHours || 6;
+  scheduleStatus.textContent = `This board follows the schedule I keep on Twitch and refreshes every ${refreshHours} hours.`;
+  scheduleRoot.dataset.scheduleState = 'ready';
+};
+
+const loadSchedule = async () => {
+  if (!scheduleRoot || scheduleRoot.dataset.scheduleState === 'loading' || scheduleRoot.dataset.scheduleState === 'ready') return;
+  scheduleRoot.dataset.scheduleState = 'loading';
+  try {
+    const response = await fetch(siteConfig.schedule?.feed || 'schedule.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`Schedule request failed: ${response.status}`);
+    renderSchedule(await response.json());
+  } catch {
+    scheduleRoot.dataset.scheduleState = 'fallback';
+    scheduleStatus.textContent = 'The board missed its cue. My official Twitch schedule is still available below.';
+  }
+};
+
+if (scheduleRoot) {
+  if ('IntersectionObserver' in window) {
+    const scheduleObserver = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      loadSchedule();
+      scheduleObserver.disconnect();
+    }, { rootMargin: '240px 0px' });
+    scheduleObserver.observe(scheduleRoot);
+  } else {
+    loadSchedule();
+  }
+}
+
 const soundPrompt = document.querySelector('[data-sound-prompt]');
 const soundToggle = document.querySelector('[data-sound-toggle]');
 const soundSkip = document.querySelector('[data-sound-skip]');
@@ -326,6 +436,7 @@ window.addEventListener('keydown', (event) => {
 const chaosFlash = document.querySelector('.chaos-flash');
 const modeStatus = document.querySelector('[data-mode-status]');
 const chaosCharacter = document.querySelector('[data-chaos-character]');
+const chaosSupportArt = [...document.querySelectorAll('[data-chaos-support]')];
 const heroCharacter = document.querySelector('.hero-character');
 const honkButton = document.querySelector('[data-honk]');
 const chaosKicker = document.querySelector('[data-chaos-kicker]');
@@ -410,6 +521,9 @@ const setChaos = (active) => {
   honkButton?.setAttribute('aria-label', active ? "Honk Smabblez's nose to turn off Chaos Mode" : "Honk Smabblez's nose to turn on Chaos Mode");
   modeStatus.textContent = active ? 'Chaos mode enabled. Click the page to drop chaos.' : 'Chaos mode disabled.';
   chaosCharacter.src = active ? chaosCharacter.dataset.chaosSrc : chaosCharacter.dataset.normalSrc;
+  chaosSupportArt.forEach((image) => {
+    image.src = active ? image.dataset.chaosSrc : image.dataset.normalSrc;
+  });
   chaosClicks = 0;
   if (active) broadcastChaos();
   else {

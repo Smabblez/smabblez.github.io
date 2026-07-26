@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "channel": "Smabblez",
+  "broadcasterId": "46623904",
+  "source": "https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=46623904",
+  "timezone": "America/Chicago",
+  "refreshHours": 6,
+  "fetchedAt": "2026-07-26T03:06:33.780Z",
+  "events": [
+    {
+      "id": "76ea67aa-1b87-4932-bedf-dd4312a9ee48",
+      "day": "MO",
+      "start": "12:00",
+      "end": "22:00",
+      "title": "",
+      "category": "Grand Theft Auto V",
+      "recurring": true
+    },
+    {
+      "id": "71e33e4a-568d-43e5-a5e9-e153e6f1b9cc",
+      "day": "TU",
+      "start": "12:00",
+      "end": "22:00",
+      "title": "",
+      "category": "Grand Theft Auto V",
+      "recurring": true
+    },
+    {
+      "id": "c1533a2f-183d-44e9-b00b-895d6d4318db",
+      "day": "WE",
+      "start": "12:00",
+      "end": "22:00",
+      "title": "",
+      "category": "Grand Theft Auto V",
+      "recurring": true
+    },
+    {
+      "id": "796a2fa4-d419-4121-afd4-8cc9e55a56bc",
+      "day": "TH",
+      "start": "12:00",
+      "end": "22:00",
+      "title": "",
+      "category": "Live on Twitch",
+      "recurring": true
+    },
+    {
+      "id": "f6cb8541-78ae-4c51-a938-85668f74d07d",
+      "day": "FR",
+      "start": "12:00",
+      "end": "16:00",
+      "title": "",
+      "category": "Live on Twitch",
+      "recurring": true
+    }
+  ]
+}
