@@ -635,12 +635,12 @@ body.chaos-on .schedule-emote { opacity: .52; rotate: 7deg; animation: schedule-
 body.simple-home.chaos-on .social-card:nth-child(1) { transform: rotate(-.35deg); }
 body.simple-home.chaos-on .social-card:nth-child(2) { transform: rotate(.28deg); }
 body.simple-home.chaos-on .social-card:nth-child(3) { transform: rotate(-.2deg); }
-body.chaos-on {
+body.simple-home {
   -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
 }
-body.chaos-on input,body.chaos-on textarea,body.chaos-on select,body.chaos-on [contenteditable="true"] {
+body.simple-home input,body.simple-home textarea,body.simple-home select,body.simple-home [contenteditable="true"] {
   -webkit-user-select: text;
   user-select: text;
 }
