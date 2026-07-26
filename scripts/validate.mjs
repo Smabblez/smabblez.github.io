@@ -208,7 +208,7 @@ check(index.includes('class="cursor-nose"'), 'Nose cursor is missing.');
 check(index.includes('data-honk') && !index.includes('data-chaos-toggle'), 'Chaos Mode must be merged into the hero nose control.');
 check(index.includes('data-normal-src="assets/emotes/hype.webp"') && index.includes('data-chaos-src="assets/emotes/evil.webp"') && !index.includes('data-honk-label'), 'Hero nose must switch between distinct verified emotes without a floating label.');
 check(scriptSource.includes('chaosCharacter.src = active ? chaosCharacter.dataset.chaosSrc : chaosCharacter.dataset.normalSrc'), 'Hero nose must swap the character emote with Chaos Mode.');
-check(styles.includes('left: 50%;\n  top: 45%;\n  width: 21%;') && styles.includes('body.chaos-on .hero-nose-button { left: 50%; top: 55%; width: 21%; }') && !styles.includes('honk-label'), 'Hero nose hit frame must stay centered on each emote and avoid floating label styles.');
+check(styles.includes('left: 44%;\n  top: 46%;\n  width: 18%;') && styles.includes('body.chaos-on .hero-nose-button { left: 47%; top: 54%; width: 17%; }') && !styles.includes('honk-label'), 'Hero nose hit frame must stay centered on each emote and avoid floating label styles.');
 check(index.includes('data-sound-restore'), 'Persistent soundtrack restore control is missing.');
 check(index.includes('data-discord-preview'), 'Live Discord community preview is missing.');
 check(index.includes('href="media-kit.html"'), 'Creator media-kit link is missing.');
