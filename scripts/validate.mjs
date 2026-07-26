@@ -46,7 +46,13 @@ const pageMetadata = indexablePages.map((page) => {
     canonical: html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i)?.[1]?.trim(),
     ogUrl: html.match(/<meta\s+property="og:url"\s+content="([^"]+)"/i)?.[1]?.trim(),
     ogImage: html.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i)?.[1]?.trim(),
+    ogImageType: html.match(/<meta\s+property="og:image:type"\s+content="([^"]+)"/i)?.[1]?.trim(),
+    ogImageWidth: html.match(/<meta\s+property="og:image:width"\s+content="([^"]+)"/i)?.[1]?.trim(),
+    ogImageHeight: html.match(/<meta\s+property="og:image:height"\s+content="([^"]+)"/i)?.[1]?.trim(),
+    ogImageAlt: html.match(/<meta\s+property="og:image:alt"\s+content="([^"]+)"/i)?.[1]?.trim(),
+    twitterCard: html.match(/<meta\s+name="twitter:card"\s+content="([^"]+)"/i)?.[1]?.trim(),
     twitterImage: html.match(/<meta\s+name="twitter:image"\s+content="([^"]+)"/i)?.[1]?.trim(),
+    twitterImageAlt: html.match(/<meta\s+name="twitter:image:alt"\s+content="([^"]+)"/i)?.[1]?.trim(),
     ogImageCount: (html.match(/<meta\s+property="og:image"\s+content="[^"]+"/gi) || []).length,
     twitterImageCount: (html.match(/<meta\s+name="twitter:image"\s+content="[^"]+"/gi) || []).length,
     shareReady: ['og:title', 'og:description', 'og:url', 'og:image', 'og:image:width', 'og:image:height', 'twitter:card', 'twitter:title', 'twitter:description', 'twitter:image']
@@ -64,6 +70,19 @@ const anchorWithData = (html, attribute, value) => anchorTags(html).find((tag) =
 const externalAnchorTags = (html) => [...html.matchAll(/<a\b[^>]*href="https:\/\/[^\"]+"[^>]*>/gi)].map(([tag]) => tag);
 const blankTargetTags = (html) => [...html.matchAll(/<a\b[^>]*target="_blank"[^>]*>/gi)].map(([tag]) => tag);
 const siteOrigin = new URL(siteUrl).origin;
+const localAssetFromUrl = (url) => {
+  try {
+    const parsed = new URL(url);
+    return parsed.origin === siteOrigin ? parsed.pathname.replace(/^\/+/, '') : null;
+  } catch {
+    return null;
+  }
+};
+const pngDimensions = (file) => {
+  const data = readFileSync(join(root, file));
+  if (data.length < 24 || data.toString('ascii', 1, 4) !== 'PNG') return null;
+  return { width: data.readUInt32BE(16), height: data.readUInt32BE(20) };
+};
 const secondaryHeroImages = [
   ['about.html', 'about-hero'],
   ['clips.html', 'music-hero'],
@@ -100,6 +119,20 @@ check(config?.content?.twitchVideos?.includes('/smabblez/videos'), 'Twitch recen
 check(config?.content?.twitchClips === 'https://www.twitch.tv/smabblez/clips?range=all', 'Twitch clips URL is incorrect.');
 check(config?.content?.twitchSchedule === 'https://www.twitch.tv/smabblez/schedule', 'Twitch schedule URL is incorrect.');
 check(config?.content?.youtubeShorts === 'https://www.youtube.com/@Smabblez/shorts', 'YouTube Shorts URL is incorrect.');
+check(config?.shareImage === 'https://smabblez.github.io/assets/site/smabblez-social-card.png', 'The configured share image must use the branded large social card.');
+const shareImageAsset = localAssetFromUrl(config?.shareImage);
+check(Boolean(shareImageAsset) && existsSync(join(root, shareImageAsset)) && JSON.stringify(pngDimensions(shareImageAsset)) === JSON.stringify({ width: 1200, height: 630 }), 'The branded share image must exist as a 1200x630 PNG.');
+const expectedProfileImages = [
+  'https://smabblez.github.io/assets/emotes/hype.png',
+  'https://smabblez.github.io/assets/site/smabblez-profile-4x3.png',
+  'https://smabblez.github.io/assets/site/smabblez-profile-16x9.png'
+];
+check(JSON.stringify(config?.seo?.profileImages) === JSON.stringify(expectedProfileImages), 'Structured profile images must expose verified 1x1, 4x3, and 16x9 artwork.');
+const profileImageDimensions = config?.seo?.profileImages?.slice(1).map((url) => {
+  const asset = localAssetFromUrl(url);
+  return asset && existsSync(join(root, asset)) ? pngDimensions(asset) : null;
+});
+check(JSON.stringify(profileImageDimensions) === JSON.stringify([{ width: 1200, height: 900 }, { width: 1200, height: 675 }]), 'Structured 4x3 and 16x9 profile artwork must exist at the reviewed dimensions.');
 check(index.includes('href="https://www.twitch.tv/smabblez/clips?range=all"') && index.includes('data-content="twitchClips"'), 'Homepage must expose the configured Twitch clips URL.');
 check(index.includes('href="https://www.youtube.com/@Smabblez/shorts"') && index.includes('data-content="youtubeShorts"'), 'Homepage must expose the configured YouTube Shorts URL.');
 const configuredMediaKitLinks = [
@@ -145,6 +178,7 @@ check(duplicateValues(pageMetadata.map(({ canonical }) => canonical)).length ===
 check(pageMetadata.every(({ page, canonical }) => canonical === (page === 'index.html' ? `${siteUrl}/` : `${siteUrl}/${page}`)), 'Public page canonicals must match the configured site URL and page inventory.');
 check(pageMetadata.every(({ canonical, ogUrl }) => canonical === ogUrl), 'Every public page og:url must match its canonical URL.');
 check(pageMetadata.every(({ ogImage, twitterImage, ogImageCount, twitterImageCount }) => ogImageCount === 1 && twitterImageCount === 1 && ogImage === config?.shareImage && twitterImage === config?.shareImage), 'Every public page must use the configured share image exactly once for Open Graph and Twitter.');
+check(pageMetadata.every(({ ogImageType, ogImageWidth, ogImageHeight, ogImageAlt, twitterCard, twitterImageAlt }) => ogImageType === 'image/png' && ogImageWidth === '1200' && ogImageHeight === '630' && Boolean(ogImageAlt) && twitterCard === 'summary_large_image' && Boolean(twitterImageAlt)), 'Every public page must expose a large, fully described 1200x630 social card.');
 check(pageMetadata.every(({ shareReady }) => shareReady), 'Every public page must include complete Open Graph and X/Twitter metadata.');
 check(pageMetadata.every(({ jsonLdValid }) => jsonLdValid), 'Every public page must contain parseable JSON-LD structured data.');
 check(secondaryHeroImages.every((tag) => /\bfetchpriority="high"/i.test(tag) && /\bdecoding="async"/i.test(tag) && !/\bloading="lazy"/i.test(tag)), 'Every secondary-page hero image must be high-priority and asynchronously decoded.');
@@ -159,6 +193,8 @@ check(indexablePages.every((page) => blankTargetsHaveRel(read(page))), 'Every ta
 check(index.includes('<title>Smabblez | Interactive Twitch Streamer & GTA RP Creator</title>'), 'Homepage SEO title is missing.');
 check(index.includes('<link rel="canonical" href="https://smabblez.github.io/">'), 'Homepage canonical URL is missing.');
 check(index.includes('"@type": "ProfilePage"') && index.includes('"mainEntity"'), 'Homepage ProfilePage structured data is missing.');
+check(index.includes('"@type": "WebSite"') && index.includes('"@id": "https://smabblez.github.io/#website"') && index.includes('"publisher": { "@id": "https://smabblez.github.io/#smabblez" }'), 'Homepage WebSite identity graph is missing or disconnected.');
+check(config.seo.profileImages.every((image) => index.includes(`"${image}"`)), 'Homepage ProfilePage must expose every configured profile-image ratio.');
 check(index.includes('"@type": "FAQPage"') && index.includes('What does Smabblez stream?'), 'Homepage FAQ structured data is missing.');
 check(index.includes('https://www.tiktok.com/@Smabblez') && index.includes('https://www.twitch.tv/smabblez'), 'Structured social identity is incomplete.');
 check(index.includes('name="twitter:image"') && index.includes('property="og:image"'), 'Homepage social preview metadata is incomplete.');
@@ -169,7 +205,7 @@ check(mediaKit.includes('styles.css?v=20260726d') && mediaKit.includes('src="ass
 check(mediaKit.includes('data-copy-kit') && mediaKit.includes('id="kit-copy-status"') && mediaKit.includes('aria-live="polite"'), 'Media-kit must expose an accessible copy-link handoff status.');
 check(mediaKitSource.includes('navigator.clipboard') && mediaKitSource.includes("execCommand('copy')") && mediaKitSource.includes('data-copy-kit'), 'Media-kit copy-link control must include Clipboard API and legacy fallback behavior.');
 check(mediaKit.includes('href="#kit-contact"') && mediaKit.includes('id="kit-contact"'), 'Media-kit must expose an above-the-fold path to collaboration contact.');
-check(mediaKit.includes('"description": "Smabblez is an interactive Twitch streamer, GTA RP creator, musician, performer, and community builder."') && mediaKit.includes('"jobTitle": "Interactive Twitch streamer, GTA RP creator, musician, performer, and community builder"') && mediaKit.includes('"image": "https://smabblez.github.io/assets/emotes/hype.png"'), 'Media-kit profile identity must expose verified creator positioning and image data.');
+check(mediaKit.includes('"description": "Smabblez is an interactive Twitch streamer, GTA RP creator, musician, performer, and community builder."') && mediaKit.includes('"jobTitle": "Interactive Twitch streamer, GTA RP creator, musician, performer, and community builder"') && config.seo.profileImages.every((image) => mediaKit.includes(`"${image}"`)), 'Media-kit profile identity must expose verified creator positioning and multi-ratio image data.');
 check(mediaKit.includes('https://www.twitch.tv/smabblez/clips?range=all') && mediaKit.includes('https://www.youtube.com/@Smabblez/shorts'), 'Media-kit official channels must include verified clip destinations.');
 check(['twitch', 'tiktok', 'discord', 'spotify', 'youtube'].every((label) => mediaKit.includes(`data-social="${label}"`)), 'Media-kit platform and contact links must carry explicit analytics labels.');
 check(styles.includes('.kit-nav { order:3;width:100%;justify-content:center;flex-wrap:wrap;column-gap:12px;row-gap:8px;'), 'Media-kit mobile navigation must wrap so every collaboration route remains reachable.');
