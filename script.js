@@ -537,7 +537,7 @@ window.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && body.classList.contains('chaos-on')) setChaos(false);
 });
 
-document.addEventListener('pointerdown', (event) => {
+document.addEventListener('click', (event) => {
   if (!body.classList.contains('chaos-on') || event.target.closest('a,button,input,label')) return;
   chaosClicks += 1;
   const word = chaosWords[chaosClicks % chaosWords.length];

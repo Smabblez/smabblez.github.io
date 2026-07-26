@@ -635,6 +635,15 @@ body.chaos-on .schedule-emote { opacity: .52; rotate: 7deg; animation: schedule-
 body.simple-home.chaos-on .social-card:nth-child(1) { transform: rotate(-.35deg); }
 body.simple-home.chaos-on .social-card:nth-child(2) { transform: rotate(.28deg); }
 body.simple-home.chaos-on .social-card:nth-child(3) { transform: rotate(-.2deg); }
+body.chaos-on {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+body.chaos-on input,body.chaos-on textarea,body.chaos-on select,body.chaos-on [contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+}
 
 /* Lightweight show motion: crisp transforms, no fog or full-page texture. */
 .simple-home .hero::before { animation: grid-drift 18s linear infinite; }
