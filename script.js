@@ -40,40 +40,58 @@ if (twitchFrame && twitchPlayerHost) {
   let twitchPlayerState = 'loading';
   let twitchStateTimer = 0;
 
+  const twitchStateContent = {
+    loading: {
+      label: 'MY TWITCH // CHECKING THE TENT',
+      kicker: 'Checking live status',
+      title: 'CHECKING THE TENT.<br><em>THE SHOW IS ONE CLICK AWAY.</em>',
+      copy: 'Checking Twitch now. While we do, follow the channel or catch the latest broadcast.',
+      status: 'Checking whether the show is live…'
+    },
+    ready: {
+      label: 'MY TWITCH // CHECKING THE TENT',
+      kicker: 'Player ready',
+      title: 'CHECKING THE TENT.<br><em>THE SHOW IS ONE CLICK AWAY.</em>',
+      copy: 'The player is ready and Twitch is reporting the channel status now.',
+      status: 'Checking whether the show is live…'
+    },
+    online: {
+      label: 'MY TWITCH // LIVE NOW',
+      kicker: 'Live now',
+      title: 'THE TENT IS OPEN.<br><em>JOIN THE CHAOS.</em>',
+      copy: 'Smabblez is live now.',
+      status: 'Smabblez is live now.'
+    },
+    offline: {
+      label: 'MY TWITCH // BETWEEN SHOWS',
+      kicker: 'Between shows',
+      title: 'MISSED THE LIVE CHAOS?<br><em>WATCH THE LATEST SHOW.</em>',
+      copy: 'Catch the newest broadcast, then follow on Twitch so you know when chat gets control again.',
+      status: 'Smabblez is offline right now. The latest broadcast and clips are ready above.'
+    },
+    fallback: {
+      label: 'MY TWITCH // PLAYER UNAVAILABLE',
+      kicker: 'Player unavailable',
+      title: 'THE PLAYER MISSED ITS CUE.<br><em>TWITCH IS ONE CLICK AWAY.</em>',
+      copy: 'Open Twitch directly for the live show, the latest broadcast, and the best clips.',
+      status: 'The embedded player could not load.'
+    }
+  };
+
   const setTwitchPlayerState = (state) => {
     twitchPlayerState = state;
     if (state === 'online' || state === 'offline' || state === 'fallback') {
       window.clearTimeout(twitchStateTimer);
     }
     twitchFrame.dataset.playerState = state;
-    const offline = state === 'offline';
-    const fallback = state === 'fallback';
-    twitchOffline?.setAttribute('aria-hidden', String(!offline && !fallback));
-    if (twitchPlayerLabel) {
-      twitchPlayerLabel.textContent = offline
-        ? 'MY TWITCH // BETWEEN SHOWS'
-        : fallback
-          ? 'MY TWITCH // PLAYER UNAVAILABLE'
-          : state === 'online'
-            ? 'MY TWITCH // LIVE NOW'
-            : 'MY TWITCH // CHECKING THE TENT';
-    }
+    const content = twitchStateContent[state] || twitchStateContent.loading;
+    twitchOffline?.setAttribute('aria-hidden', String(state === 'online'));
+    if (twitchPlayerLabel) twitchPlayerLabel.textContent = content.label;
     if (twitchPlayerSignal) twitchPlayerSignal.dataset.signal = state;
-    if (fallback) {
-      if (twitchStateKicker) twitchStateKicker.innerHTML = '<span>///</span> Player unavailable';
-      if (twitchStateTitle) twitchStateTitle.innerHTML = 'THE PLAYER MISSED ITS CUE.<br><em>TWITCH IS ONE CLICK AWAY.</em>';
-      if (twitchStateCopy) twitchStateCopy.textContent = 'The embedded player could not load here. Open Twitch directly for the live show, recent broadcasts, and clips.';
-    }
-    if (twitchPlayerStatus) {
-      const prefix = state === 'online'
-        ? 'Smabblez is live now.'
-        : offline
-          ? 'Smabblez is offline right now. Recent shows and clips are ready above.'
-          : fallback
-            ? 'The embedded player could not load.'
-            : 'Checking whether the show is live…';
-      twitchPlayerStatus.firstChild.textContent = `${prefix} `;
-    }
+    if (twitchStateKicker) twitchStateKicker.innerHTML = `<span>///</span> ${content.kicker}`;
+    if (twitchStateTitle) twitchStateTitle.innerHTML = content.title;
+    if (twitchStateCopy) twitchStateCopy.textContent = content.copy;
+    if (twitchPlayerStatus) twitchPlayerStatus.firstChild.textContent = `${content.status} `;
   };
 
   const loadTwitchPlayer = () => {
@@ -84,6 +102,11 @@ if (twitchFrame && twitchPlayerHost) {
       return;
     }
     try {
+      twitchStateTimer = window.setTimeout(() => {
+        if (twitchPlayerState === 'loading' || twitchPlayerState === 'ready') {
+          setTwitchPlayerState('fallback');
+        }
+      }, 8000);
       const player = new window.Twitch.Player(twitchPlayerHost.id, {
         width: '100%',
         height: '100%',
@@ -94,11 +117,6 @@ if (twitchFrame && twitchPlayerHost) {
       });
       player.addEventListener(window.Twitch.Player.READY, () => {
         if (twitchPlayerState === 'loading') setTwitchPlayerState('ready');
-        twitchStateTimer = window.setTimeout(() => {
-          if (twitchPlayerState === 'loading' || twitchPlayerState === 'ready') {
-            setTwitchPlayerState('fallback');
-          }
-        }, 6000);
       });
       player.addEventListener(window.Twitch.Player.ONLINE, () => setTwitchPlayerState('online'));
       player.addEventListener(window.Twitch.Player.PLAY, () => setTwitchPlayerState('online'));
@@ -107,6 +125,7 @@ if (twitchFrame && twitchPlayerHost) {
       setTwitchPlayerState('fallback');
     }
   };
+  setTwitchPlayerState('loading');
   if ('IntersectionObserver' in window) {
     const twitchObserver = new IntersectionObserver((entries) => {
       if (!entries.some((entry) => entry.isIntersecting)) return;
