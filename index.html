@@ -35,7 +35,7 @@
   <link rel="dns-prefetch" href="//p.scdn.co">
   <link rel="dns-prefetch" href="//image-cdn-ak.spotifycdn.com">
   <link rel="dns-prefetch" href="//discord.com">
-  <link rel="stylesheet" href="styles.css?v=20260726g">
+  <link rel="stylesheet" href="styles.css?v=20260729a">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -178,10 +178,29 @@
           <a class="text-link" href="https://www.twitch.tv/smabblez/clips?range=all" data-content="twitchClips" target="_blank" rel="noreferrer">Browse Twitch clips ↗</a>
         </div>
       </div>
-      <div class="live-player reveal">
-        <div class="live-player-top"><span>MY TWITCH // LIVE OR LATEST</span><span aria-hidden="true">● ● ●</span></div>
-        <iframe data-twitch-player title="Smabblez Twitch live player" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-        <p class="live-player-fallback">Player not loading? <a href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">Open Smabblez on Twitch ↗</a></p>
+      <div class="live-player reveal" data-twitch-frame data-player-state="loading">
+        <div class="live-player-top">
+          <span data-twitch-player-label>MY TWITCH // CHECKING THE TENT</span>
+          <span class="live-player-signal" data-twitch-player-signal aria-hidden="true">● ● ●</span>
+        </div>
+        <div class="twitch-stage">
+          <div class="twitch-player-shell" id="smabblez-twitch-player" data-twitch-player aria-label="Smabblez Twitch live player"></div>
+          <article class="live-offline-card" data-twitch-offline aria-hidden="true">
+            <img src="assets/emotes/hype.webp" width="1024" height="1024" loading="lazy" decoding="async" alt="" aria-hidden="true">
+            <div class="live-offline-copy">
+              <p class="kicker" data-twitch-state-kicker><span>///</span> Offline for now</p>
+              <h3 data-twitch-state-title>THE TENT IS CLOSED.<br><em>THE CHAOS ISN'T.</em></h3>
+              <p data-twitch-state-copy>Catch the newest broadcast or clip, then follow on Twitch so you know when chat gets control again.</p>
+              <div class="live-offline-actions">
+                <a class="button button-primary" href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">Follow on Twitch <span aria-hidden="true">↗</span></a>
+                <a class="text-link" href="https://www.twitch.tv/smabblez/videos?filter=archives&amp;sort=time" data-content="twitchVideos" target="_blank" rel="noreferrer">Recent broadcasts ↗</a>
+                <a class="text-link" href="https://www.twitch.tv/smabblez/clips?range=all" data-content="twitchClips" target="_blank" rel="noreferrer">Best clips ↗</a>
+              </div>
+            </div>
+          </article>
+        </div>
+        <p class="live-player-fallback" aria-live="polite" data-twitch-player-status>Checking whether the show is live… <a href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">Open Smabblez on Twitch ↗</a></p>
+        <noscript><p class="live-player-fallback">JavaScript is off. <a href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">Watch Smabblez on Twitch ↗</a></p></noscript>
       </div>
       <div class="stream-schedule reveal" data-twitch-schedule>
         <div class="schedule-intro">
@@ -286,7 +305,8 @@
     <div><a href="about.html">About</a><a href="clips.html">Clips</a><a href="gta-rp.html">GTA RP</a><a href="music.html">Music</a><a href="https://www.twitch.tv/smabblez" data-social="twitch" target="_blank" rel="noreferrer">Twitch</a><a href="https://www.tiktok.com/@Smabblez" data-social="tiktok" target="_blank" rel="noreferrer">TikTok</a><a href="https://discord.gg/5edKN6cw2K" data-social="discord" target="_blank" rel="noreferrer">Discord</a><a href="https://www.youtube.com/@Smabblez" data-social="youtube" target="_blank" rel="noreferrer">YouTube</a><a href="https://open.spotify.com/artist/1JiqQUYL0EA1h3jVQIRQtg" data-social="spotify" target="_blank" rel="noreferrer">Spotify</a><a href="media-kit.html" data-track="media-kit">Media kit</a></div>
   </footer>
 
+  <script src="https://player.twitch.tv/js/embed/v1.js"></script>
   <script src="site.config.js?v=20260726c"></script>
-  <script src="script.js?v=20260726g"></script>
+  <script src="script.js?v=20260729a"></script>
 </body>
 </html>
