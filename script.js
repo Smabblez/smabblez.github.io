@@ -23,13 +23,89 @@ Object.entries(siteConfig.content || {}).forEach(([name, url]) => {
   document.querySelectorAll(`[data-content="${name}"]`).forEach((link) => { link.href = url; });
 });
 
-const twitchPlayer = document.querySelector('[data-twitch-player]');
-if (twitchPlayer) {
+const twitchFrame = document.querySelector('[data-twitch-frame]');
+const twitchPlayerHost = document.querySelector('[data-twitch-player]');
+const twitchOffline = document.querySelector('[data-twitch-offline]');
+const twitchPlayerLabel = document.querySelector('[data-twitch-player-label]');
+const twitchPlayerSignal = document.querySelector('[data-twitch-player-signal]');
+const twitchPlayerStatus = document.querySelector('[data-twitch-player-status]');
+const twitchStateKicker = document.querySelector('[data-twitch-state-kicker]');
+const twitchStateTitle = document.querySelector('[data-twitch-state-title]');
+const twitchStateCopy = document.querySelector('[data-twitch-state-copy]');
+
+if (twitchFrame && twitchPlayerHost) {
   const twitchChannel = siteConfig.brand?.twitchChannel || 'smabblez';
   const twitchParent = window.location.hostname || 'localhost';
+  let twitchPlayerStarted = false;
+  let twitchPlayerState = 'loading';
+  let twitchStateTimer = 0;
+
+  const setTwitchPlayerState = (state) => {
+    twitchPlayerState = state;
+    if (state === 'online' || state === 'offline' || state === 'fallback') {
+      window.clearTimeout(twitchStateTimer);
+    }
+    twitchFrame.dataset.playerState = state;
+    const offline = state === 'offline';
+    const fallback = state === 'fallback';
+    twitchOffline?.setAttribute('aria-hidden', String(!offline && !fallback));
+    if (twitchPlayerLabel) {
+      twitchPlayerLabel.textContent = offline
+        ? 'MY TWITCH // BETWEEN SHOWS'
+        : fallback
+          ? 'MY TWITCH // PLAYER UNAVAILABLE'
+          : state === 'online'
+            ? 'MY TWITCH // LIVE NOW'
+            : 'MY TWITCH // CHECKING THE TENT';
+    }
+    if (twitchPlayerSignal) twitchPlayerSignal.dataset.signal = state;
+    if (fallback) {
+      if (twitchStateKicker) twitchStateKicker.innerHTML = '<span>///</span> Player unavailable';
+      if (twitchStateTitle) twitchStateTitle.innerHTML = 'THE PLAYER MISSED ITS CUE.<br><em>TWITCH IS ONE CLICK AWAY.</em>';
+      if (twitchStateCopy) twitchStateCopy.textContent = 'The embedded player could not load here. Open Twitch directly for the live show, recent broadcasts, and clips.';
+    }
+    if (twitchPlayerStatus) {
+      const prefix = state === 'online'
+        ? 'Smabblez is live now.'
+        : offline
+          ? 'Smabblez is offline right now. Recent shows and clips are ready above.'
+          : fallback
+            ? 'The embedded player could not load.'
+            : 'Checking whether the show is live…';
+      twitchPlayerStatus.firstChild.textContent = `${prefix} `;
+    }
+  };
+
   const loadTwitchPlayer = () => {
-    if (twitchPlayer.src) return;
-    twitchPlayer.src = `https://player.twitch.tv/?channel=${encodeURIComponent(twitchChannel)}&parent=${encodeURIComponent(twitchParent)}&autoplay=false&muted=true`;
+    if (twitchPlayerStarted) return;
+    twitchPlayerStarted = true;
+    if (!window.Twitch?.Player) {
+      setTwitchPlayerState('fallback');
+      return;
+    }
+    try {
+      const player = new window.Twitch.Player(twitchPlayerHost.id, {
+        width: '100%',
+        height: '100%',
+        channel: twitchChannel,
+        parent: [twitchParent],
+        autoplay: false,
+        muted: true
+      });
+      player.addEventListener(window.Twitch.Player.READY, () => {
+        if (twitchPlayerState === 'loading') setTwitchPlayerState('ready');
+        twitchStateTimer = window.setTimeout(() => {
+          if (twitchPlayerState === 'loading' || twitchPlayerState === 'ready') {
+            setTwitchPlayerState('fallback');
+          }
+        }, 6000);
+      });
+      player.addEventListener(window.Twitch.Player.ONLINE, () => setTwitchPlayerState('online'));
+      player.addEventListener(window.Twitch.Player.PLAY, () => setTwitchPlayerState('online'));
+      player.addEventListener(window.Twitch.Player.OFFLINE, () => setTwitchPlayerState('offline'));
+    } catch {
+      setTwitchPlayerState('fallback');
+    }
   };
   if ('IntersectionObserver' in window) {
     const twitchObserver = new IntersectionObserver((entries) => {
@@ -37,7 +113,7 @@ if (twitchPlayer) {
       loadTwitchPlayer();
       twitchObserver.disconnect();
     }, { rootMargin: '80px 0px' });
-    twitchObserver.observe(twitchPlayer);
+    twitchObserver.observe(twitchFrame);
   } else {
     loadTwitchPlayer();
   }
